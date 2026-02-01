@@ -2,11 +2,93 @@
 <html lang="da">
 <head>
   <meta charset="UTF-8">
-  <title>Plus</title>
+  <title>Division</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f7ff;
+      text-align: center;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 2em;
+    }
+
+    .opgave {
+      font-size: 2em;
+      margin: 20px 0;
+    }
+
+    input {
+      font-size: 1.5em;
+      padding: 10px;
+      width: 120px;
+      text-align: center;
+    }
+
+    button {
+      font-size: 1.2em;
+      padding: 10px 20px;
+      margin-top: 15px;
+      border-radius: 10px;
+      border: none;
+      background-color: #4caf50;
+      color: white;
+    }
+
+    .feedback {
+      font-size: 1.3em;
+      margin-top: 20px;
+    }
+
+    a {
+      display: block;
+      margin-top: 30px;
+      font-size: 1.1em;
+    }
+  </style>
 </head>
+
 <body>
+
   <h1>➗ Division</h1>
-  <p>Her kommer opgaver snart</p>
+
+  <div class="opgave">
+    Hvad er <span id="tal1"></span> + <span id="tal2"></span>?
+  </div>
+
+  <input type="number" id="svar" placeholder="Dit svar">
+
+  <br>
+
+  <button onclick="tjekSvar()">Tjek svar</button>
+
+  <div class="feedback" id="feedback"></div>
+
   <a href="index.html">⬅️ Tilbage</a>
+
+  <script>
+    let tal1 = Math.floor(Math.random() * 10) + 1;
+    let tal2 = Math.floor(Math.random() * 10) + 1;
+
+    document.getElementById("tal1").innerText = tal1;
+    document.getElementById("tal2").innerText = tal2;
+
+    function tjekSvar() {
+      let brugerSvar = Number(document.getElementById("svar").value);
+      let korrektSvar = tal1 / tal2;
+
+      if (brugerSvar === korrektSvar) {
+        document.getElementById("feedback").innerText =
+          "✅ Rigtigt! " + tal1 + " / " + tal2 + " = " + korrektSvar;
+      } else {
+        document.getElementById("feedback").innerText =
+          "❌ Ikke helt. Prøv at tælle " + tal1 + " og så divider med " + tal2 + " til.";
+      }
+    }
+  </script>
+
 </body>
 </html>
