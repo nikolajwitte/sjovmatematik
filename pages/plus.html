@@ -56,13 +56,30 @@
           </button>
         </div>
         
-        <div style="margin-top: 20px;">
-          <button onclick="visHjaelp()" class="button" style="background: #f6ad55; color: white;">
-            <i class="fas fa-question-circle"></i> Få hjælp
-          </button>
-          <button onclick="visForklaring()" class="button" style="background: #90cdf4; color: white;">
-            <i class="fas fa-lightbulb"></i> Se løsning
-          </button>
+        <!-- KNAPPER - TÆLLELINJE KUN I NIVEAU 1 OG 2 -->
+        <div id="tallelinjeKnapper" style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+          <!-- Knapperne indsættes dynamisk baseret på niveau -->
+        </div>
+      </div>
+      
+      <!-- TÆLLELINJE - KUN VISES I NIVEAU 1 OG 2 -->
+      <div id="tallelinjeContainer" class="tallelinje-container">
+        <h3>Tællelinje - Visualiser regnestykket:</h3>
+        <div class="tallelinje-wrapper">
+          <div id="tallelinje" class="tallelinje-ramme">
+            <!-- Tællelinjen tegnes her med JavaScript -->
+          </div>
+          <div class="tallelinje-knapper">
+            <button onclick="startAnimation()" class="button" style="background: #667eea; color: white;">
+              <i class="fas fa-play-circle"></i> Vis animation
+            </button>
+            <button onclick="skjulTallelinje()" class="button" style="background: #a0aec0; color: white;">
+              <i class="fas fa-eye-slash"></i> Skjul tællelinje
+            </button>
+            <button onclick="forklarTallelinje()" class="button" style="background: #f6ad55; color: white;">
+              <i class="fas fa-info-circle"></i> Hjælp
+            </button>
+          </div>
         </div>
       </div>
       
@@ -92,6 +109,7 @@
     let currentTal1, currentTal2, correctAnswer;
     let streak = 0;
     let attempts = [];
+    let animationActive = false;
 
     // NÅR SIDEN INDLÆSES
     document.addEventListener('DOMContentLoaded', function() {
@@ -99,6 +117,7 @@
       opdaterBrugerinfo();
       setupLevelButtons();
       genererOpgave();
+      opdaterKnapper();
       
       // Enter-tasten
       document.getElementById('svarInput').addEventListener('keypress', function(e) {
@@ -126,11 +145,44 @@
           currentLevel = parseInt(this.dataset.level);
           opdaterBrugerinfo();
           genererOpgave();
+          opdaterKnapper();
+          // Skjul tællelinje når niveau ændres
+          document.getElementById('tallelinjeContainer').style.display = 'none';
         });
       });
     }
 
-    // GENERER NY PLUS OPGAVE
+    // OPDATER KNAPPER BASERET PÅ NIVEAU
+    function opdaterKnapper() {
+      const knapContainer = document.getElementById('tallelinjeKnapper');
+      let html = '';
+      
+      // Tællelinje knapper kun for niveau 1 og 2
+      if (currentLevel <= 2) {
+        html += `
+          <button onclick="visTallelinje()" class="button" style="background: #667eea; color: white; flex: 1; min-width: 150px;">
+            <i class="fas fa-ruler-combined"></i> Vis tællelinje
+          </button>
+          <button onclick="startAnimation()" class="button" style="background: #48bb78; color: white; flex: 1; min-width: 150px;">
+            <i class="fas fa-play-circle"></i> Vis skridt-for-skridt
+          </button>
+        `;
+      }
+      
+      // Hjælpeknapper for alle niveauer
+      html += `
+        <button onclick="visHjaelp()" class="button" style="background: #f6ad55; color: white; flex: 1; min-width: 150px;">
+          <i class="fas fa-question-circle"></i> Få hjælp
+        </button>
+        <button onclick="visForklaring()" class="button" style="background: #90cdf4; color: white; flex: 1; min-width: 150px;">
+          <i class="fas fa-lightbulb"></i> Se løsning
+        </button>
+      `;
+      
+      knapContainer.innerHTML = html;
+    }
+
+    // GENERER NY PLUS OPGAVE (TILFÆLDIG RÆKKEFØLGE)
     function genererOpgave() {
       let maxTal;
       
@@ -141,8 +193,10 @@
         default: maxTal = 10;
       }
       
+      // Generer to tal i tilfældig rækkefølge
       currentTal1 = Math.floor(Math.random() * maxTal) + 1;
       currentTal2 = Math.floor(Math.random() * maxTal) + 1;
+      
       correctAnswer = currentTal1 + currentTal2;
       
       // Vis opgaven
@@ -156,6 +210,23 @@
       // Nulstil input
       document.getElementById('svarInput').value = '';
       document.getElementById('svarInput').focus();
+      
+      // Skjul tællelinje
+      document.getElementById('tallelinjeContainer').style.display = 'none';
+    }
+
+    // HJÆLPEFUNKTIONER TIL TÆLLELINJE
+    function getStorsteTal() {
+      return Math.max(currentTal1, currentTal2);
+    }
+
+    function getMindsteTal() {
+      return Math.min(currentTal1, currentTal2);
+    }
+
+    function skalBytteRækkefølgeForTallelinje() {
+      // Kun byt hvis det største tal ikke er først
+      return getStorsteTal() !== currentTal1;
     }
 
     // TJEK SVAR
@@ -225,17 +296,30 @@
       genererOpgave();
       document.getElementById('feedback').textContent = '';
       document.getElementById('feedback').className = 'feedback';
+      animationActive = false;
     }
 
     // VIS HJÆLP
     function visHjaelp() {
-      const hjælp = `
-        <strong>Tips til addition:</strong><br>
-        1. Start med det største tal (${Math.max(currentTal1, currentTal2)})<br>
-        2. Tæl derefter ${Math.min(currentTal1, currentTal2)} frem<br>
-        3. Brug fingre hvis det hjælper!<br><br>
-        <em>Prøv: ${currentTal1} + ${currentTal2} = ?</em>
+      const storsteTal = getStorsteTal();
+      const mindsteTal = getMindsteTal();
+      const skalBytte = skalBytteRækkefølgeForTallelinje();
+      
+      let hjælp = `
+        <strong>Smart addition-strategi:</strong><br>
+        1. <strong>Find det største tal</strong> (${storsteTal})<br>
+        2. <strong>Start med at tælle fra det</strong><br>
+        3. <strong>Tæl det mindre tal frem</strong> (${mindsteTal} skridt)<br>
       `;
+      
+      if (skalBytte) {
+        hjælp += `<br><em>Eksempel: ${currentTal1} + ${currentTal2}<br>
+        Smart: Start med ${storsteTal}, tæl ${mindsteTal} frem → ${correctAnswer}<br>
+        Du sparer ${storsteTal - mindsteTal} skridt!</em>`;
+      } else {
+        hjælp += `<br><em>Opgaven: ${currentTal1} + ${currentTal2}<br>
+        Smart: Du startede allerede med største tal!</em>`;
+      }
       
       document.getElementById('feedback').innerHTML = hjælp;
       document.getElementById('feedback').className = 'feedback hjelp';
@@ -243,13 +327,342 @@
 
     // VIS FORKLARING
     function visForklaring() {
+      const storsteTal = getStorsteTal();
+      const mindsteTal = getMindsteTal();
+      
       const forklaring = `
-        <strong>Løsningsmetode:</strong><br>
-        1. ${currentTal1} + ${currentTal2}<br>
-        2. ${currentTal1} + ${currentTal2} = ${correctAnswer}<br><br>
-        <em>Du kan også tænke:<br>
-        ${currentTal1} + ${currentTal2} = ${currentTal1 + currentTal2}</em>
+        <strong>Strategisk løsning:</strong><br>
+        1. <strong>Identificér største tal:</strong> ${storsteTal}<br>
+        2. <strong>Start derfra:</strong> ${storsteTal}<br>
+        3. <strong>Tæl mindste tal frem:</strong> ${mindsteTal} skridt<br>
+        4. <strong>Resultat:</strong> ${storsteTal} + ${mindsteTal} = ${correctAnswer}<br><br>
+        <em>Når du ser ${currentTal1} + ${currentTal2}, tænk:<br>
+        "Jeg starter med ${storsteTal} og tæller ${mindsteTal}"</em>
       `;
+      
+      document.getElementById('feedback').innerHTML = forklaring;
+      document.getElementById('feedback').className = 'feedback hjelp';
+    }
+
+    // TÆLLELINJE FUNKTIONER (KUN FOR NIVEAU 1 OG 2)
+    function visTallelinje() {
+      if (currentLevel >= 3) {
+        showFeedback('Tællelinjen er kun tilgængelig i niveau 1 og 2', false);
+        return;
+      }
+      document.getElementById('tallelinjeContainer').style.display = 'block';
+      tegnTallelinje();
+    }
+
+    function skjulTallelinje() {
+      document.getElementById('tallelinjeContainer').style.display = 'none';
+      animationActive = false;
+    }
+
+    function tegnTallelinje() {
+      if (currentLevel >= 3) return;
+      
+      const container = document.getElementById('tallelinje');
+      const storsteTal = getStorsteTal();
+      const mindsteTal = getMindsteTal();
+      
+      // Tællelinjen starter ALTID ved største tal
+      const startTal = storsteTal;
+      const antalSkridt = mindsteTal;
+      const slutTal = startTal + antalSkridt;
+      
+      const start = Math.max(0, startTal - 8);
+      const slut = slutTal + 8;
+      
+      let html = '';
+      
+      // Tegn hovedlinjen
+      html += `<div class="tallelinje-linje"></div>`;
+      
+      // Tegn markeringer og tal
+      for (let i = start; i <= slut; i++) {
+        const position = ((i - start) / (slut - start)) * 100;
+        
+        // Vis alle tal
+        html += `
+          <div class="tallelinje-markering" style="left: ${position}%; top: 60px;">
+            <div style="width: 2px; height: 15px; background: #4a5568; margin: 0 auto;"></div>
+          </div>
+        `;
+        
+        // Vis tal for hver markering
+        const isStart = i === startTal;
+        const isSlut = i === slutTal;
+        
+        html += `
+          <div class="tallelinje-tal" style="left: ${position}%; top: 80px; 
+            font-size: ${isStart || isSlut ? '16px' : '14px'}; 
+            color: ${isStart ? '#48bb78' : isSlut ? '#4299e1' : '#4a5568'};
+            ${isStart || isSlut ? 'font-weight: bold;' : ''}">
+            ${i}
+          </div>
+        `;
+      }
+      
+      // Marker starttallet (største tal) - TEKST UNDER CIRKEL
+      const startPosition = ((startTal - start) / (slut - start)) * 100;
+      html += `
+        <div class="tallelinje-start" style="left: ${startPosition}%; top: 30px;">
+          <div class="tallelinje-start-cirkel">
+            ${startTal}
+          </div>
+          <div style="text-align: center; margin-top: 15px; font-size: 14px; color: #48bb78; font-weight: bold;">
+            Start (største tal)
+          </div>
+        </div>
+      `;
+      
+      // Marker sluttallet - TEKST UNDER CIRKEL
+      const slutPosition = ((slutTal - start) / (slut - start)) * 100;
+      html += `
+        <div class="tallelinje-slut" style="left: ${slutPosition}%; top: 30px;">
+          <div class="tallelinje-slut-cirkel">
+            ${slutTal}
+          </div>
+          <div style="text-align: center; margin-top: 15px; font-size: 14px; color: #4299e1; font-weight: bold;">
+            Slut (svar)
+          </div>
+        </div>
+      `;
+      
+      // Tegn alle skridt-markeringspunkter
+      for (let skridt = 1; skridt <= antalSkridt; skridt++) {
+        const skridtPosition = ((startTal + skridt - start) / (slut - start)) * 100;
+        const isLastSkridt = skridt === antalSkridt;
+        
+        html += `
+          <div id="skridt-${skridt}" class="skridt-punkt" style="
+            position: absolute;
+            left: ${skridtPosition}%;
+            top: 70px;
+            width: ${isLastSkridt ? '30px' : '20px'};
+            height: ${isLastSkridt ? '30px' : '20px'};
+            background: ${isLastSkridt ? '#4299e1' : '#f56565'};
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0.3;
+            border: 2px solid white;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+            z-index: 6;
+          "></div>
+        `;
+        
+        // Skridt nummer over punktet
+        html += `
+          <div style="
+            position: absolute;
+            left: ${skridtPosition}%;
+            top: 40px;
+            transform: translateX(-50%);
+            font-size: 14px;
+            color: #f56565;
+            font-weight: bold;
+            opacity: 0.3;
+          ">
+            ${skridt}
+          </div>
+        `;
+      }
+      
+      // Tilføj note om rækkefølge hvis nødvendigt
+      if (skalBytteRækkefølgeForTallelinje()) {
+        html += `
+          <div style="
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #f6ad55;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            z-index: 10;
+            box-shadow: 0 4px 8px rgba(246, 173, 85, 0.4);
+          ">
+            💡 Smart: Starter med største tal (${storsteTal})
+          </div>
+        `;
+      }
+      
+      container.innerHTML = html;
+    }
+
+    // START ANIMATION - MED LILLE PRIK
+    function startAnimation() {
+      if (currentLevel >= 3) {
+        showFeedback('Tællelinjen er kun tilgængelig i niveau 1 og 2', false);
+        return;
+      }
+      
+      if (animationActive) return;
+      animationActive = true;
+      
+      const container = document.getElementById('tallelinje');
+      const storsteTal = getStorsteTal();
+      const mindsteTal = getMindsteTal();
+      
+      // Tællelinjen starter ALTID ved største tal
+      const startTal = storsteTal;
+      const antalSkridt = mindsteTal;
+      const slutTal = startTal + antalSkridt;
+      
+      const start = Math.max(0, startTal - 8);
+      const slut = slutTal + 8;
+      const startPosition = ((startTal - start) / (slut - start)) * 100;
+      
+      // Fjern evt. gammel animation
+      const oldAnimation = document.querySelector('.animation-prik');
+      if (oldAnimation) oldAnimation.remove();
+      
+      // Fjern active-step fra alle punkter
+      document.querySelectorAll('.skridt-punkt').forEach(p => {
+        p.classList.remove('active-step');
+      });
+      
+      // Vis tællelinje hvis den er skjult
+      document.getElementById('tallelinjeContainer').style.display = 'block';
+      tegnTallelinje();
+      
+      // Opret animerings-prik - LILLE (15px)
+      const animationPrik = document.createElement('div');
+      animationPrik.className = 'animation-prik';
+      animationPrik.style.cssText = `
+        position: absolute;
+        left: ${startPosition}%;
+        top: 70px;
+        width: 15px;
+        height: 15px;
+        background: #48bb78;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 3;
+        box-shadow: 0 2px 4px rgba(72, 187, 120, 0.4);
+        transition: all 0.5s ease;
+      `;
+      
+      container.appendChild(animationPrik);
+      
+      // Start step-by-step animation
+      let currentStep = 0;
+      
+      function takeNextStep() {
+        if (currentStep >= antalSkridt || !animationActive) {
+          // Animation færdig eller afbrudt
+          if (animationPrik) {
+            animationPrik.style.opacity = '0';
+            animationPrik.style.transition = 'opacity 0.5s ease';
+            setTimeout(() => {
+              if (animationPrik.parentNode) {
+                animationPrik.parentNode.removeChild(animationPrik);
+              }
+            }, 500);
+          }
+          
+          setTimeout(() => {
+            tegnTallelinje(); // Genindlæs tællelinjen
+            animationActive = false;
+          }, 1000);
+          return;
+        }
+        
+        currentStep++;
+        const stepPosition = ((startTal + currentStep - start) / (slut - start)) * 100;
+        const isLastStep = currentStep === antalSkridt;
+        
+        // Flyt prikken
+        animationPrik.style.left = `${stepPosition}%`;
+        animationPrik.style.background = isLastStep ? '#4299e1' : '#f56565';
+        
+        // Gør prikken lidt større når den er aktiv
+        animationPrik.style.width = '20px';
+        animationPrik.style.height = '20px';
+        animationPrik.style.boxShadow = '0 3px 6px rgba(0,0,0,0.3)';
+        animationPrik.style.zIndex = '4';
+        
+        // Fremhæv dette skridt-punkt
+        const punkt = document.getElementById(`skridt-${currentStep}`);
+        if (punkt) {
+          punkt.classList.add('active-step');
+          punkt.style.opacity = '1';
+          punkt.style.background = isLastStep ? '#4299e1' : '#f56565';
+          punkt.style.width = '25px';
+          punkt.style.height = '25px';
+          punkt.style.zIndex = '8';
+          
+          // Fjern active-step fra forrige punkt (hvis der er et)
+          const prevPunkt = document.getElementById(`skridt-${currentStep-1}`);
+          if (prevPunkt) {
+            prevPunkt.classList.remove('active-step');
+            prevPunkt.style.width = '20px';
+            prevPunkt.style.height = '20px';
+            prevPunkt.style.zIndex = '6';
+          }
+          
+          // Vis skridt-nummer tydeligt
+          const skridtNummer = punkt.parentElement.querySelector(`div[style*="top: 40px"]`);
+          if (skridtNummer && skridtNummer.textContent === String(currentStep)) {
+            skridtNummer.style.opacity = '1';
+            skridtNummer.style.color = isLastStep ? '#4299e1' : '#f56565';
+            skridtNummer.style.fontSize = '16px';
+            skridtNummer.style.fontWeight = 'bold';
+          }
+        }
+        
+        // Vis skridt-besked
+        const feedback = document.getElementById('feedback');
+        if (feedback) {
+          feedback.innerHTML = `
+            <div style="text-align: center;">
+              <strong>Skridt ${currentStep}/${antalSkridt}:</strong><br>
+              Start med største tal (${startTal})<br>
+              ${startTal} + ${currentStep} = <span style="color: #f56565; font-weight: bold;">${startTal + currentStep}</span><br>
+              <small>${antalSkridt - currentStep} skridt tilbage</small>
+            </div>
+          `;
+          feedback.className = 'feedback correct';
+        }
+        
+        // Næste skridt (pause først)
+        setTimeout(takeNextStep, isLastStep ? 1200 : 800);
+      }
+      
+      // Start animationen
+      setTimeout(takeNextStep, 500);
+    }
+
+    function forklarTallelinje() {
+      if (currentLevel >= 3) {
+        showFeedback('Tællelinjen er kun tilgængelig i niveau 1 og 2', false);
+        return;
+      }
+      
+      const storsteTal = getStorsteTal();
+      const mindsteTal = getMindsteTal();
+      const skalBytte = skalBytteRækkefølgeForTallelinje();
+      
+      let forklaring = `
+        <strong>Smart tællelinje-strategi (niveau ${currentLevel}):</strong><br><br>
+        1. 📍 <strong>Start altid med det største tal</strong> (${storsteTal})<br>
+        2. 🔴 <strong>Tæl kun det mindste tal</strong> (${mindsteTal} skridt)<br>
+        3. 📍 <strong>Slut på svaret</strong> (${storsteTal + mindsteTal})<br><br>
+      `;
+      
+      if (skalBytte) {
+        forklaring += `
+          <em>💡 OPGAVEN: ${currentTal1} + ${currentTal2}<br>
+          💡 TÆLLELINJE: ${storsteTal} + ${mindsteTal}<br>
+          Smart: Du sparer ${storsteTal - mindsteTal} skridt!</em><br><br>
+        `;
+      }
+      
+      forklaring += `<small>Tryk "Vis skridt-for-skridt" for at se hvert skridt</small>`;
       
       document.getElementById('feedback').innerHTML = forklaring;
       document.getElementById('feedback').className = 'feedback hjelp';
@@ -257,6 +670,7 @@
   </script>
 
   <style>
+    /* NIVEAU KNAPPER */
     .level-buttons {
       display: flex;
       gap: 10px;
@@ -284,6 +698,145 @@
       background: #48bb78;
       color: white;
       border-color: #48bb78;
+    }
+    
+    /* TÆLLELINJE STYLES */
+    .tallelinje-container {
+      margin-top: 30px;
+      display: none;
+    }
+    
+    .tallelinje-wrapper {
+      background: white;
+      border: 2px solid #667eea;
+      border-radius: 10px;
+      padding: 25px;
+      overflow-x: auto;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    }
+    
+    .tallelinje-ramme {
+      position: relative;
+      height: 150px;
+      min-width: 600px;
+      margin: 20px 0;
+      padding: 10px 0;
+    }
+    
+    .tallelinje-linje {
+      position: absolute;
+      top: 70px;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: #4a5568;
+      z-index: 1;
+    }
+    
+    .tallelinje-markering {
+      position: absolute;
+      transform: translateX(-50%);
+      z-index: 2;
+    }
+    
+    .tallelinje-tal {
+      position: absolute;
+      transform: translateX(-50%);
+      font-weight: bold;
+      z-index: 3;
+    }
+    
+    .tallelinje-start {
+      position: absolute;
+      transform: translateX(-50%);
+      z-index: 4;
+    }
+    
+    .tallelinje-start-cirkel {
+      background: #48bb78;
+      color: white;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      font-weight: bold;
+      font-size: 20px;
+      box-shadow: 0 6px 12px rgba(72, 187, 120, 0.3);
+      margin: 0 auto;
+    }
+    
+    .tallelinje-slut {
+      position: absolute;
+      transform: translateX(-50%);
+      z-index: 4;
+    }
+    
+    .tallelinje-slut-cirkel {
+      background: #4299e1;
+      color: white;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      font-weight: bold;
+      font-size: 20px;
+      box-shadow: 0 6px 12px rgba(66, 153, 225, 0.3);
+      margin: 0 auto;
+    }
+    
+    .tallelinje-knapper {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    
+    /* STEP-BY-STEP ANIMATION */
+    .skridt-punkt {
+      transition: all 0.5s ease;
+    }
+    
+    @keyframes highlightStep {
+      0% { transform: translate(-50%, -50%) scale(1); }
+      50% { transform: translate(-50%, -50%) scale(1.3); }
+      100% { transform: translate(-50%, -50%) scale(1); }
+    }
+    
+    .highlighted-step {
+      animation: highlightStep 0.5s ease;
+      opacity: 1 !important;
+      box-shadow: 0 8px 16px rgba(245, 101, 101, 0.5) !important;
+    }
+    
+    /* ANIMATION PRIK - LILLE */
+    .animation-prik {
+      position: absolute;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 3;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      transition: all 0.5s ease;
+    }
+    
+    /* HOVER EFFEKT PÅ SKRIDT-PUNKTER */
+    .skridt-punkt:hover {
+      opacity: 0.8 !important;
+      transform: translate(-50%, -50%) scale(1.2);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    
+    /* NÅR ANIMATION-PRIKKEN ER OVER ET SKRIDT-PUNKT */
+    .skridt-punkt.active-step {
+      opacity: 1 !important;
+      transform: translate(-50%, -50%) scale(1.3);
+      box-shadow: 0 6px 12px rgba(245, 101, 101, 0.5) !important;
+      z-index: 8 !important;
+      transition: all 0.3s ease;
     }
   </style>
 </body>
