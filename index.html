@@ -2,61 +2,72 @@
 <html lang="da">
 <head>
   <meta charset="UTF-8">
-  <title>Matematiktræning – 6. klasse</title>
-
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f2f7ff;
-      text-align: center;
-      padding: 20px;
-    }
-
-    h1 {
-      font-size: 2.2em;
-      margin-bottom: 10px;
-    }
-
-    p {
-      font-size: 1.2em;
-      margin-bottom: 30px;
-    }
-
-    .menu {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      max-width: 500px;
-      margin: 0 auto;
-    }
-
-    .button {
-      background-color: #4caf50;
-      color: white;
-      padding: 25px;
-      font-size: 1.5em;
-      border-radius: 15px;
-      text-decoration: none;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-    }
-
-    .button:hover {
-      background-color: #45a049;
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sjov Matematik - Vælg regnearter</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-
 <body>
+  <div class="container">
+    <header class="header">
+      <h1>🧮 Sjov Matematik</h1>
+      <p>Træn matematik fra 5. til 9. klasse. Vælg en regnearter at starte med!</p>
+      
+      <div class="stats-bar">
+        <div class="stat-item">
+          <div class="stat-label">Dine point</div>
+          <div class="stat-value" id="totalPoints">0</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Rigtige svar</div>
+          <div class="stat-value" id="correctAnswers">0%</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Niveau</div>
+          <div class="stat-value" id="currentLevel">1</div>
+        </div>
+      </div>
+    </header>
 
-  <h1>🧮 Matematiktræning</h1>
-  <p>Vælg hvad du vil øve</p>
-
-  <div class="menu">
-    <a class="button" href="plus.html">➕ Plus</a>
-    <a class="button" href="minus.html">➖ Minus</a>
-    <a class="button" href="gange.html">✖️ Gange</a>
-    <a class="button" href="division.html">➗ Division</a>
+    <main>
+      <div class="menu-grid">
+        <a href="pages/plus.html" class="menu-item">
+          <div class="menu-icon">➕</div>
+          <div class="menu-text">Plus</div>
+          <small class="menu-desc">Lær at lægge tal sammen</small>
+        </a>
+        
+        <a href="pages/minus.html" class="menu-item">
+          <div class="menu-icon">➖</div>
+          <div class="menu-text">Minus</div>
+          <small class="menu-desc">Træk tal fra hinanden</small>
+        </a>
+        
+        <a href="pages/gange.html" class="menu-item">
+          <div class="menu-icon">✖️</div>
+          <div class="menu-text">Gange</div>
+          <small class="menu-desc">Mestring af multiplikation</small>
+        </a>
+        
+        <a href="pages/division.html" class="menu-item">
+          <div class="menu-icon">➗</div>
+          <div class="menu-text">Division</div>
+          <small class="menu-desc">Del tal ligeligt</small>
+        </a>
+      </div>
+      
+      <div style="margin-top: 40px; text-align: center;">
+        <h3>Snart tilgængelige emner:</h3>
+        <div style="display: flex; justify-content: center; gap: 15px; margin-top: 15px; flex-wrap: wrap;">
+          <span class="coming-soon">Brøker (½)</span>
+          <span class="coming-soon">Procent (%)</span>
+          <span class="coming-soon">Ligninger (=)</span>
+          <span class="coming-soon">Geometri (📐)</span>
+        </div>
+      </div>
+    </main>
   </div>
 
+  <script src="js/app.js"></script>
 </body>
 </html>
