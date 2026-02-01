@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gange - Sjov Matematik</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1><i class="fas fa-times"></i> Gange (Multiplikation)</h1>
+      <p>Lær at gange tal sammen. Øv gangetabellerne og bliv hurtig!</p>
+    </header>
+
+    <div class="stats-bar">
+      <div class="stat-item">
+        <div class="stat-label">Niveau</div>
+        <div class="stat-value" id="userLevel">1</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">Point</div>
+        <div class="stat-value" id="userPoints">0</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">I træk</div>
+        <div class="stat-value" id="streak">0</div>
+      </div>
+    </div>
+
+    <main>
+      <!-- NIVEAU VÆLGER -->
+      <div style="margin-bottom: 30px; text-align: center;">
+        <h3>Vælg sværhedsgrad:</h3>
+        <div class="level-buttons">
+          <button class="level-btn active" data-level="1">Let (gangetabellen)</button>
+          <button class="level-btn" data-level="2">Mellem (op til 12×12)</button>
+          <button class="level-btn" data-level="3">Svær (store tal & decimaler)</button>
+        </div>
+      </div>
+
+      <!-- GANGETABEL HJÆLP -->
+      <div id="timesTableHelp" style="display: none; background: #fff3cd; border: 2px solid #ffd54f; border-radius: 10px; padding: 15px; margin-bottom: 20px;">
+        <h4 style="margin-top: 0; color: #856404;">Gangetabel for <span id="currentTable">?</span>:</h4>
+        <div id="timesTableContent" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px;"></div>
+        <button onclick="skjulGangetabel()" style="margin-top: 10px; padding: 5px 10px; background: #856404; color: white; border: none; border-radius: 5px;">Skjul</button>
+      </div>
+
+      <!-- OPGAVE -->
+      <div class="opgave-container">
+        <div class="opgave-tekst" id="opgaveTekst">
+          <!-- Opgaven vises her -->
+        </div>
+        
+        <div class="input-group">
+          <input type="number" id="svarInput" class="answer-input" placeholder="Dit svar" autofocus>
+          <button onclick="tjekSvar()" class="button primary-btn" style="background: #d69e2e;">
+            <i class="fas fa-check"></i> Tjek svar
+          </button>
+          <button onclick="nyOpgave()" class="button secondary-btn">
+            <i class="fas fa-redo"></i> Ny opgave
+          </button>
+        </div>
+        
+        <div style="margin-top: 20px;">
+          <button onclick="visGangetabel()" class="button" style="background: #f6ad55; color: white;">
+            <i class="fas fa-table"></i> Vis gangetabel
+          </button>
+          <button onclick="visHjaelp()" class="button" style="background: #f6ad55; color: white;">
+            <i class="fas fa-question-circle"></i> Få hjælp
+          </button>
+          <button onclick="visForklaring()" class="button" style="background: #90cdf4; color: white;">
+            <i class="fas fa-lightbulb"></i> Se løsning
+          </button>
+        </div>
+      </div>
+      
+      <!-- FEEDBACK -->
+      <div id="feedback" class="feedback"></div>
+      
+      <!-- GANGETABEL ØVELSE -->
+      <div id="tablePractice" style="margin-top: 30px; display: none;">
+        <h3>Øv gangetabellen for <span id="practiceTable">?</span>:</h3>
+        <div id="tableQuestions" style="margin-top: 10px;"></div>
+      </div>
+      
+      <!-- TILBAGE -->
+      <div style="text-align: center; margin-top: 40px;">
+        <a href="../index.html" class="back-link">
+          <i class="fas fa-arrow-left"></i> Tilbage til menuen
+        </a>
+      </div>
+    </main>
+  </div>
+
+  <!-- JAVASCRIPT -->
+  <script src="../js/app.js"></script>
+  <script>
+    // GANGE SPECIFIK KODE
+    let currentLevel = 1;
+    let currentTal1, currentTal2, correctAnswer;
+    let streak = 0;
+    let currentTable = 0;
+
+    // NÅR SIDEN INDLÆSES
+    document.addEventListener('DOMContentLoaded', function() {
+      loadUserData();
+      opdaterBrugerinfo();
+      setupLevelButtons();
+      genererOpgave();
+      
+      // Enter-tasten
+      document.getElementById('svarInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') tjekSvar();
+      });
+    });
+
+    // OPDATER BRUGERINFO
+    function opdaterBrugerinfo() {
+      document.getElementById('userLevel').textContent = currentLevel;
+      document.getElementById('userPoints').textContent = userData.totalPoints;
+      document.getElementById('streak').textContent = streak;
+    }
+
+    // SETUP NIVEAU KNAPPER
+    function setupLevelButtons() {
+      const buttons = document.querySelectorAll('.level-btn');
+      buttons.forEach(btn => {
+        btn.addEventListener('click', function() {
+          buttons.forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          currentLevel = parseInt(this.dataset.level);
+          opdaterBrugerinfo();
+          genererOpgave();
+        });
+      });
+    }
+
+    // GENERER NY GANGE OPGAVE
+    function genererOpgave() {
+      let maxTal1, maxTal2;
+      
+      switch(currentLevel) {
+        case 1: // Gangetabellen 1-10
+          maxTal1 = 10;
+          maxTal2 = 10;
+          currentTal1 = Math.floor(Math.random() * maxTal1) + 1;
+          currentTal2 = Math.floor(Math.random() * maxTal2) + 1;
+          currentTable = currentTal1; // For gangetabel-hjælp
+          break;
+          
+        case 2: // Op til 12×12
+          maxTal1 = 12;
+          maxTal2 = 12;
+          currentTal1 = Math.floor(Math.random() * maxTal1) + 1;
+          currentTal2 = Math.floor(Math.random() * maxTal2) + 1;
+          currentTable = currentTal1;
+          break;
+          
+        case 3: // Store tal og decimaler
+          // 50% chance for decimaltal
+          if (Math.random() > 0.5) {
+            currentTal1 = (Math.floor(Math.random() * 20) + 1) * 0.5; // 0.5, 1.0, 1.5...
+            currentTal2 = Math.floor(Math.random() * 10) + 1;
+          } else {
+            currentTal1 = Math.floor(Math.random() * 30) + 10;
+            currentTal2 = Math.floor(Math.random() * 20) + 5;
+          }
+          currentTable = 0; // Ingen gangetabel for store tal
+          break;
+      }
+      
+      correctAnswer = currentTal1 * currentTal2;
+      
+      // Vis opgaven
+      document.getElementById('opgaveTekst').innerHTML = `
+        Hvad er <span class="regnearter">${currentTal1}</span> 
+        <i class="fas fa-times" style="color: #d69e2e;"></i> 
+        <span class="regnearter">${currentTal2}</span> 
+        ?
+        ${currentLevel === 3 && currentTal1 % 1 !== 0 ? '<br><small>(Afrund til 2 decimaler hvis nødvendigt)</small>' : ''}
+      `;
+      
+      // Nulstil input
+      document.getElementById('svarInput').value = '';
+      document.getElementById('svarInput').focus();
+      
+      // Opdater gangetabel hjælp
+      if (currentLevel < 3 && currentTable > 0) {
+        document.getElementById('currentTable').textContent = currentTable;
+      }
+    }
+
+    // TJEK SVAR
+    function tjekSvar() {
+      const svarInput = document.getElementById('svarInput');
+      let brugerSvar = parseFloat(svarInput.value);
+      
+      if (isNaN(brugerSvar)) {
+        showFeedback('Skriv venligst et tal før du tjekker svar', false);
+        return;
+      }
+      
+      // Afrund til 2 decimaler for niveau 3
+      if (currentLevel === 3) {
+        brugerSvar = Math.round(brugerSvar * 100) / 100;
+        correctAnswer = Math.round(correctAnswer * 100) / 100;
+      }
+      
+      const isCorrect = brugerSvar === correctAnswer;
+      
+      if (isCorrect) {
+        streak++;
+        showFeedback(`✅ Fremragende! ${currentTal1} × ${currentTal2} = ${correctAnswer}`, true);
+        calculateNewLevel(true);
+        
+        // Automatisk ny opgave
+        setTimeout(() => {
+          genererOpgave();
+          opdaterBrugerinfo();
+        }, 1500);
+      } else {
+        streak = 0;
+        showFeedback(`❌ ${brugerSvar} er ikke rigtigt. Prøv igen!`, false);
+        calculateNewLevel(false);
+      }
+      
+      opdaterBrugerinfo();
+    }
+
+    // NY OPGAVE
+    function nyOpgave() {
+      genererOpgave();
+      document.getElementById('feedback').textContent = '';
+      document.getElementById('feedback').className = 'feedback';
+      skjulGangetabel();
+      document.getElementById('tablePractice').style.display = 'none';
+    }
+
+    // VIS GANGETABEL
+    function visGangetabel() {
+      if (currentLevel === 3) {
+        showFeedback('Gangetabel hjælp er kun tilgængelig på niveau 1 og 2', false);
+        return;
+      }
+      
+      const table = currentTable || Math.floor(Math.random() * 10) + 1;
+      document.getElementById('currentTable').textContent = table;
+      
+      let html = '';
+      for (let i = 1; i <= 10; i++) {
+        html += `<div style="padding: 5px; text-align: center; background: ${i % 2 === 0 ? '#f8f9fa' : 'white'};">
+                  ${table} × ${i} = ${table * i}
+                </div>`;
+      }
+      
+      document.getElementById('timesTableContent').innerHTML = html;
+      document.getElementById('timesTableHelp').style.display = 'block';
+    }
+
+    function skjulGangetabel() {
+      document.getElementById('timesTableHelp').style.display = 'none';
+    }
+
+    // VIS HJÆLP
+    function visHjaelp() {
+      let hjaelpTekst;
+      
+      if (currentLevel < 3) {
+        hjaelpTekst = `
+          <strong>Tips til multiplikation:</strong><br>
+          1. Husk gangetabellen for ${currentTal1}<br>
+          2. ${currentTal1} × ${currentTal2} er det samme som ${currentTal1} lagt sammen ${currentTal2} gange<br>
+          3. Prøv: ${currentTal1} + ${currentTal1} + ... (${currentTal2} gange)<br><br>
+          <em>Brug gangetabel-knappen hvis du er i tvivl!</em>
+        `;
+      } else {
+        hjaelpTekst = `
+          <strong>Tips til store tal/decimaler:</strong><br>
+          1. ${currentTal1} × ${currentTal2}<br>
+          2. Glem decimaltegnet først: ${Math.round(currentTal1 * 10)} × ${currentTal2} = ${Math.round(currentTal1 * 10) * currentTal2}<br>
+          3. Divider med 10 til sidst: ${(Math.round(currentTal1 * 10) * currentTal2) / 10}<br><br>
+          <em>Husk at afrunde til 2 decimaler!</em>
+        `;
+      }
+      
+      document.getElementById('feedback').innerHTML = hjaelpTekst;
+      document.getElementById('feedback').className = 'feedback hjelp';
+    }
+
+    // VIS FORKLARING
+    function visForklaring() {
+      const forklaring = `
+        <strong>Løsningsmetode:</strong><br>
+        1. ${currentTal1} × ${currentTal2}<br>
+        2. Resultat: ${correctAnswer}<br><br>
+        <em>Tænk på det som:<br>
+        ${Array(currentTal2).fill(currentTal1).join(' + ')}${currentTal2 > 1 ? ' = ' + correctAnswer : ''}</em>
+      `;
+      
+      document.getElementById('feedback').innerHTML = forklaring;
+      document.getElementById('feedback').className = 'feedback hjelp';
+    }
+
+    // START GANGETABEL ØVELSE
+    function startTablePractice(table) {
+      currentTable = table;
+      document.getElementById('practiceTable').textContent = table;
+      
+      let html = '';
+      for (let i = 1; i <= 10; i++) {
+        html += `
+          <div style="margin: 5px 0; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+            ${table} × ${i} = 
+            <input type="number" id="tableAnswer${i}" style="width: 60px; padding: 5px; margin-left: 10px;">
+            <span id="tableResult${i}" style="margin-left: 10px;"></span>
+          </div>
+        `;
+      }
+      
+      document.getElementById('tableQuestions').innerHTML = html;
+      document.getElementById('tablePractice').style.display = 'block';
+    }
+
+    function checkTablePractice() {
+      let correctCount = 0;
+      for (let i = 1; i <= 10; i++) {
+        const answer = parseInt(document.getElementById(`tableAnswer${i}`).value) || 0;
+        const correct = currentTable * i;
+        const resultSpan = document.getElementById(`tableResult${i}`);
+        
+        if (answer === correct) {
+          resultSpan.innerHTML = '✅';
+          resultSpan.style.color = 'green';
+          correctCount++;
+        } else {
+          resultSpan.innerHTML = `❌ (${correct})`;
+          resultSpan.style.color = 'red';
+        }
+      }
+      
+      showFeedback(`Du fik ${correctCount} ud af 10 rigtige i ${currentTable}-tabellen!`, correctCount === 10);
+    }
+  </script>
+
+  <style>
+    .times-table-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 5px;
+      margin-top: 10px;
+    }
+    
+    .table-item {
+      padding: 8px;
+      text-align: center;
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 5px;
+    }
+    
+    .table-item:nth-child(even) {
+      background: #f7fafc;
+    }
+  </style>
+</body>
+</html>

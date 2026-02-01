@@ -137,3 +137,54 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 });
+
+// PROGRESS BAR FUNKTION
+function updateProgress(topic, correct) {
+  // Gem pr. emne
+  if (!userData[topic]) {
+    userData[topic] = { attempts: 0, correct: 0, level: 1 };
+  }
+  
+  userData[topic].attempts++;
+  if (correct) userData[topic].correct++;
+  
+  // Opdater niveau pr. emne
+  const accuracy = userData[topic].correct / userData[topic].attempts;
+  if (accuracy > 0.8) userData[topic].level = Math.min(3, userData[topic].level + 0.1);
+  if (accuracy < 0.5) userData[topic].level = Math.max(1, userData[topic].level - 0.1);
+  
+  saveUserData();
+}
+
+// GET USER'S LEVEL FOR TOPIC
+function getUserLevelForTopic(topic) {
+  return userData[topic]?.level || 1;
+}
+
+// ACHIEVEMENTS SYSTEM
+const achievements = {
+  'first_correct': { name: 'Første rigtige!', points: 10 },
+  'five_streak': { name: '5 i træk!', points: 25 },
+  'level_up': { name: 'Niveau stigning!', points: 50 }
+};
+
+function checkAchievements() {
+  // Tjek for achievements
+  if (userData.totalCorrect === 1 && !userData.achievements?.first_correct) {
+    awardAchievement('first_correct');
+  }
+  
+  if (userData.totalCorrect % 5 === 0 && userData.totalCorrect > 0) {
+    awardAchievement('five_streak');
+  }
+}
+
+function awardAchievement(id) {
+  if (!userData.achievements) userData.achievements = {};
+  userData.achievements[id] = true;
+  userData.totalPoints += achievements[id].points;
+  
+  // Vis popup (simpel version)
+  alert(`🎉 Achievement: ${achievements[id].name}! +${achievements[id].points} point!`);
+  saveUserData();
+}

@@ -249,3 +249,59 @@ body {
     max-width: 200px;
   }
 }
+
+/* NIVEAU KNAPPER */
+.level-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 15px;
+  flex-wrap: wrap;
+}
+
+.level-btn {
+  padding: 12px 20px;
+  border: 2px solid #cbd5e0;
+  background: white;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.level-btn:hover {
+  border-color: #48bb78;
+  background: #f0fff4;
+}
+
+.level-btn.active {
+  background: #48bb78;
+  color: white;
+  border-color: #48bb78;
+}
+
+/* REGNEARTER FARVER */
+.plus-color { color: #48bb78; }
+.minus-color { color: #f56565; }
+.gange-color { color: #d69e2e; }
+.division-color { color: #4299e1; }
+
+/* FORSØG LISTE */
+.attempt-item {
+  padding: 10px;
+  margin: 5px 0;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.attempt-correct {
+  background: #c6f6d5;
+  border-left: 4px solid #38a169;
+}
+
+.attempt-incorrect {
+  background: #fed7d7;
+  border-left: 4px solid #e53e3e;
+}

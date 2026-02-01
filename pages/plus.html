@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plus - Sjov Matematik</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1><i class="fas fa-plus"></i> Plus (Addition)</h1>
+      <p>Lær at lægge tal sammen. Jo flere rigtige, jo sværere bliver opgaverne!</p>
+    </header>
+
+    <div class="stats-bar">
+      <div class="stat-item">
+        <div class="stat-label">Niveau</div>
+        <div class="stat-value" id="userLevel">1</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">Point</div>
+        <div class="stat-value" id="userPoints">0</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">I træk</div>
+        <div class="stat-value" id="streak">0</div>
+      </div>
+    </div>
+
+    <main>
+      <!-- NIVEAU VÆLGER -->
+      <div style="margin-bottom: 30px; text-align: center;">
+        <h3>Vælg sværhedsgrad:</h3>
+        <div class="level-buttons">
+          <button class="level-btn active" data-level="1">Let (tal under 10)</button>
+          <button class="level-btn" data-level="2">Mellem (tal under 20)</button>
+          <button class="level-btn" data-level="3">Svær (tal under 100)</button>
+        </div>
+      </div>
+
+      <!-- OPGAVE -->
+      <div class="opgave-container">
+        <div class="opgave-tekst" id="opgaveTekst">
+          <!-- Opgaven vises her -->
+        </div>
+        
+        <div class="input-group">
+          <input type="number" id="svarInput" class="answer-input" placeholder="Dit svar" autofocus>
+          <button onclick="tjekSvar()" class="button primary-btn">
+            <i class="fas fa-check"></i> Tjek svar
+          </button>
+          <button onclick="nyOpgave()" class="button secondary-btn">
+            <i class="fas fa-redo"></i> Ny opgave
+          </button>
+        </div>
+        
+        <div style="margin-top: 20px;">
+          <button onclick="visHjaelp()" class="button" style="background: #f6ad55; color: white;">
+            <i class="fas fa-question-circle"></i> Få hjælp
+          </button>
+          <button onclick="visForklaring()" class="button" style="background: #90cdf4; color: white;">
+            <i class="fas fa-lightbulb"></i> Se løsning
+          </button>
+        </div>
+      </div>
+      
+      <!-- FEEDBACK -->
+      <div id="feedback" class="feedback"></div>
+      
+      <!-- FORSØG LISTE -->
+      <div id="attemptsList" style="margin-top: 30px;">
+        <h3>Dine seneste forsøg:</h3>
+        <div id="attemptsContainer" style="margin-top: 10px;"></div>
+      </div>
+      
+      <!-- TILBAGE -->
+      <div style="text-align: center; margin-top: 40px;">
+        <a href="../index.html" class="back-link">
+          <i class="fas fa-arrow-left"></i> Tilbage til menuen
+        </a>
+      </div>
+    </main>
+  </div>
+
+  <!-- JAVASCRIPT -->
+  <script src="../js/app.js"></script>
+  <script>
+    // PLUS SPECIFIK KODE
+    let currentLevel = 1;
+    let currentTal1, currentTal2, correctAnswer;
+    let streak = 0;
+    let attempts = [];
+
+    // NÅR SIDEN INDLÆSES
+    document.addEventListener('DOMContentLoaded', function() {
+      loadUserData();
+      opdaterBrugerinfo();
+      setupLevelButtons();
+      genererOpgave();
+      
+      // Enter-tasten
+      document.getElementById('svarInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') tjekSvar();
+      });
+    });
+
+    // OPDATER BRUGERINFO
+    function opdaterBrugerinfo() {
+      document.getElementById('userLevel').textContent = currentLevel;
+      document.getElementById('userPoints').textContent = userData.totalPoints;
+      document.getElementById('streak').textContent = streak;
+    }
+
+    // SETUP NIVEAU KNAPPER
+    function setupLevelButtons() {
+      const buttons = document.querySelectorAll('.level-btn');
+      buttons.forEach(btn => {
+        btn.addEventListener('click', function() {
+          // Fjern active fra alle
+          buttons.forEach(b => b.classList.remove('active'));
+          // Tilføj active til klikket
+          this.classList.add('active');
+          // Opdater niveau
+          currentLevel = parseInt(this.dataset.level);
+          opdaterBrugerinfo();
+          genererOpgave();
+        });
+      });
+    }
+
+    // GENERER NY PLUS OPGAVE
+    function genererOpgave() {
+      let maxTal;
+      
+      switch(currentLevel) {
+        case 1: maxTal = 10; break;
+        case 2: maxTal = 20; break;
+        case 3: maxTal = 100; break;
+        default: maxTal = 10;
+      }
+      
+      currentTal1 = Math.floor(Math.random() * maxTal) + 1;
+      currentTal2 = Math.floor(Math.random() * maxTal) + 1;
+      correctAnswer = currentTal1 + currentTal2;
+      
+      // Vis opgaven
+      document.getElementById('opgaveTekst').innerHTML = `
+        Hvad er <span class="regnearter">${currentTal1}</span> 
+        <i class="fas fa-plus" style="color: #48bb78;"></i> 
+        <span class="regnearter">${currentTal2}</span> 
+        ?
+      `;
+      
+      // Nulstil input
+      document.getElementById('svarInput').value = '';
+      document.getElementById('svarInput').focus();
+    }
+
+    // TJEK SVAR
+    function tjekSvar() {
+      const svarInput = document.getElementById('svarInput');
+      const brugerSvar = parseInt(svarInput.value);
+      
+      if (isNaN(brugerSvar)) {
+        showFeedback('Skriv venligst et tal før du tjekker svar', false);
+        return;
+      }
+      
+      const isCorrect = brugerSvar === correctAnswer;
+      
+      // Gem forsøg
+      attempts.unshift({
+        opgave: `${currentTal1} + ${currentTal2}`,
+        svar: brugerSvar,
+        korrekt: isCorrect,
+        tid: new Date().toLocaleTimeString()
+      });
+      
+      // Begræns til 5 seneste
+      if (attempts.length > 5) attempts.pop();
+      visForsog();
+      
+      if (isCorrect) {
+        streak++;
+        showFeedback(`✅ Fantastisk! ${currentTal1} + ${currentTal2} = ${correctAnswer}`, true);
+        calculateNewLevel(true);
+        
+        // Automatisk ny opgave
+        setTimeout(() => {
+          genererOpgave();
+          opdaterBrugerinfo();
+        }, 1500);
+      } else {
+        streak = 0;
+        showFeedback(`❌ ${brugerSvar} er ikke rigtigt. Prøv igen!`, false);
+        calculateNewLevel(false);
+      }
+      
+      opdaterBrugerinfo();
+    }
+
+    // VIS FORSØG
+    function visForsog() {
+      const container = document.getElementById('attemptsContainer');
+      if (!container) return;
+      
+      let html = '';
+      attempts.forEach((attempt, index) => {
+        html += `
+          <div style="padding: 10px; margin: 5px 0; background: ${attempt.korrekt ? '#c6f6d5' : '#fed7d7'}; border-radius: 5px;">
+            ${attempt.opgave} = ${attempt.svar} 
+            ${attempt.korrekt ? '✅' : '❌'}
+            <small style="float:right;">${attempt.tid}</small>
+          </div>
+        `;
+      });
+      
+      container.innerHTML = html || '<p>Ingen forsøg endnu...</p>';
+    }
+
+    // NY OPGAVE
+    function nyOpgave() {
+      genererOpgave();
+      document.getElementById('feedback').textContent = '';
+      document.getElementById('feedback').className = 'feedback';
+    }
+
+    // VIS HJÆLP
+    function visHjaelp() {
+      const hjælp = `
+        <strong>Tips til addition:</strong><br>
+        1. Start med det største tal (${Math.max(currentTal1, currentTal2)})<br>
+        2. Tæl derefter ${Math.min(currentTal1, currentTal2)} frem<br>
+        3. Brug fingre hvis det hjælper!<br><br>
+        <em>Prøv: ${currentTal1} + ${currentTal2} = ?</em>
+      `;
+      
+      document.getElementById('feedback').innerHTML = hjælp;
+      document.getElementById('feedback').className = 'feedback hjelp';
+    }
+
+    // VIS FORKLARING
+    function visForklaring() {
+      const forklaring = `
+        <strong>Løsningsmetode:</strong><br>
+        1. ${currentTal1} + ${currentTal2}<br>
+        2. ${currentTal1} + ${currentTal2} = ${correctAnswer}<br><br>
+        <em>Du kan også tænke:<br>
+        ${currentTal1} + ${currentTal2} = ${currentTal1 + currentTal2}</em>
+      `;
+      
+      document.getElementById('feedback').innerHTML = forklaring;
+      document.getElementById('feedback').className = 'feedback hjelp';
+    }
+  </script>
+
+  <style>
+    .level-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 15px;
+      flex-wrap: wrap;
+    }
+    
+    .level-btn {
+      padding: 12px 20px;
+      border: 2px solid #cbd5e0;
+      background: white;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+    
+    .level-btn:hover {
+      border-color: #48bb78;
+      background: #f0fff4;
+    }
+    
+    .level-btn.active {
+      background: #48bb78;
+      color: white;
+      border-color: #48bb78;
+    }
+  </style>
+</body>
+</html>

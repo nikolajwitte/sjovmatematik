@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Division - Sjov Matematik</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1><i class="fas fa-divide"></i> Division</h1>
+      <p>Lær at dele tal ligeligt. Mester division med og uden rest!</p>
+    </header>
+
+    <div class="stats-bar">
+      <div class="stat-item">
+        <div class="stat-label">Niveau</div>
+        <div class="stat-value" id="userLevel">1</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">Point</div>
+        <div class="stat-value" id="userPoints">0</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">I træk</div>
+        <div class="stat-value" id="streak">0</div>
+      </div>
+    </div>
+
+    <main>
+      <!-- NIVEAU VÆLGER -->
+      <div style="margin-bottom: 30px; text-align: center;">
+        <h3>Vælg sværhedsgrad:</h3>
+        <div class="level-buttons">
+          <button class="level-btn active" data-level="1">Let (ingen rest)</button>
+          <button class="level-btn" data-level="2">Mellem (med rest)</button>
+          <button class="level-btn" data-level="3">Svær (decimaltal)</button>
+        </div>
+        
+        <!-- REST VALG (kun vises på niveau 2) -->
+        <div id="restOptions" style="margin-top: 15px; display: none;">
+          <label style="margin-right: 15px;">
+            <input type="radio" name="restType" value="hel" checked> Vis rest som helt tal
+          </label>
+          <label>
+            <input type="radio" name="restType" value="decimal"> Vis rest som decimaltal
+          </label>
+        </div>
+      </div>
+
+      <!-- OPGAVE -->
+      <div class="opgave-container">
+        <div class="opgave-tekst" id="opgaveTekst">
+          <!-- Opgaven vises her -->
+        </div>
+        
+        <div class="input-group">
+          <input type="number" id="svarInput" class="answer-input" placeholder="Dit svar" step="0.01" autofocus>
+          <button onclick="tjekSvar()" class="button primary-btn" style="background: #4299e1;">
+            <i class="fas fa-check"></i> Tjek svar
+          </button>
+          <button onclick="nyOpgave()" class="button secondary-btn">
+            <i class="fas fa-redo"></i> Ny opgave
+          </button>
+        </div>
+        
+        <!-- REST INPUT (kun vises på niveau 2 med "hel" valgt) -->
+        <div id="restContainer" style="margin-top: 10px; display: none;">
+          <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+            <span>Rest:</span>
+            <input type="number" id="restInput" class="answer-input" style="width: 100px;" placeholder="Rest">
+          </div>
+        </div>
+        
+        <div style="margin-top: 20px;">
+          <button onclick="visHjaelp()" class="button" style="background: #f6ad55; color: white;">
+            <i class="fas fa-question-circle"></i> Få hjælp
+          </button>
+          <button onclick="visForklaring()" class="button" style="background: #90cdf4; color: white;">
+            <i class="fas fa-lightbulb"></i> Se løsning
+          </button>
+          <button onclick="visGangeMetode()" class="button" style="background: #9f7aea; color: white;">
+            <i class="fas fa-exchange-alt"></i> Gange-metoden
+          </button>
+        </div>
+      </div>
+      
+      <!-- FEEDBACK -->
+      <div id="feedback" class="feedback"></div>
+      
+      <!-- DIVISION METODE VISNING -->
+      <div id="methodDisplay" style="margin-top: 30px; display: none;">
+        <h3>Løsningsmetode:</h3>
+        <div id="methodSteps" style="margin-top: 10px;"></div>
+      </div>
+      
+      <!-- TILBAGE -->
+      <div style="text-align: center; margin-top: 40px;">
+        <a href="../index.html" class="back-link">
+          <i class="fas fa-arrow-left"></i> Tilbage til menuen
+        </a>
+      </div>
+    </main>
+  </div>
+
+  <!-- JAVASCRIPT -->
+  <script src="../js/app.js"></script>
+  <script>
+    // DIVISION SPECIFIK KODE
+    let currentLevel = 1;
+    let currentTal1, currentTal2, correctAnswer, correctRest;
+    let streak = 0;
+    let showRestInput = false;
+    let useDecimalRest = false;
+
+    // NÅR SIDEN INDLÆSES
+    document.addEventListener('DOMContentLoaded', function() {
+      loadUserData();
+      opdaterBrugerinfo();
+      setupLevelButtons();
+      setupRestOptions();
+      genererOpgave();
+      
+      // Enter-tasten
+      document.getElementById('svarInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') tjekSvar();
+      });
+    });
+
+    // OPDATER BRUGERINFO
+    function opdaterBrugerinfo() {
+      document.getElementById('userLevel').textContent = currentLevel;
+      document.getElementById('userPoints').textContent = userData.totalPoints;
+      document.getElementById('streak').textContent = streak;
+    }
+
+    // SETUP NIVEAU KNAPPER
+    function setupLevelButtons() {
+      const buttons = document.querySelectorAll('.level-btn');
+      buttons.forEach(btn => {
+        btn.addEventListener('click', function() {
+          buttons.forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          currentLevel = parseInt(this.dataset.level);
+          
+          // Vis/skjul rest indstillinger
+          const restOptions = document.getElementById('restOptions');
+          const restContainer = document.getElementById('restContainer');
+          
+          if (currentLevel === 2) {
+            restOptions.style.display = 'block';
+            restContainer.style.display = useDecimalRest ? 'none' : 'flex';
+          } else {
+            restOptions.style.display = 'none';
+            restContainer.style.display = 'none';
+          }
+          
+          opdaterBrugerinfo();
+          genererOpgave();
+        });
+      });
+    }
+
+    // SETUP REST INDSTILLINGER
+    function setupRestOptions() {
+      const radioButtons = document.querySelectorAll('input[name="restType"]');
+      radioButtons.forEach(radio => {
+        radio.addEventListener('change', function() {
+          useDecimalRest = this.value === 'decimal';
+          const restContainer = document.getElementById('restContainer');
+          restContainer.style.display = useDecimalRest ? 'none' : 'flex';
+          
+          if (currentLevel === 2) {
+            genererOpgave();
+          }
+        });
+      });
+    }
+
+    // GENERER NY DIVISION OPGAVE
+    function genererOpgave() {
+      switch(currentLevel) {
+        case 1: // Ingen rest
+          currentTal2 = Math.floor(Math.random() * 10) + 1; // divisor 1-10
+          correctAnswer = Math.floor(Math.random() * 10) + 1; // resultat 1-10
+          currentTal1 = correctAnswer * currentTal2; // dividend
+          correctRest = 0;
+          showRestInput = false;
+          break;
+          
+        case 2: // Med rest
+          currentTal2 = Math.floor(Math.random() * 12) + 2; // divisor 2-13
+          correctAnswer = Math.floor(Math.random() * 10) + 1; // heltalsresultat
+          correctRest = Math.floor(Math.random() * (currentTal2 - 1)) + 1; // rest 1 til (divisor-1)
+          currentTal1 = correctAnswer * currentTal2 + correctRest;
+          showRestInput = !useDecimalRest;
+          break;
+          
+        case 3: // Decimaltal
+          // Lav en division der giver et pænt decimaltal
+          const decimalValues = [0.5, 0.25, 0.2, 0.1, 0.05];
+          const decimal = decimalValues[Math.floor(Math.random() * decimalValues.length)];
+          
+          currentTal2 = Math.floor(Math.random() * 8) + 2; // 2-9
+          correctAnswer = Math.floor(Math.random() * 10) + 1 + decimal; // fx 3.5
+          currentTal1 = Math.round(correctAnswer * currentTal2 * 100) / 100; // Round to avoid floating errors
+          correctRest = 0;
+          showRestInput = false;
+          break;
+      }
+      
+      // Vis opgaven
+      let opgaveHTML = `
+        Hvad er <span class="regnearter">${currentTal1}</span> 
+        <i class="fas fa-divide" style="color: #4299e1;"></i> 
+        <span class="regnearter">${currentTal2}</span> 
+        ?
+      `;
+      
+      if (currentLevel === 2 && !useDecimalRest) {
+        opgaveHTML += `<br><small>(Angiv både resultat og rest)</small>`;
+      } else if (currentLevel === 3) {
+        opgaveHTML += `<br><small>(Afrund til 2 decimaler hvis nødvendigt)</small>`;
+      }
+      
+      document.getElementById('opgaveTekst').innerHTML = opgaveHTML;
+      
+      // Vis/skjul rest input
+      document.getElementById('restContainer').style.display = showRestInput ? 'flex' : 'none';
+      
+      // Nulstil input
+      document.getElementById('svarInput').value = '';
+      document.getElementById('restInput').value = '';
+      document.getElementById('svarInput').focus();
+    }
+
+    // TJEK SVAR
+    function tjekSvar() {
+      const svarInput = document.getElementById('svarInput');
+      let brugerSvar = parseFloat(svarInput.value);
+      
+      if (isNaN(brugerSvar)) {
+        showFeedback('Skriv venligst et tal før du tjekker svar', false);
+        return;
+      }
+      
+      let isCorrect = false;
+      let feedbackMessage = '';
+      
+      if (currentLevel === 1 || currentLevel === 3) {
+        // Niveau 1 og 3: Ingen rest
+        brugerSvar = Math.round(brugerSvar * 100) / 100;
+        const roundedCorrect = Math.round(correctAnswer * 100) / 100;
+        isCorrect = Math.abs(brugerSvar - roundedCorrect) < 0.01;
+        
+        if (isCorrect) {
+          feedbackMessage = `✅ Perfekt! ${currentTal1} ÷ ${currentTal2} = ${correctAnswer}`;
+        } else {
+          feedbackMessage = `❌ ${brugerSvar} er ikke rigtigt. Prøv igen!`;
+        }
+      } else if (currentLevel === 2) {
+        // Niveau 2: Med rest
+        const brugerRest = useDecimalRest ? 0 : parseInt(document.getElementById('restInput').value) || 0;
+        
+        if (useDecimalRest) {
+          // Decimal resultat
+          const decimalAnswer = currentTal1 / currentTal2;
+          brugerSvar = Math.round(brugerSvar * 100) / 100;
+          const roundedDecimal = Math.round(decimalAnswer * 100) / 100;
+          isCorrect = Math.abs(brugerSvar - roundedDecimal) < 0.01;
+          
+          if (isCorrect) {
+            feedbackMessage = `✅ Perfekt! ${currentTal1} ÷ ${currentTal2} = ${decimalAnswer.toFixed(2)}`;
+          } else {
+            feedbackMessage = `❌ ${brugerSvar} er ikke rigtigt. Prøv igen!`;
+          }
+        } else {
+          // Heltal + rest
+          isCorrect = (brugerSvar === correctAnswer) && (brugerRest === correctRest);
+          
+          if (isCorrect) {
+            feedbackMessage = `✅ Fremragende! ${currentTal1} ÷ ${currentTal2} = ${correctAnswer} rest ${correctRest}`;
+          } else {
+            feedbackMessage = `❌ Ikke helt rigtigt. Prøv igen!`;
+          }
+        }
+      }
+      
+      if (isCorrect) {
+        streak++;
+        showFeedback(feedbackMessage, true);
+        calculateNewLevel(true);
+        
+        setTimeout(() => {
+          genererOpgave();
+          opdaterBrugerinfo();
+        }, 1500);
+      } else {
+        streak = 0;
+        showFeedback(feedbackMessage, false);
+        calculateNewLevel(false);
+      }
+      
+      opdaterBrugerinfo();
+    }
+
+    // NY OPGAVE
+    function nyOpgave() {
+      genererOpgave();
+      document.getElementById('feedback').textContent = '';
+      document.getElementById('feedback').className = 'feedback';
+      document.getElementById('methodDisplay').style.display = 'none';
+    }
+
+    // VIS HJÆLP
+    function visHjaelp() {
+      let hjaelpTekst;
+      
+      if (currentLevel === 1) {
+        hjaelpTekst = `
+          <strong>Tips til division uden rest:</strong><br>
+          1. Spørg: "Hvor mange gange kan ${currentTal2} gå op i ${currentTal1}?"<br>
+          2. Tænk på gangetabellen for ${currentTal2}<br>
+          3. ${currentTal2} × ? = ${currentTal1}<br>
+          4. Svaret er ${correctAnswer}, fordi ${currentTal2} × ${correctAnswer} = ${currentTal1}
+        `;
+      } else if (currentLevel === 2) {
+        hjaelpTekst = `
+          <strong>Tips til division med rest:</strong><br>
+          1. Find det største multiplum af ${currentTal2} der er mindre end ${currentTal1}<br>
+          2. ${currentTal2} × ${correctAnswer} = ${currentTal2 * correctAnswer}<br>
+          3. Resten er ${currentTal1} - ${currentTal2 * correctAnswer} = ${correctRest}<br>
+          4. Så: ${currentTal1} ÷ ${currentTal2} = ${correctAnswer} rest ${correctRest}
+        `;
+      } else {
+        hjaelpTekst = `
+          <strong>Tips til division med decimaltal:</strong><br>
+          1. ${currentTal1} ÷ ${currentTal2}<br>
+          2. Prøv som brøk: ${currentTal1}/${currentTal2}<br>
+          3. Eller gang begge tal med 10 for at fjerne decimaler<br>
+          4. ${currentTal1 * 10} ÷ ${currentTal2 * 10} = ${(currentTal1/currentTal2).toFixed(2)}
+        `;
+      }
+      
+      document.getElementById('feedback').innerHTML = hjaelpTekst;
+      document.getElementById('feedback').className = 'feedback hjelp';
+    }
+
+    // VIS FORKLARING
+    function visForklaring() {
+      const forklaring = `
+        <strong>Løsningsmetode:</strong><br>
+        ${currentLevel === 1 ? 
+          `1. ${currentTal2} × ${correctAnswer} = ${currentTal1}<br>2. Derfor: ${currentTal1} ÷ ${currentTal2} = ${correctAnswer}` :
+        currentLevel === 2 ? 
+          `1. ${currentTal2} × ${correctAnswer} = ${currentTal2 * correctAnswer}<br>2. ${currentTal1} - ${currentTal2 * correctAnswer} = ${correctRest}<br>3. Derfor: ${currentTal1} ÷ ${currentTal2} = ${correctAnswer} rest ${correctRest}` :
+          `1. ${currentTal1} ÷ ${currentTal2} = ${correctAnswer.toFixed(2)}<br>2. ${currentTal1} / ${currentTal2} = ${(currentTal1/currentTal2).toFixed(2)}<br>3. Afrundet: ${correctAnswer.toFixed(2)}`
+        }
+      `;
+      
+      document.getElementById('feedback').innerHTML = forklaring;
+      document.getElementById('feedback').className = 'feedback hjelp';
+    }
+
+    // VIS GANGE-METODEN (Alternativ metode)
+    function visGangeMetode() {
+      let stepsHTML = '';
+      
+      if (currentLevel === 1) {
+        stepsHTML = `
+          <div style="background: #e6fffa; padding: 15px; border-radius: 10px;">
+            <strong>Gange-metoden til division:</strong><br><br>
+            1. Spørg: ${currentTal2} × ? = ${currentTal1}<br>
+            2. Prøv med gangetabellen for ${currentTal2}:<br>
+            ${Array.from({length: 10}, (_, i) => i + 1).map(i => 
+              `${currentTal2} × ${i} = ${currentTal2 * i}${currentTal2 * i === currentTal1 ? ' ✅' : ''}`
+            ).join('<br>')}<br><br>
+            3. Find at ${currentTal2} × ${correctAnswer} = ${currentTal1}<br>
+            4. Derfor er svaret ${correctAnswer}
+          </div>
+        `;
+      }
+      
+      document.getElementById('methodSteps').innerHTML = stepsHTML;
+      document.getElementById('methodDisplay').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
