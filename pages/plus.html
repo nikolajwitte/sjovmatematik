@@ -883,6 +883,10 @@
         // CENTRAL DATA OPDATERING
         if (window.MathApp && typeof window.MathApp.updateTopicData === 'function') {
           const newLevel = window.MathApp.updateTopicData('plus', true, 10);
+              const pointsEl = document.getElementById('userPoints');
+    if (pointsEl && window.MathApp.userData) {
+      pointsEl.textContent = window.MathApp.userData.totalPoints || 0;
+    }
           if (newLevel && newLevel !== currentLevel) {
             currentLevel = newLevel;
             // Opdater knapper til nyt niveau
@@ -909,6 +913,10 @@
         // CENTRAL DATA OPDATERING
         if (window.MathApp && typeof window.MathApp.updateTopicData === 'function') {
           const newLevel = window.MathApp.updateTopicData('plus', false, 0);
+              const pointsEl = document.getElementById('userPoints');
+    if (pointsEl && window.MathApp.userData) {
+      pointsEl.textContent = window.MathApp.userData.totalPoints || 0;
+    }
           if (newLevel && newLevel !== currentLevel) {
             currentLevel = newLevel;
             // Opdater knapper til nyt niveau
