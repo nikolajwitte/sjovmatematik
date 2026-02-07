@@ -1032,11 +1032,13 @@
       if (currentLevel >= 3) return;
       
       const container = document.getElementById('tallelinje');
-      const startTal = Math.min(currentTal1, currentTal2);
+      const mindsteTal = Math.min(currentTal1, currentTal2);
+      const storsteTal = Math.max(currentTal1, currentTal2);
+      const startTal = storsteTal; // Start på det største tal
       const slutTal = correctAnswer;
       
-      // ALTID vis alle tal fra start til slut
-      const start = startTal;
+      // ALTID vis alle tal fra mindste tal til resultat
+      const start = mindsteTal;
       const slut = slutTal;
       
       let html = '';
@@ -1058,7 +1060,7 @@
         `;
         
         // Vis ALLE tal
-        const isOneOfOurNumbers = i === currentTal1 || i === currentTal2 || i === slutTal;
+        const isOneOfOurNumbers = i === currentTal1 || i === currentTal2 || i === slutTal || i === startTal;
         const color = isOneOfOurNumbers ? '#f56565' : '#4a5568';
         const fontWeight = isOneOfOurNumbers ? 'bold' : 'normal';
         
@@ -1100,20 +1102,17 @@
         const tal1Position = ((currentTal1 - start) / (slut - start)) * 100;
         const tal2Position = ((currentTal2 - start) / (slut - start)) * 100;
         const sumPosition = ((correctAnswer - start) / (slut - start)) * 100;
+        const startPosition = ((startTal - start) / (slut - start)) * 100;
         
         // Ingen farvede cirkler på niveau 2
         html += `
-          <div style="position: absolute; left: ${tal1Position}%; top: 50px; transform: translateX(-50%); text-align: center;">
-            <div style="font-size: 16px; font-weight: bold; color: #f56565;">${currentTal1}</div>
-            <div style="font-size: 12px; color: #f56565; margin-top: 5px;">Tal 1</div>
-          </div>
-          <div style="position: absolute; left: ${tal2Position}%; top: 50px; transform: translateX(-50%); text-align: center;">
-            <div style="font-size: 16px; font-weight: bold; color: #ed8936;">${currentTal2}</div>
-            <div style="font-size: 12px; color: #ed8936; margin-top: 5px;">Tal 2</div>
+          <div style="position: absolute; left: ${startPosition}%; top: 50px; transform: translateX(-50%); text-align: center;">
+            <div style="font-size: 16px; font-weight: bold; color: #48bb78;">${startTal}</div>
+            <div style="font-size: 12px; color: #48bb78; margin-top: 5px;">Start</div>
           </div>
           <div style="position: absolute; left: ${sumPosition}%; top: 120px; transform: translateX(-50%); text-align: center;">
-            <div style="font-size: 16px; font-weight: bold; color: #48bb78;">${correctAnswer}</div>
-            <div style="font-size: 12px; color: #48bb78; margin-top: 5px;">Sum</div>
+            <div style="font-size: 16px; font-weight: bold; color: #4299e1;">${slutTal}</div>
+            <div style="font-size: 12px; color: #4299e1; margin-top: 5px;">Resultat</div>
           </div>
         `;
       }
@@ -1121,23 +1120,28 @@
       container.innerHTML = html;
     }
 
-    // ANIMATION FUNKTIONER (kun niveau 1)
+    // ANIMATION FUNKTIONER (kun niveau 1) - FIXET VERSION
     function startAnimation() {
       if (animationActive || currentLevel !== 1) return;
       
       const container = document.getElementById('tallelinje');
-      const startTal = Math.min(currentTal1, currentTal2);
       const mindsteTal = Math.min(currentTal1, currentTal2);
       const storsteTal = Math.max(currentTal1, currentTal2);
-      
-      const antalSkridt = Math.abs(storsteTal - mindsteTal);
+      const startTal = storsteTal; // Start på det største tal
+      const antalSkridt = Math.abs(correctAnswer - startTal);
       const slutTal = correctAnswer;
       
-      const start = startTal;
+      const start = mindsteTal;
       const slut = slutTal;
       
-      const startPosition = ((mindsteTal - start) / (slut - start)) * 100;
-      const slutPosition = ((slutTal - start) / (slut - start)) * 100;
+      // Beregn positionerne for hvert heltal
+      const positions = {};
+      for (let i = start; i <= slut; i++) {
+        positions[i] = ((i - start) / (slut - start)) * 100;
+      }
+      
+      const startPosition = positions[startTal];
+      const slutPosition = positions[slutTal];
       
       // Fjern evt. tidligere animation
       const oldPrik = document.querySelector('.animation-prik');
@@ -1151,36 +1155,34 @@
       prik.style.background = '#667eea';
       prik.style.left = `${startPosition}%`;
       prik.style.top = '60px';
-      prik.innerHTML = `<div style="color: white; text-align: center; line-height: 25px; font-weight: bold;">${mindsteTal}</div>`;
+      prik.innerHTML = `<div style="color: white; text-align: center; line-height: 25px; font-weight: bold;">${startTal}</div>`;
       
       container.appendChild(prik);
       
-      // Start animation
+      // Start animation - spring fra heltal til heltal
       animationActive = true;
-      animateStep(prik, startPosition, slutPosition, 0, antalSkridt, mindsteTal);
+      animateStep(prik, 0, antalSkridt, positions, startTal);
     }
 
-    function animateStep(prik, startPos, endPos, currentStep, totalSteps, startNumber) {
+    function animateStep(prik, currentStep, totalSteps, positions, startNumber) {
       if (currentStep > totalSteps || !animationActive) {
         animationActive = false;
         return;
       }
       
-      // Beregn nuværende position
-      const progress = currentStep / totalSteps;
-      const currentPos = startPos + (endPos - startPos) * progress;
-      
-      // Opdater prik position
-      prik.style.left = `${currentPos}%`;
-      
-      // Vis træktæller
       const currentNumber = startNumber + currentStep;
-      prik.innerHTML = `<div style="color: white; text-align: center; line-height: 25px; font-weight: bold;">${currentNumber}</div>`;
+      const currentPosition = positions[currentNumber];
+      
+      // Flyt prikken til næste heltal
+      if (currentPosition !== undefined) {
+        prik.style.left = `${currentPosition}%`;
+        prik.innerHTML = `<div style="color: white; text-align: center; line-height: 25px; font-weight: bold;">${currentNumber}</div>`;
+      }
       
       // Næste trin
       currentStep++;
       animationTimeout = setTimeout(() => {
-        animateStep(prik, startPos, endPos, currentStep, totalSteps, startNumber);
+        animateStep(prik, currentStep, totalSteps, positions, startNumber);
       }, animationSpeed);
     }
 
