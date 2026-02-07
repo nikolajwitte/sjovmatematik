@@ -278,6 +278,50 @@
       font-weight: bold;
     }
     
+    /* TUTOR KNAP */
+    .tutor-btn {
+      background: #9f7aea;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.3s;
+      min-width: 150px;
+    }
+    
+    .tutor-btn:hover {
+      background: #805ad5;
+      transform: translateY(-2px);
+    }
+    
+    /* RESET KNAP */
+    .reset-btn {
+      background: #f56565;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.3s;
+      min-width: 150px;
+    }
+    
+    .reset-btn:hover {
+      background: #e53e3e;
+      transform: translateY(-2px);
+    }
+    
     /* RESPONSIVITET */
     @media (max-width: 768px) {
       .tallelinje-ramme {
@@ -337,33 +381,16 @@
         width: 35px;
         min-width: 35px;
       }
-    }
-    
-    /* SIMPLIFIKATION AF STATS BAR */
-    .stats-bar {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      border-radius: 15px;
-      padding: 15px 25px;
-      margin: 20px 0;
-      display: flex;
-      justify-content: space-around;
-      color: white;
-      box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-    }
-    
-    .stat-item {
-      text-align: center;
-    }
-    
-    .stat-label {
-      font-size: 0.9rem;
-      opacity: 0.9;
-      margin-bottom: 5px;
-    }
-    
-    .stat-value {
-      font-size: 2rem;
-      font-weight: bold;
+      
+      #hjaelpeKnapper {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      #hjaelpeKnapper button {
+        width: 100%;
+        max-width: 250px;
+      }
     }
   </style>
 </head>
@@ -395,11 +422,11 @@
       <div style="margin-bottom: 30px; text-align: center;">
         <h3>Vælg sværhedsgrad:</h3>
         <div class="level-buttons">
-          <button class="level-btn active" data-level="1">Let (0-10)</button>
-          <button class="level-btn" data-level="2">Mellem (0-20)</button>
-          <button class="level-btn" data-level="3">Svær (0-99)</button>
-          <button class="level-btn" data-level="4">Ekspert (99-999)</button>
-          <button class="level-btn" data-level="5">Mester (999-999.999)</button>
+          <button class="level-btn active" data-level="1">Let (1-10)</button>
+          <button class="level-btn" data-level="2">Mellem (1-20)</button>
+          <button class="level-btn" data-level="3">Svær (1-99)</button>
+          <button class="level-btn" data-level="4">Ekspert (100-999)</button>
+          <button class="level-btn" data-level="5">Mester (1000-999.999)</button>
         </div>
       </div>
 
@@ -419,9 +446,17 @@
           </button>
         </div>
         
-        <!-- HJÆLPEKNAPPER (kun for niveau 1-2) -->
+        <!-- HJÆLPEKNAPPER -->
         <div id="hjaelpeKnapper" style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
           <!-- Knapper vises dynamisk baseret på niveau -->
+        </div>
+        
+        <!-- BEGYND FORFRA KNAP -->
+        <div style="text-align: center; margin: 20px 0;">
+          <button onclick="begyndForfra()" class="reset-btn">
+            <i class="fas fa-undo"></i> Begynd forfra
+          </button>
+          <p style="font-size: 0.8rem; color: #718096; margin-top: 5px;">Nulstiller niveau og antal rigtige</p>
         </div>
       </div>
       
@@ -574,18 +609,24 @@
             <i class="fas fa-ruler-combined"></i> Vis tællelinje
           </button>
           <button onclick="visSimpelHjaelp()" class="button" style="background: #f6ad55; color: white; flex: 1; min-width: 150px;">
-            <i class="fas fa-lightbulb"></i> Simpel løsning
+            <i class="fas fa-lightbulb"></i> Simpel hjælp
+          </button>
+          <button onclick="visMatematiktutor()" class="tutor-btn" style="flex: 1; min-width: 150px;">
+            <i class="fas fa-chalkboard-teacher"></i> Matematiktutor
           </button>
         `;
         knapContainer.style.display = 'flex';
       } else if (currentLevel === 3) {
         // Niveau 3 har begge muligheder
         knapContainer.innerHTML = `
-          <button onclick="visSimpelHjaelp()" class="button" style="background: #f6ad55; color: white; flex: 1; min-width: 200px;">
-            <i class="fas fa-lightbulb"></i> Simpel løsning
+          <button onclick="visSimpelHjaelp()" class="button" style="background: #f6ad55; color: white; flex: 1; min-width: 150px;">
+            <i class="fas fa-lightbulb"></i> Simpel hjælp
           </button>
-          <button onclick="visKolonneHjaelp()" class="button" style="background: #90cdf4; color: white; flex: 1; min-width: 200px;">
-            <i class="fas fa-calculator"></i> Få hjælp til udregningen
+          <button onclick="visKolonneHjaelp()" class="button" style="background: #90cdf4; color: white; flex: 1; min-width: 150px;">
+            <i class="fas fa-calculator"></i> Kolonnehjælp
+          </button>
+          <button onclick="visMatematiktutor()" class="tutor-btn" style="flex: 1; min-width: 150px;">
+            <i class="fas fa-chalkboard-teacher"></i> Matematiktutor
           </button>
         `;
         knapContainer.style.display = 'flex';
@@ -593,44 +634,47 @@
         // Niveau 4 og 5 har kun kolonnehjælp
         knapContainer.innerHTML = `
           <button onclick="visKolonneHjaelp()" class="button" style="background: #90cdf4; color: white; flex: 1; min-width: 200px;">
-            <i class="fas fa-calculator"></i> Få hjælp til udregningen
+            <i class="fas fa-calculator"></i> Kolonnehjælp
+          </button>
+          <button onclick="visMatematiktutor()" class="tutor-btn" style="flex: 1; min-width: 200px;">
+            <i class="fas fa-chalkboard-teacher"></i> Matematiktutor
           </button>
         `;
         knapContainer.style.display = 'flex';
       }
     }
 
-    // GENERER NY PLUS OPGAVE
+    // GENERER NY PLUS OPGAVE (INGEN 0-TAL)
     function genererOpgave() {
       switch(currentLevel) {
         case 1: 
-          // Niveau 1: Tal 0-10
-          currentTal1 = Math.floor(Math.random() * 11); // 0-10
-          currentTal2 = Math.floor(Math.random() * 11);
+          // Niveau 1: Tal 1-10 (ingen 0)
+          currentTal1 = Math.floor(Math.random() * 10) + 1; // 1-10
+          currentTal2 = Math.floor(Math.random() * 10) + 1;
           break;
         case 2: 
-          // Niveau 2: Tal 0-20
-          currentTal1 = Math.floor(Math.random() * 21); // 0-20
-          currentTal2 = Math.floor(Math.random() * 21);
+          // Niveau 2: Tal 1-20 (ingen 0)
+          currentTal1 = Math.floor(Math.random() * 20) + 1; // 1-20
+          currentTal2 = Math.floor(Math.random() * 20) + 1;
           break;
         case 3: 
-          // Niveau 3: Tal 0-99
-          currentTal1 = Math.floor(Math.random() * 100); // 0-99
-          currentTal2 = Math.floor(Math.random() * 100);
+          // Niveau 3: Tal 1-99 (ingen 0)
+          currentTal1 = Math.floor(Math.random() * 99) + 1; // 1-99
+          currentTal2 = Math.floor(Math.random() * 99) + 1;
           break;
         case 4:
-          // Niveau 4: Tal 99-999
-          currentTal1 = Math.floor(Math.random() * 901) + 99; // 99-999
-          currentTal2 = Math.floor(Math.random() * 901) + 99;
+          // Niveau 4: Tal 100-999
+          currentTal1 = Math.floor(Math.random() * 900) + 100; // 100-999
+          currentTal2 = Math.floor(Math.random() * 900) + 100;
           break;
         case 5:
-          // Niveau 5: Tal 999-999.999
-          currentTal1 = Math.floor(Math.random() * 999001) + 999; // 999-999.999
-          currentTal2 = Math.floor(Math.random() * 999001) + 999;
+          // Niveau 5: Tal 1000-999.999
+          currentTal1 = Math.floor(Math.random() * 999000) + 1000; // 1000-999.999
+          currentTal2 = Math.floor(Math.random() * 999000) + 1000;
           break;
         default: 
-          currentTal1 = Math.floor(Math.random() * 11);
-          currentTal2 = Math.floor(Math.random() * 11);
+          currentTal1 = Math.floor(Math.random() * 10) + 1;
+          currentTal2 = Math.floor(Math.random() * 10) + 1;
       }
       
       correctAnswer = currentTal1 + currentTal2;
@@ -707,7 +751,7 @@
       hjælpContainer.scrollIntoView({ behavior: 'smooth' });
     }
 
-    // KOLONNEADDITION HJÆLP (niveau 3-5)
+    // KOLONNEADDITION HJÆLP (niveau 3-5) - UDEN LEDENDE NULLER
     function visKolonneHjaelp() {
       const hjælpContainer = document.getElementById('hjaelpContainer');
       
@@ -760,26 +804,17 @@
         });
       }
       
-      // Byg den visuelle kolonne
+      // Byg den visuelle kolonne - UDEN LEDENDE NULLER
       let kolonneHTML = '';
       
-      // Forbered tal til visning (lige længde)
-      const resultLength = resultDigits.length;
-      const paddedNum1 = currentTal1.toString().padStart(resultLength, '0');
-      const paddedNum2 = currentTal2.toString().padStart(resultLength, '0');
+      // Vis talene uden ledende nuller
+      const num1Str = currentTal1.toString();
+      const num2Str = currentTal2.toString();
+      const resultLength = Math.max(num1Str.length, num2Str.length, resultDigits.length);
       
-      // Byg cifre i korrekt rækkefølge (fra venstre mod højre)
-      const digits1HTML = Array.from(paddedNum1).map(digit => 
-        `<div class="kolonne-digit">${digit}</div>`
-      ).join('');
-      
-      const digits2HTML = Array.from(paddedNum2).map(digit => 
-        `<div class="kolonne-digit">${digit}</div>`
-      ).join('');
-      
-      const emptyDigitsHTML = Array.from({length: resultLength}, () => 
-        `<div class="kolonne-digit empty"></div>`
-      ).join('');
+      // Tilføj mellemrum foran for at få dem til at stå korrekt
+      const paddedNum1 = num1Str.padStart(resultLength, ' ');
+      const paddedNum2 = num2Str.padStart(resultLength, ' ');
       
       kolonneHTML += `
         <div class="kolonne-title">
@@ -790,13 +825,21 @@
           <!-- Første tal -->
           <div class="kolonne-row">
             <span style="color: #718096; margin-right: 10px; width: 45px;">&nbsp;</span>
-            ${digits1HTML}
+            ${Array.from(paddedNum1).map((digit, i) => 
+              digit === ' ' 
+                ? `<div class="kolonne-digit" style="visibility: hidden;">0</div>`
+                : `<div class="kolonne-digit">${digit}</div>`
+            ).join('')}
           </div>
           
           <!-- Andet tal med plus -->
           <div class="kolonne-row">
             <span class="kolonne-operator">+</span>
-            ${digits2HTML}
+            ${Array.from(paddedNum2).map((digit, i) => 
+              digit === ' ' 
+                ? `<div class="kolonne-digit" style="visibility: hidden;">0</div>`
+                : `<div class="kolonne-digit">${digit}</div>`
+            ).join('')}
           </div>
           
           <!-- Linje -->
@@ -805,7 +848,9 @@
           <!-- Tomme kasser til resultatet -->
           <div class="kolonne-row">
             <span style="color: #718096; margin-right: 10px; width: 45px;">&nbsp;</span>
-            ${emptyDigitsHTML}
+            ${Array.from({length: resultLength}, (_, i) => 
+              `<div class="kolonne-digit empty"></div>`
+            ).join('')}
           </div>
         </div>
       `;
@@ -882,6 +927,37 @@
     // SKJUL HJÆLP
     function skjulHjaelp() {
       document.getElementById('hjaelpContainer').style.display = 'none';
+    }
+
+    // BEGYND FORFRA - NULSTIL NIVEAU OG ANTAL RIGTIGE
+    function begyndForfra() {
+      if (confirm('Er du sikker på at du vil begynde forfra? Dette vil nulstille dit niveau til 1 og slette alle dine rigtige svar. Streak og forsøg bevares.')) {
+        currentLevel = 1;
+        correctCount = 0;
+        
+        // Opdater knapper til niveau 1
+        const buttons = document.querySelectorAll('.level-btn');
+        buttons.forEach(btn => {
+          btn.classList.remove('active');
+          if (parseInt(btn.dataset.level) === 1) {
+            btn.classList.add('active');
+          }
+        });
+        
+        // Gem data
+        saveUserData();
+        
+        // Opdater visning
+        opdaterBrugerinfo();
+        opdaterHjaelpeKnapper();
+        genererOpgave();
+        
+        // Skjul tællelinje og hjælp
+        document.getElementById('tallelinjeContainer').style.display = 'none';
+        document.getElementById('hjaelpContainer').style.display = 'none';
+        
+        showFeedback('✅ Du er nu tilbage på niveau 1! Antal rigtige er nulstillet.', true);
+      }
     }
 
     // TJEK SVAR
@@ -1009,14 +1085,14 @@
           <button onclick="startAnimation()" class="button" style="background: #48bb78; color: white;">
             <i class="fas fa-play-circle"></i> Vis animation
           </button>
-          <button onclick="skjulTallelinje()" class="button" style="background: #a0aec0; color: white;">
-            <i class="fas fa-eye-slash"></i> Skjul tællelinje
+          <button onclick="skjulTallelinje()" class="close-hjaelp-btn">
+            <i class="fas fa-times"></i> Skjul tællelinje
           </button>
         `;
       } else {
         knapContainer.innerHTML = `
-          <button onclick="skjulTallelinje()" class="button" style="background: #a0aec0; color: white;">
-            <i class="fas fa-eye-slash"></i> Skjul tællelinje
+          <button onclick="skjulTallelinje()" class="close-hjaelp-btn">
+            <i class="fas fa-times"></i> Skjul tællelinje
           </button>
         `;
       }
@@ -1026,62 +1102,59 @@
       if (currentLevel >= 3) return;
       
       const container = document.getElementById('tallelinje');
-      const storsteTal = Math.max(currentTal1, currentTal2);
       const mindsteTal = Math.min(currentTal1, currentTal2);
+      const storsteTal = Math.max(currentTal1, currentTal2);
+      const startTal = storsteTal; // Start på det største tal
+      const slutTal = correctAnswer;
       
-      const startTal = storsteTal;
-      const antalSkridt = mindsteTal;
-      const slutTal = startTal + antalSkridt;
-      
-      // Beregn interval der indeholder begge tal og svaret
-      const minTal = Math.min(startTal, currentTal1, currentTal2, slutTal);
-      const maxTal = Math.max(startTal, currentTal1, currentTal2, slutTal);
-      
-      // Lidt ekstra plads i siderne
-      const start = Math.max(0, minTal - 3);
-      const slut = maxTal + 3;
+      // ALTID vis alle tal fra mindste tal til resultat
+      const start = mindsteTal;
+      const slut = slutTal;
       
       let html = '';
       
       // Tegn hovedlinjen
       html += `<div class="tallelinje-linje"></div>`;
       
-      // Tegn markeringer og tal
+      // Tegn ALLE tal og markeringer
       for (let i = start; i <= slut; i++) {
         const position = ((i - start) / (slut - start)) * 100;
         
-        // Marker primære tal
-        const isImportant = i % 5 === 0 || i === startTal || i === slutTal || i === currentTal1 || i === currentTal2;
-        const isVeryImportant = i % 10 === 0;
-        
-        // Tegn markering
+        // Tegn markering for hvert tal
         html += `
           <div class="tallelinje-markering" style="left: ${position}%; top: 60px;">
-            <div style="width: ${isVeryImportant ? '3px' : isImportant ? '2px' : '1px'}; 
-                        height: ${isVeryImportant ? '20px' : isImportant ? '15px' : '10px'}; 
-                        background: #4a5568; margin: 0 auto;"></div>
+            <div style="width: 2px; height: 15px; background: #4a5568; margin: 0 auto;"></div>
           </div>
         `;
         
-        // Vis tal for vigtige markeringer
-        if (isImportant) {
-          const isOneOfOurNumbers = i === startTal || i === slutTal || i === currentTal1 || i === currentTal2;
+        // Vis ALLE tal - KUN på niveau 1
+        if (currentLevel === 1) {
+          const isOneOfOurNumbers = i === currentTal1 || i === currentTal2 || i === slutTal || i === startTal;
           const color = isOneOfOurNumbers ? '#f56565' : '#4a5568';
           const fontWeight = isOneOfOurNumbers ? 'bold' : 'normal';
-          const fontSize = isVeryImportant ? '14px' : '12px';
           
           html += `
-            <div class="tallelinje-tal" style="left: ${position}%; top: ${isVeryImportant ? '85px' : '90px'}; 
-              font-size: ${fontSize}; 
+            <div class="tallelinje-tal" style="left: ${position}%; top: 90px; 
+              font-size: 12px; 
               color: ${color};
               font-weight: ${fontWeight}">
+              ${i}
+            </div>
+          `;
+        } else {
+          // NIVEAU 2: Kun vis alle tal uden farver eller tyk skrift
+          html += `
+            <div class="tallelinje-tal" style="left: ${position}%; top: 90px; 
+              font-size: 12px; 
+              color: #4a5568;
+              font-weight: normal">
               ${i}
             </div>
           `;
         }
       }
       
-      // KUN FOR NIVEAU 1: Vis start og slut cirkler
+      // KUN på NIVEAU 1: Vis start og slut cirkler med farver
       if (currentLevel === 1) {
         const startPosition = ((startTal - start) / (slut - start)) * 100;
         const slutPosition = ((slutTal - start) / (slut - start)) * 100;
@@ -1104,39 +1177,8 @@
             </div>
           </div>
         `;
-      } else {
-        // Niveau 2 viser kun tal (uden animation)
-        const tal1Position = ((currentTal1 - start) / (slut - start)) * 100;
-        const tal2Position = ((currentTal2 - start) / (slut - start)) * 100;
-        const sumPosition = ((correctAnswer - start) / (slut - start)) * 100;
-        
-        html += `
-          <div class="tallelinje-start" style="left: ${tal1Position}%; top: 60px;">
-            <div class="tallelinje-start-cirkel" style="background: #f56565;">
-              ${currentTal1}
-            </div>
-            <div style="text-align: center; margin-top: 10px; font-size: 14px; color: #f56565; font-weight: bold;">
-              Tal 1
-            </div>
-          </div>
-          <div class="tallelinje-start" style="left: ${tal2Position}%; top: 60px;">
-            <div class="tallelinje-start-cirkel" style="background: #ed8936;">
-              ${currentTal2}
-            </div>
-            <div style="text-align: center; margin-top: 10px; font-size: 14px; color: #ed8936; font-weight: bold;">
-              Tal 2
-            </div>
-          </div>
-          <div class="tallelinje-slut" style="left: ${sumPosition}%; top: 60px;">
-            <div class="tallelinje-slut-cirkel" style="background: #48bb78;">
-              ${correctAnswer}
-            </div>
-            <div style="text-align: center; margin-top: 10px; font-size: 14px; color: #48bb78; font-weight: bold;">
-              Sum
-            </div>
-          </div>
-        `;
       }
+      // NIVEAU 2: INGEN ekstra markeringer - kun tal på linjen
       
       container.innerHTML = html;
     }
@@ -1146,21 +1188,23 @@
       if (animationActive || currentLevel !== 1) return;
       
       const container = document.getElementById('tallelinje');
-      const storsteTal = Math.max(currentTal1, currentTal2);
       const mindsteTal = Math.min(currentTal1, currentTal2);
+      const storsteTal = Math.max(currentTal1, currentTal2);
+      const startTal = storsteTal; // Start på det største tal
+      const antalSkridt = Math.abs(correctAnswer - startTal);
+      const slutTal = correctAnswer;
       
-      const startTal = storsteTal;
-      const antalSkridt = mindsteTal;
-      const slutTal = startTal + antalSkridt;
+      const start = mindsteTal;
+      const slut = slutTal;
       
-      const minTal = Math.min(startTal, currentTal1, currentTal2, slutTal);
-      const maxTal = Math.max(startTal, currentTal1, currentTal2, slutTal);
+      // Beregn positionerne for hvert heltal
+      const positions = {};
+      for (let i = start; i <= slut; i++) {
+        positions[i] = ((i - start) / (slut - start)) * 100;
+      }
       
-      const start = Math.max(0, minTal - 3);
-      const slut = maxTal + 3;
-      
-      const startPosition = ((startTal - start) / (slut - start)) * 100;
-      const slutPosition = ((slutTal - start) / (slut - start)) * 100;
+      const startPosition = positions[startTal];
+      const slutPosition = positions[slutTal];
       
       // Fjern evt. tidligere animation
       const oldPrik = document.querySelector('.animation-prik');
@@ -1178,33 +1222,38 @@
       
       container.appendChild(prik);
       
-      // Start animation
+      // Start animation - spring fra heltal til heltal
       animationActive = true;
-      animateStep(prik, startPosition, slutPosition, 0, antalSkridt);
+      animateStep(prik, 0, antalSkridt, positions, startTal);
     }
 
-    function animateStep(prik, startPos, endPos, currentStep, totalSteps) {
+    function animateStep(prik, currentStep, totalSteps, positions, startNumber) {
       if (currentStep > totalSteps || !animationActive) {
         animationActive = false;
         return;
       }
       
-      // Beregn nuværende position
-      const progress = currentStep / totalSteps;
-      const currentPos = startPos + (endPos - startPos) * progress;
+      const currentNumber = startNumber + currentStep;
+      const currentPosition = positions[currentNumber];
       
-      // Opdater prik position
-      prik.style.left = `${currentPos}%`;
-      
-      // Vis træktæller
-      const currentNumber = Math.max(currentTal1, currentTal2) + currentStep;
-      prik.innerHTML = `<div style="color: white; text-align: center; line-height: 25px; font-weight: bold;">${currentNumber}</div>`;
+      // Flyt prikken til næste heltal
+      if (currentPosition !== undefined) {
+        prik.style.left = `${currentPosition}%`;
+        prik.innerHTML = `<div style="color: white; text-align: center; line-height: 25px; font-weight: bold;">${currentNumber}</div>`;
+      }
       
       // Næste trin
       currentStep++;
       animationTimeout = setTimeout(() => {
-        animateStep(prik, startPos, endPos, currentStep, totalSteps);
+        animateStep(prik, currentStep, totalSteps, positions, startNumber);
       }, animationSpeed);
+    }
+
+    // VIS MATEMATIKTUTOR (YouTube video)
+    function visMatematiktutor() {
+      // Åben YouTube video i nyt vindue/tab
+      const videoURL = "https://www.youtube.com/watch?v=AuX7nPBqDts"; // Eksempel video - kan ændres
+      window.open(videoURL, '_blank');
     }
 
     // VIS FEEDBACK

@@ -3,1213 +3,464 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Plus - Sjov Matematik</title>
-  <link rel="stylesheet" href="../css/style.css">
+  <title>Sjov Matematik - Vælg regnearter</title>
+  <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /* NIVEAU KNAPPER */
-    .level-buttons {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-      margin-top: 15px;
-      flex-wrap: wrap;
-    }
-    
-    .level-btn {
-      padding: 12px 20px;
-      border: 2px solid #cbd5e0;
-      background: white;
-      border-radius: 10px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: all 0.3s;
-      min-width: 160px;
-    }
-    
-    .level-btn:hover {
-      border-color: #48bb78;
-      background: #f0fff4;
-    }
-    
-    .level-btn.active {
-      background: #48bb78;
-      color: white;
-      border-color: #48bb78;
-    }
-    
-    /* TÆLLELINJE STYLES */
-    .tallelinje-container {
-      margin-top: 30px;
-      display: none;
-    }
-    
-    .tallelinje-wrapper {
-      background: white;
-      border: 2px solid #667eea;
-      border-radius: 10px;
-      padding: 25px;
-      overflow-x: auto;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-    }
-    
-    .tallelinje-ramme {
-      position: relative;
-      height: 170px;
-      min-width: 600px;
+    /* TILPASSET STATS BAR TIL FORSIDEN */
+    .stats-bar {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 15px;
+      padding: 15px 25px;
       margin: 20px 0;
-      padding: 10px 0;
-    }
-    
-    .tallelinje-linje {
-      position: absolute;
-      top: 70px;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: #4a5568;
-      z-index: 1;
-    }
-    
-    .tallelinje-markering {
-      position: absolute;
-      transform: translateX(-50%);
-      z-index: 2;
-    }
-    
-    .tallelinje-tal {
-      position: absolute;
-      transform: translateX(-50%);
-      font-weight: bold;
-      z-index: 3;
-    }
-    
-    .tallelinje-start {
-      position: absolute;
-      transform: translateX(-50%);
-      z-index: 4;
-    }
-    
-    .tallelinje-start-cirkel {
-      background: #48bb78;
+      display: flex;
+      justify-content: space-around;
       color: white;
-      width: 45px;
-      height: 45px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
+      box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    }
+    
+    .stat-item {
+      text-align: center;
+    }
+    
+    .stat-label {
+      font-size: 0.9rem;
+      opacity: 0.9;
+      margin-bottom: 5px;
+    }
+    
+    .stat-value {
+      font-size: 2rem;
       font-weight: bold;
-      font-size: 16px;
-      box-shadow: 0 4px 8px rgba(72, 187, 120, 0.3);
-      margin: 0 auto;
     }
     
-    .tallelinje-slut {
-      position: absolute;
-      transform: translateX(-50%);
-      z-index: 4;
+    /* MENU ITEMS MED NIVEAU INDIKATOR */
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-top: 30px;
     }
     
-    .tallelinje-slut-cirkel {
-      background: #4299e1;
-      color: white;
-      width: 45px;
-      height: 45px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      font-weight: bold;
-      font-size: 16px;
-      box-shadow: 0 4px 8px rgba(66, 153, 225, 0.3);
-      margin: 0 auto;
-    }
-    
-    .tallelinje-knapper {
-      display: flex;
-      gap: 15px;
-      justify-content: center;
-      margin-top: 20px;
-      flex-wrap: wrap;
-    }
-    
-    /* ANIMATION */
-    .animation-prik {
-      position: absolute;
-      border-radius: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 3;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-      transition: all 0.5s ease;
-    }
-    
-    /* NY KOLONNEADDITION DESIGN - SIMPLERE OG TYDELIGERE */
-    .kolonne-help-container {
+    .menu-item {
       background: white;
-      border: 2px solid #e2e8f0;
       border-radius: 15px;
       padding: 25px;
-      margin: 20px 0;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-    }
-    
-    .kolonne-title {
+      text-decoration: none;
       color: #2d3748;
-      font-size: 1.3rem;
-      margin-bottom: 20px;
+      display: block;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      border: 2px solid transparent;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .menu-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+      border-color: #48bb78;
+    }
+    
+    .menu-icon {
+      font-size: 3rem;
+      margin-bottom: 15px;
       text-align: center;
+    }
+    
+    .menu-text {
+      font-size: 1.5rem;
       font-weight: bold;
+      margin-bottom: 10px;
+      text-align: center;
     }
     
-    .kolonne-visual {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 10px;
-      font-family: 'Courier New', monospace;
-      font-size: 1.4rem;
-      margin: 0 auto;
-      max-width: 700px;
-      padding: 15px;
-      background: #f8fafc;
-      border-radius: 8px;
+    .menu-desc {
+      color: #718096;
+      text-align: center;
+      display: block;
+      margin-bottom: 15px;
     }
     
-    .kolonne-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    
-    .kolonne-digit {
-      width: 45px;
-      height: 45px;
+    .menu-level {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: #48bb78;
+      color: white;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      border: 1px solid #cbd5e0;
-      border-radius: 5px;
-      background: white;
-    }
-    
-    .kolonne-digit.empty {
-      background: #f7fafc;
-      border: 1px dashed #cbd5e0;
-    }
-    
-    .kolonne-digit.highlight {
-      background: #bee3f8;
-      border-color: #4299e1;
-      font-weight: bold;
-    }
-    
-    .kolonne-digit.carry {
-      background: #fed7d7;
-      border-color: #f56565;
       font-weight: bold;
       font-size: 0.9rem;
     }
     
-    .kolonne-operator {
-      color: #48bb78;
-      font-weight: bold;
-      margin-right: 10px;
-      width: 45px;
-      text-align: center;
-    }
-    
-    .kolonne-line {
-      border-top: 2px solid #4a5568;
-      margin: 10px 0;
-      width: 100%;
-    }
-    
-    .step-explanation {
-      background: #f0fff4;
-      padding: 15px;
-      border-radius: 8px;
+    .menu-progress {
+      height: 6px;
+      background: #e2e8f0;
+      border-radius: 3px;
       margin-top: 10px;
-      border-left: 4px solid #48bb78;
+      overflow: hidden;
     }
     
-    .step-title {
-      color: #2d3748;
-      font-weight: bold;
-      margin-bottom: 8px;
+    .menu-progress-fill {
+      height: 100%;
+      background: linear-gradient(to right, #48bb78, #38a169);
+      border-radius: 3px;
+      transition: width 0.5s ease;
     }
     
-    .step-content {
-      color: #4a5568;
-      line-height: 1.5;
-    }
-    
-    .hjaelp-container {
-      max-height: 600px;
-      overflow-y: auto;
-      margin-top: 20px;
-    }
-    
-    .close-hjaelp-btn {
-      background: #f56565;
-      color: white;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-top: 15px;
-      font-weight: bold;
-    }
-    
-    .close-hjaelp-btn:hover {
-      background: #e53e3e;
-    }
-    
-    .step-number {
-      display: inline-block;
-      background: #48bb78;
-      color: white;
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      text-align: center;
-      line-height: 24px;
-      margin-right: 8px;
-      font-weight: bold;
-    }
-    
-    /* TUTOR KNAP */
-    .tutor-btn {
-      background: #9f7aea;
-      color: white;
-      border: none;
-      padding: 12px 20px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      margin: 0 auto;
-      transition: all 0.3s;
-    }
-    
-    .tutor-btn:hover {
-      background: #805ad5;
-      transform: translateY(-2px);
+    /* COMING SOON TAGS */
+    .coming-soon {
+      background: #f7fafc;
+      border: 2px dashed #cbd5e0;
+      padding: 10px 20px;
+      border-radius: 25px;
+      color: #a0aec0;
+      font-weight: 600;
     }
     
     /* RESPONSIVITET */
     @media (max-width: 768px) {
-      .tallelinje-ramme {
-        min-width: 300px;
-        height: 200px;
-      }
-      
-      .tallelinje-tal {
-        font-size: 12px;
-      }
-      
-      .level-buttons {
+      .stats-bar {
         flex-direction: column;
+        gap: 15px;
+      }
+      
+      .stat-item {
+        display: flex;
+        justify-content: space-between;
         align-items: center;
       }
       
-      .level-btn {
-        width: 100%;
-        max-width: 250px;
+      .stat-value {
+        font-size: 1.8rem;
       }
       
-      .tallelinje-knapper {
-        flex-direction: column;
-        align-items: center;
+      .menu-grid {
+        grid-template-columns: 1fr;
       }
-      
-      .tallelinje-knapper button {
-        width: 90%;
-        margin-bottom: 10px;
-      }
-      
-      .input-group {
-        flex-direction: column;
-        align-items: center;
-      }
-      
-      .input-group input,
-      .input-group button {
-        width: 90%;
-        max-width: 250px;
-        margin-bottom: 10px;
-      }
-      
-      .kolonne-visual {
-        font-size: 1.1rem;
-        max-width: 95%;
-        overflow-x: auto;
-      }
-      
-      .kolonne-digit {
-        width: 35px;
-        height: 35px;
-        min-width: 35px;
-      }
-      
-      .kolonne-operator {
-        width: 35px;
-        min-width: 35px;
-      }
+    }
+    
+    /* TOP EMNE SECTION */
+    .top-topic {
+      background: linear-gradient(135deg, #f6ad55 0%, #ed8936 100%);
+      border-radius: 15px;
+      padding: 20px;
+      color: white;
+      margin-top: 30px;
+      box-shadow: 0 10px 20px rgba(237, 137, 54, 0.3);
+    }
+    
+    .top-topic h3 {
+      margin-top: 0;
+      margin-bottom: 10px;
+    }
+    
+    .top-topic p {
+      margin-bottom: 0;
+      opacity: 0.9;
     }
   </style>
 </head>
 <body>
   <div class="container">
     <header class="header">
-      <h1><i class="fas fa-plus"></i> Plus (Addition)</h1>
-      <p>Lær at lægge tal sammen. Jo flere rigtige, jo sværere bliver opgaverne!</p>
+      <h1><i class="fas fa-calculator"></i> Sjov Matematik</h1>
+      <p>Træn matematik fra 5. til 9. klasse. Vælg en regnearter at starte med!</p>
+      
+      <!-- SIMPLIFICERET STATS BAR -->
+      <div class="stats-bar">
+        <div class="stat-item">
+          <div class="stat-label">Samlet antal rigtige</div>
+          <div class="stat-value" id="totalCorrect">0</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">I træk rekord</div>
+          <div class="stat-value" id="maxStreak">0</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Aktivitetsdage</div>
+          <div class="stat-value" id="activeDays">1</div>
+        </div>
+      </div>
     </header>
 
-    <!-- SIMPLIFICERET STATS BAR -->
-    <div class="stats-bar">
-      <div class="stat-item">
-        <div class="stat-label">Niveau</div>
-        <div class="stat-value" id="userLevel">1</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-label">Antal rigtige</div>
-        <div class="stat-value" id="correctCount">0</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-label">I træk</div>
-        <div class="stat-value" id="streak">0</div>
-      </div>
-    </div>
-
     <main>
-      <!-- NIVEAU VÆLGER -->
-      <div style="margin-bottom: 30px; text-align: center;">
-        <h3>Vælg sværhedsgrad:</h3>
-        <div class="level-buttons">
-          <button class="level-btn active" data-level="1">Let (1-10)</button>
-          <button class="level-btn" data-level="2">Mellem (1-20)</button>
-          <button class="level-btn" data-level="3">Svær (1-99)</button>
-          <button class="level-btn" data-level="4">Ekspert (100-999)</button>
-          <button class="level-btn" data-level="5">Mester (1000-999.999)</button>
-        </div>
-      </div>
-
-      <!-- OPGAVE -->
-      <div class="opgave-container">
-        <div class="opgave-tekst" id="opgaveTekst">
-          <!-- Opgaven vises her -->
-        </div>
-        
-        <div class="input-group">
-          <input type="number" id="svarInput" class="answer-input" placeholder="Dit svar" autofocus>
-          <button onclick="tjekSvar()" class="button primary-btn">
-            <i class="fas fa-check"></i> Tjek svar
-          </button>
-          <button onclick="nyOpgave()" class="button secondary-btn">
-            <i class="fas fa-redo"></i> Ny opgave
-          </button>
-        </div>
-        
-        <!-- HJÆLPEKNAPPER (kun for niveau 1-2) -->
-        <div id="hjaelpeKnapper" style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
-          <!-- Knapper vises dynamisk baseret på niveau -->
-        </div>
+      <!-- TOP EMNE (VALGFRIT) -->
+      <div class="top-topic" style="display: none;" id="topTopic">
+        <h3><i class="fas fa-trophy"></i> Dit bedste emne</h3>
+        <p>Du har flest rigtige i <span id="bestTopicName">Plus</span> (<span id="bestTopicScore">0</span> rigtige)</p>
       </div>
       
-      <!-- TÆLLELINJE - Vises kun i niveau 1 og 2 -->
-      <div id="tallelinjeContainer" class="tallelinje-container">
-        <h3>Tællelinje - Visualiser regnestykket:</h3>
-        <div class="tallelinje-wrapper">
-          <div id="tallelinje" class="tallelinje-ramme">
-            <!-- Tællelinjen tegnes her med JavaScript -->
+      <h2 style="margin-top: 30px;">Vælg et emne:</h2>
+      <div class="menu-grid">
+        <a href="pages/plus.html" class="menu-item">
+          <div class="menu-level" id="plusLevel">1</div>
+          <div class="menu-icon">➕</div>
+          <div class="menu-text">Plus</div>
+          <small class="menu-desc">Lær at lægge tal sammen</small>
+          <div class="menu-progress">
+            <div class="menu-progress-fill" id="plusProgress" style="width: 0%"></div>
           </div>
-          <div class="tallelinje-knapper">
-            <!-- Knapper vises dynamisk baseret på niveau -->
-          </div>
-        </div>
-      </div>
-      
-      <!-- HJÆLP VISNING (Kolonnehjælp) -->
-      <div id="hjaelpContainer" class="kolonne-help-container" style="display: none;">
-        <!-- Kolonnehjælp vises her dynamisk -->
-      </div>
-      
-      <!-- MATEMATIKTUTOR KNAP -->
-      <div style="text-align: center; margin: 30px 0;">
-        <button onclick="visMatematiktutor()" class="tutor-btn">
-          <i class="fas fa-chalkboard-teacher"></i> Besøg din matematiktutor
-        </button>
-      </div>
-      
-      <!-- FEEDBACK (kun for svar-check) -->
-      <div id="feedback" class="feedback"></div>
-      
-      <!-- FORSØG LISTE -->
-      <div id="attemptsList" style="margin-top: 30px;">
-        <h3>Dine seneste forsøg:</h3>
-        <div id="attemptsContainer" style="margin-top: 10px;"></div>
-      </div>
-      
-      <!-- TILBAGE -->
-      <div style="text-align: center; margin-top: 40px;">
-        <a href="../index.html" class="back-link">
-          <i class="fas fa-arrow-left"></i> Tilbage til menuen
         </a>
+        
+        <a href="pages/minus.html" class="menu-item">
+          <div class="menu-level" id="minusLevel">1</div>
+          <div class="menu-icon">➖</div>
+          <div class="menu-text">Minus</div>
+          <small class="menu-desc">Træk tal fra hinanden</small>
+          <div class="menu-progress">
+            <div class="menu-progress-fill" id="minusProgress" style="width: 0%"></div>
+          </div>
+        </a>
+        
+        <a href="pages/gange.html" class="menu-item">
+          <div class="menu-level" id="gangeLevel">1</div>
+          <div class="menu-icon">✖️</div>
+          <div class="menu-text">Gange</div>
+          <small class="menu-desc">Mestring af multiplikation</small>
+          <div class="menu-progress">
+            <div class="menu-progress-fill" id="gangeProgress" style="width: 0%"></div>
+          </div>
+        </a>
+        
+        <a href="pages/division.html" class="menu-item">
+          <div class="menu-level" id="divisionLevel">1</div>
+          <div class="menu-icon">➗</div>
+          <div class="menu-text">Division</div>
+          <small class="menu-desc">Del tal ligeligt</small>
+          <div class="menu-progress">
+            <div class="menu-progress-fill" id="divisionProgress" style="width: 0%"></div>
+          </div>
+        </a>
+      </div>
+      
+      <!-- KOMMENDE EMNER -->
+      <div style="margin-top: 40px; text-align: center;">
+        <h3>Snart tilgængelige emner:</h3>
+        <div style="display: flex; justify-content: center; gap: 15px; margin-top: 15px; flex-wrap: wrap;">
+          <span class="coming-soon"><i class="fas fa-pizza-slice"></i> Brøker (½)</span>
+          <span class="coming-soon"><i class="fas fa-percentage"></i> Procent (%)</span>
+          <span class="coming-soon"><i class="fas fa-equals"></i> Ligninger (=)</span>
+          <span class="coming-soon"><i class="fas fa-shapes"></i> Geometri (📐)</span>
+        </div>
+      </div>
+      
+      <!-- RESET KNAP -->
+      <div style="text-align: center; margin-top: 40px;">
+        <button onclick="resetAllData()" class="button" style="background: #f56565; color: white;">
+          <i class="fas fa-trash-alt"></i> Nulstil alle data
+        </button>
+        <p style="font-size: 0.8rem; color: #718096; margin-top: 5px;">Sletter alle dine fremskridt og nulstiller til niveau 1</p>
       </div>
     </main>
   </div>
 
   <script>
-    // PLUS SPECIFIK KODE
-    let currentLevel = 1;
-    let currentTal1, currentTal2, correctAnswer;
-    let streak = 0;
-    let correctCount = 0;
-    let attempts = [];
-    let animationActive = false;
-    let animationTimeout;
-    let animationSpeed = 800;
-
-    // FORMAT NUMBER WITH THOUSAND SEPARATORS
-    function formatNumber(num) {
-      return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    }
-
-    // HJÆLPEFUNKTION TIL PLADSBETEGNELSER
-    function getPlaceName(position) {
-      const placeNames = [
-        "1'ere",
-        "10'ere", 
-        "100'ere",
-        "1000'ere",
-        "10.000'ere",
-        "100.000'ere",
-        "1.000.000'ere"
-      ];
-      
-      return position < placeNames.length ? placeNames[position] : `${Math.pow(10, position)}'ere`;
-    }
+    // GLOBALE VARIABLER
+    let userData = {
+      totalCorrect: 0,
+      maxStreak: 0,
+      activeDays: 1,
+      lastActiveDate: null,
+      topics: {
+        plus: { level: 1, correctCount: 0, streak: 0 },
+        minus: { level: 1, correctCount: 0, streak: 0 },
+        gange: { level: 1, correctCount: 0, streak: 0 },
+        division: { level: 1, correctCount: 0, streak: 0 }
+      }
+    };
 
     // NÅR SIDEN INDLÆSES
     document.addEventListener('DOMContentLoaded', function() {
-      // LÆS BRUGERDATA FRA LOCALSTORAGE
       loadUserData();
-      
-      // OPDATER VISNING
-      opdaterBrugerinfo();
-      setupLevelButtons();
-      genererOpgave();
-      opdaterHjaelpeKnapper();
-      
-      // ENTER-TASTEN
-      document.getElementById('svarInput').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') tjekSvar();
-      });
+      updateStatsDisplay();
+      updateTopicsDisplay();
+      updateTopTopic();
+      checkActiveDay();
     });
 
     // INDLÆS BRUGERDATA
     function loadUserData() {
       try {
-        const savedData = localStorage.getItem('plusData');
+        const savedData = localStorage.getItem('mathAppData');
         if (savedData) {
           const data = JSON.parse(savedData);
-          correctCount = data.correctCount || 0;
-          streak = data.streak || 0;
-          currentLevel = data.level || 1;
-          attempts = data.attempts || [];
+          // Merge med standard data for at sikre alle felter er der
+          userData = { ...userData, ...data };
+          
+          // Sørg for at topics altid har alle felter
+          Object.keys(userData.topics).forEach(topic => {
+            userData.topics[topic] = { 
+              level: userData.topics[topic].level || 1,
+              correctCount: userData.topics[topic].correctCount || 0,
+              streak: userData.topics[topic].streak || 0
+            };
+          });
         }
       } catch (e) {
-        console.log("Ingen tidligere data fundet");
+        console.log("Ingen tidligere data fundet, starter fra ny");
       }
     }
 
     // GEM BRUGERDATA
     function saveUserData() {
-      const data = {
-        correctCount: correctCount,
-        streak: streak,
-        level: currentLevel,
-        attempts: attempts.slice(0, 10) // Gem kun de sidste 10 forsøg
-      };
-      localStorage.setItem('plusData', JSON.stringify(data));
+      localStorage.setItem('mathAppData', JSON.stringify(userData));
     }
 
-    // OPDATER BRUGERINFO VISNING
-    function opdaterBrugerinfo() {
-      document.getElementById('userLevel').textContent = currentLevel;
-      document.getElementById('correctCount').textContent = correctCount;
-      document.getElementById('streak').textContent = streak;
-    }
-
-    // SETUP NIVEAU KNAPPER
-    function setupLevelButtons() {
-      const buttons = document.querySelectorAll('.level-btn');
-      buttons.forEach(btn => {
-        btn.addEventListener('click', function() {
-          // Fjern active fra alle
-          buttons.forEach(b => b.classList.remove('active'));
-          // Tilføj active til klikket
-          this.classList.add('active');
-          // Opdater niveau
-          currentLevel = parseInt(this.dataset.level);
-          genererOpgave();
-          opdaterHjaelpeKnapper();
-          // Skjul tællelinje og hjælp når niveau ændres
-          document.getElementById('tallelinjeContainer').style.display = 'none';
-          document.getElementById('hjaelpContainer').style.display = 'none';
-        });
-      });
-    }
-
-    // OPDATER HJÆLPEKNAPPER BASERET PÅ NIVEAU
-    function opdaterHjaelpeKnapper() {
-      const knapContainer = document.getElementById('hjaelpeKnapper');
+    // TJEK AKTIV DAG
+    function checkActiveDay() {
+      const today = new Date().toDateString();
       
-      if (currentLevel === 1 || currentLevel === 2) {
-        // Niveau 1 og 2 har tællelinje og simpel hjælp
-        knapContainer.innerHTML = `
-          <button onclick="visTallelinje()" class="button" style="background: #667eea; color: white; flex: 1; min-width: 150px;">
-            <i class="fas fa-ruler-combined"></i> Vis tællelinje
-          </button>
-          <button onclick="visSimpelHjaelp()" class="button" style="background: #f6ad55; color: white; flex: 1; min-width: 150px;">
-            <i class="fas fa-lightbulb"></i> Simpel løsning
-          </button>
-        `;
-        knapContainer.style.display = 'flex';
-      } else if (currentLevel === 3) {
-        // Niveau 3 har begge muligheder
-        knapContainer.innerHTML = `
-          <button onclick="visSimpelHjaelp()" class="button" style="background: #f6ad55; color: white; flex: 1; min-width: 200px;">
-            <i class="fas fa-lightbulb"></i> Simpel løsning
-          </button>
-          <button onclick="visKolonneHjaelp()" class="button" style="background: #90cdf4; color: white; flex: 1; min-width: 200px;">
-            <i class="fas fa-calculator"></i> Få hjælp til udregningen
-          </button>
-        `;
-        knapContainer.style.display = 'flex';
-      } else {
-        // Niveau 4 og 5 har kun kolonnehjælp
-        knapContainer.innerHTML = `
-          <button onclick="visKolonneHjaelp()" class="button" style="background: #90cdf4; color: white; flex: 1; min-width: 200px;">
-            <i class="fas fa-calculator"></i> Få hjælp til udregningen
-          </button>
-        `;
-        knapContainer.style.display = 'flex';
-      }
-    }
-
-    // GENERER NY PLUS OPGAVE (INGEN 0-TAL)
-    function genererOpgave() {
-      switch(currentLevel) {
-        case 1: 
-          // Niveau 1: Tal 1-10 (ingen 0)
-          currentTal1 = Math.floor(Math.random() * 10) + 1; // 1-10
-          currentTal2 = Math.floor(Math.random() * 10) + 1;
-          break;
-        case 2: 
-          // Niveau 2: Tal 1-20 (ingen 0)
-          currentTal1 = Math.floor(Math.random() * 20) + 1; // 1-20
-          currentTal2 = Math.floor(Math.random() * 20) + 1;
-          break;
-        case 3: 
-          // Niveau 3: Tal 1-99 (ingen 0)
-          currentTal1 = Math.floor(Math.random() * 99) + 1; // 1-99
-          currentTal2 = Math.floor(Math.random() * 99) + 1;
-          break;
-        case 4:
-          // Niveau 4: Tal 100-999
-          currentTal1 = Math.floor(Math.random() * 900) + 100; // 100-999
-          currentTal2 = Math.floor(Math.random() * 900) + 100;
-          break;
-        case 5:
-          // Niveau 5: Tal 1000-999.999
-          currentTal1 = Math.floor(Math.random() * 999000) + 1000; // 1000-999.999
-          currentTal2 = Math.floor(Math.random() * 999000) + 1000;
-          break;
-        default: 
-          currentTal1 = Math.floor(Math.random() * 10) + 1;
-          currentTal2 = Math.floor(Math.random() * 10) + 1;
-      }
-      
-      correctAnswer = currentTal1 + currentTal2;
-      
-      // VIS OPGAVEN
-      const opgaveTekst = document.getElementById('opgaveTekst');
-      
-      opgaveTekst.innerHTML = `
-        <div style="font-size: 1.4rem; margin-bottom: 10px;">
-          Hvad er <span class="regnearter">${formatNumber(currentTal1)}</span> 
-          <i class="fas fa-plus" style="color: #48bb78; margin: 0 10px;"></i> 
-          <span class="regnearter">${formatNumber(currentTal2)}</span> 
-          ?
-        </div>
-        ${currentLevel >= 3 ? '<div style="font-size: 0.9rem; color: #718096; background: #f7fafc; padding: 8px; border-radius: 5px; margin-top: 5px;">💡 Tip: For større tal kan du bruge kolonneaddition</div>' : ''}
-      `;
-      
-      // Nulstil input
-      document.getElementById('svarInput').value = '';
-      document.getElementById('svarInput').focus();
-      
-      // Skjul tællelinje og hjælp
-      document.getElementById('tallelinjeContainer').style.display = 'none';
-      document.getElementById('hjaelpContainer').style.display = 'none';
-    }
-
-    // SIMPEL HJÆLP (kun niveau 1-3)
-    function visSimpelHjaelp() {
-      const hjælpContainer = document.getElementById('hjaelpContainer');
-      
-      const storsteTal = Math.max(currentTal1, currentTal2);
-      const mindsteTal = Math.min(currentTal1, currentTal2);
-      
-      const hjælpHTML = `
-        <div class="kolonne-title">
-          <i class="fas fa-lightbulb"></i> Simpel løsningsstrategi
-        </div>
-        
-        <div class="step-explanation">
-          <div class="step-title"><span class="step-number">1</span> Find det største tal</div>
-          <div class="step-content">
-            Vi finder det største tal for at gøre det nemmere at tælle:<br>
-            <strong>${formatNumber(currentTal1)}</strong> vs <strong>${formatNumber(currentTal2)}</strong>
-            → Størst er <span style="color: #48bb78; font-weight: bold;">${formatNumber(storsteTal)}</span>
-          </div>
-        </div>
-        
-        <div class="step-explanation" style="background: #ebf8ff; border-left-color: #4299e1;">
-          <div class="step-title"><span class="step-number">2</span> Start med at tælle fra det største tal</div>
-          <div class="step-content">
-            Start ved: <span style="color: #48bb78; font-weight: bold;">${formatNumber(storsteTal)}</span>
-          </div>
-        </div>
-        
-        <div class="step-explanation" style="background: #fff5f5; border-left-color: #f56565;">
-          <div class="step-title"><span class="step-number">3</span> Læg det mindste tal til</div>
-          <div class="step-content">
-            Tæl <span style="color: #f56565; font-weight: bold;">${formatNumber(mindsteTal)}</span> tal videre<br>
-            ${mindsteTal <= 10 ? 'Du kan bruge fingrene til at tælle!' : 'Brug kolonneaddition for større tal'}
-          </div>
-        </div>
-        
-        <div style="text-align: center; margin-top: 20px;">
-          <button onclick="skjulHjaelp()" class="close-hjaelp-btn">
-            <i class="fas fa-times"></i> Luk hjælp
-          </button>
-        </div>
-      `;
-      
-      hjælpContainer.innerHTML = hjælpHTML;
-      hjælpContainer.style.display = 'block';
-      
-      // Rul til hjælpen
-      hjælpContainer.scrollIntoView({ behavior: 'smooth' });
-    }
-
-    // KOLONNEADDITION HJÆLP (niveau 3-5) - UDEN LEDENDE NULLER
-    function visKolonneHjaelp() {
-      const hjælpContainer = document.getElementById('hjaelpContainer');
-      
-      // Konverter tal til arrays af cifre (enere først)
-      const digits1 = currentTal1.toString().split('').map(Number).reverse();
-      const digits2 = currentTal2.toString().split('').map(Number).reverse();
-      
-      // Find længden af det længste tal
-      const maxLength = Math.max(digits1.length, digits2.length);
-      
-      // Beregn kolonneaddition
-      let carry = 0;
-      let resultDigits = [];
-      let stepDetails = [];
-      
-      for (let i = 0; i < maxLength; i++) {
-        const d1 = digits1[i] || 0;
-        const d2 = digits2[i] || 0;
-        const sum = d1 + d2 + carry;
-        
-        const resultDigit = sum % 10;
-        const newCarry = Math.floor(sum / 10);
-        
-        resultDigits.unshift(resultDigit);
-        stepDetails.push({
-          position: i,
-          digit1: d1,
-          digit2: d2,
-          carry: carry,
-          sum: sum,
-          resultDigit: resultDigit,
-          newCarry: newCarry
-        });
-        
-        carry = newCarry;
-      }
-      
-      // Hvis der er carry til sidst
-      if (carry > 0) {
-        resultDigits.unshift(carry);
-        stepDetails.push({
-          position: maxLength,
-          digit1: 0,
-          digit2: 0,
-          carry: carry,
-          sum: carry,
-          resultDigit: carry,
-          newCarry: 0,
-          isFinalCarry: true
-        });
-      }
-      
-      // Beregn resultatet som tal (uden ledende nuller)
-      const resultNumber = parseInt(resultDigits.join(''));
-      
-      // Byg den visuelle kolonne - UDEN LEDENDE NULLER
-      let kolonneHTML = '';
-      
-      // Vis talene uden ledende nuller
-      const num1Str = currentTal1.toString();
-      const num2Str = currentTal2.toString();
-      const resultLength = Math.max(num1Str.length, num2Str.length, resultDigits.length);
-      
-      // Tilføj mellemrum foran for at få dem til at stå korrekt
-      const paddedNum1 = num1Str.padStart(resultLength, ' ');
-      const paddedNum2 = num2Str.padStart(resultLength, ' ');
-      
-      kolonneHTML += `
-        <div class="kolonne-title">
-          <i class="fas fa-calculator"></i> Kolonneaddition - Trin for trin
-        </div>
-        
-        <div class="kolonne-visual">
-          <!-- Første tal -->
-          <div class="kolonne-row">
-            <span style="color: #718096; margin-right: 10px; width: 45px;">&nbsp;</span>
-            ${Array.from(paddedNum1).map((digit, i) => 
-              digit === ' ' 
-                ? `<div class="kolonne-digit" style="visibility: hidden;">0</div>`
-                : `<div class="kolonne-digit">${digit}</div>`
-            ).join('')}
-          </div>
-          
-          <!-- Andet tal med plus -->
-          <div class="kolonne-row">
-            <span class="kolonne-operator">+</span>
-            ${Array.from(paddedNum2).map((digit, i) => 
-              digit === ' ' 
-                ? `<div class="kolonne-digit" style="visibility: hidden;">0</div>`
-                : `<div class="kolonne-digit">${digit}</div>`
-            ).join('')}
-          </div>
-          
-          <!-- Linje -->
-          <div class="kolonne-line"></div>
-          
-          <!-- Tomme kasser til resultatet -->
-          <div class="kolonne-row">
-            <span style="color: #718096; margin-right: 10px; width: 45px;">&nbsp;</span>
-            ${Array.from({length: resultLength}, (_, i) => 
-              `<div class="kolonne-digit empty"></div>`
-            ).join('')}
-          </div>
-        </div>
-      `;
-      
-      // Trin-for-trin forklaring
-      let stepsHTML = '<div style="margin-top: 25px;">';
-      stepsHTML += '<div class="step-title" style="font-size: 1.1rem; margin-bottom: 15px;">📝 Sådan gør du:</div>';
-      
-      // Sorter stepDetails så de kommer i rigtig rækkefølge (1'ere først)
-      const sortedStepDetails = [...stepDetails].sort((a, b) => a.position - b.position);
-      
-      sortedStepDetails.forEach((step, index) => {
-        const placeName = getPlaceName(step.position);
-        
-        if (step.isFinalCarry) {
-          const finalPlaceName = getPlaceName(step.position);
-          stepsHTML += `
-            <div class="step-explanation" style="background: #fffaf0; border-left-color: #f6ad55; margin-bottom: 10px;">
-              <div class="step-title"><span class="step-number">${index + 1}</span> Sidste overførsel</div>
-              <div class="step-content">
-                Vi har stadig ${step.carry} tilbage at overføre<br>
-                → Skriv ${step.carry} foran resultatet (i ${finalPlaceName})
-              </div>
-            </div>
-          `;
-        } else {
-          // Formater beregningen pænt
-          let beregning = `${step.digit1} + ${step.digit2}`;
-          if (step.carry > 0) {
-            beregning += ` + ${step.carry} (overført)`;
-          }
-          beregning += ` = ${step.sum}`;
-          
-          // Forklaring på resultatciffer og overførsel
-          let forklaring = `→ Skriv ${step.resultDigit} i resultatet (i ${placeName})`;
-          if (step.newCarry > 0) {
-            const nextPlaceName = getPlaceName(step.position + 1);
-            forklaring += `<br>→ Overfør ${step.newCarry} til ${nextPlaceName}`;
-          }
-          
-          stepsHTML += `
-            <div class="step-explanation" style="margin-bottom: 10px;">
-              <div class="step-title"><span class="step-number">${index + 1}</span> ${placeName}</div>
-              <div class="step-content">
-                ${beregning}<br>
-                ${forklaring}
-              </div>
-            </div>
-          `;
-        }
-      });
-      
-      stepsHTML += '</div>';
-      
-      // Samlet hjælp
-      const hjælpHTML = `
-        ${kolonneHTML}
-        ${stepsHTML}
-        
-        <div style="text-align: center; margin-top: 20px;">
-          <button onclick="skjulHjaelp()" class="close-hjaelp-btn">
-            <i class="fas fa-times"></i> Luk hjælp
-          </button>
-        </div>
-      `;
-      
-      hjælpContainer.innerHTML = hjælpHTML;
-      hjælpContainer.style.display = 'block';
-      
-      // Rul til hjælpen
-      hjælpContainer.scrollIntoView({ behavior: 'smooth' });
-    }
-
-    // SKJUL HJÆLP
-    function skjulHjaelp() {
-      document.getElementById('hjaelpContainer').style.display = 'none';
-    }
-
-    // TJEK SVAR
-    function tjekSvar() {
-      const svarInput = document.getElementById('svarInput');
-      const brugerSvar = parseFloat(svarInput.value.replace(',', '.'));
-      
-      if (isNaN(brugerSvar)) {
-        showFeedback('Skriv venligst et tal før du tjekker svar', false);
+      if (!userData.lastActiveDate) {
+        userData.lastActiveDate = today;
+        saveUserData();
         return;
       }
       
-      const tolerance = 0.01;
-      const isCorrect = Math.abs(brugerSvar - correctAnswer) < tolerance;
+      if (userData.lastActiveDate !== today) {
+        userData.lastActiveDate = today;
+        userData.activeDays++;
+        saveUserData();
+        updateStatsDisplay();
+      }
+    }
+
+    // OPDATER STATISTIK VISNING
+    function updateStatsDisplay() {
+      document.getElementById('totalCorrect').textContent = userData.totalCorrect;
+      document.getElementById('maxStreak').textContent = userData.maxStreak;
+      document.getElementById('activeDays').textContent = userData.activeDays;
+    }
+
+    // OPDATER EMNE VISNING
+    function updateTopicsDisplay() {
+      // Plus
+      const plusData = userData.topics.plus;
+      document.getElementById('plusLevel').textContent = plusData.level;
+      const plusProgress = Math.min((plusData.correctCount / 50) * 100, 100);
+      document.getElementById('plusProgress').style.width = plusProgress + '%';
       
-      // Gem forsøg lokalt
-      attempts.unshift({
-        opgave: `${formatNumber(currentTal1)} + ${formatNumber(currentTal2)}`,
-        svar: formatNumber(brugerSvar),
-        korrekt: isCorrect,
-        tid: new Date().toLocaleTimeString()
+      // Minus
+      const minusData = userData.topics.minus;
+      document.getElementById('minusLevel').textContent = minusData.level;
+      const minusProgress = Math.min((minusData.correctCount / 50) * 100, 100);
+      document.getElementById('minusProgress').style.width = minusProgress + '%';
+      
+      // Gange
+      const gangeData = userData.topics.gange;
+      document.getElementById('gangeLevel').textContent = gangeData.level;
+      const gangeProgress = Math.min((gangeData.correctCount / 50) * 100, 100);
+      document.getElementById('gangeProgress').style.width = gangeProgress + '%';
+      
+      // Division
+      const divisionData = userData.topics.division;
+      document.getElementById('divisionLevel').textContent = divisionData.level;
+      const divisionProgress = Math.min((divisionData.correctCount / 50) * 100, 100);
+      document.getElementById('divisionProgress').style.width = divisionProgress + '%';
+    }
+
+    // FIND BEDSTE EMNE
+    function updateTopTopic() {
+      let bestTopic = null;
+      let bestScore = -1;
+      
+      Object.entries(userData.topics).forEach(([topic, data]) => {
+        if (data.correctCount > bestScore) {
+          bestScore = data.correctCount;
+          bestTopic = topic;
+        }
       });
       
-      if (attempts.length > 5) attempts.pop();
-      visForsog();
-      skjulHjaelp();
+      if (bestScore > 10) { // Vis kun hvis brugeren har mere end 10 rigtige
+        const topicNames = {
+          plus: 'Plus',
+          minus: 'Minus', 
+          gange: 'Gange',
+          division: 'Division'
+        };
+        
+        document.getElementById('bestTopicName').textContent = topicNames[bestTopic];
+        document.getElementById('bestTopicScore').textContent = bestScore;
+        document.getElementById('topTopic').style.display = 'block';
+      }
+    }
+
+    // NULSTIL ALLE DATA
+    function resetAllData() {
+      if (confirm('Er du sikker på at du vil nulstille ALLE dine data? Dette kan ikke fortrydes!')) {
+        // Reset til standard data
+        userData = {
+          totalCorrect: 0,
+          maxStreak: 0,
+          activeDays: 1,
+          lastActiveDate: new Date().toDateString(),
+          topics: {
+            plus: { level: 1, correctCount: 0, streak: 0 },
+            minus: { level: 1, correctCount: 0, streak: 0 },
+            gange: { level: 1, correctCount: 0, streak: 0 },
+            division: { level: 1, correctCount: 0, streak: 0 }
+          }
+        };
+        
+        // Gem også lokale data for hvert emne
+        localStorage.removeItem('plusData');
+        localStorage.removeItem('minusData');
+        localStorage.removeItem('gangeData');
+        localStorage.removeItem('divisionData');
+        
+        // Gem ny data
+        saveUserData();
+        
+        // Opdater visning
+        updateStatsDisplay();
+        updateTopicsDisplay();
+        document.getElementById('topTopic').style.display = 'none';
+        
+        alert('Alle data er nulstillet! Du starter fra niveau 1.');
+      }
+    }
+
+    // HJÆLPEFUNKTION TIL AT OPDATERE EMNE DATA (kan kaldes fra andre sider)
+    window.updateTopicData = function(topic, isCorrect) {
+      if (!userData.topics[topic]) {
+        userData.topics[topic] = { level: 1, correctCount: 0, streak: 0 };
+      }
       
       if (isCorrect) {
-        streak++;
-        correctCount++;
+        // Opdater correct count
+        userData.topics[topic].correctCount++;
+        userData.totalCorrect++;
         
-        // NIVEAU OPGRADERING (simplet system)
-        if (streak >= 5 && currentLevel < 5) {
-          currentLevel++;
-          streak = 0; // Nulstil streak ved niveauopgradering
-          showFeedback(`🎉 Tillykke! Du er nu steget til niveau ${currentLevel}!`, true);
-          
-          // Opdater level-knapper
-          const buttons = document.querySelectorAll('.level-btn');
-          buttons.forEach(btn => {
-            btn.classList.remove('active');
-            if (parseInt(btn.dataset.level) === currentLevel) {
-              btn.classList.add('active');
-            }
-          });
-          opdaterHjaelpeKnapper();
-        } else {
-          showFeedback(`✅ Fantastisk! ${formatNumber(currentTal1)} + ${formatNumber(currentTal2)} = ${formatNumber(correctAnswer)}`, true);
+        // Opdater streak
+        userData.topics[topic].streak++;
+        if (userData.topics[topic].streak > userData.maxStreak) {
+          userData.maxStreak = userData.topics[topic].streak;
         }
         
-        // Gem data
-        saveUserData();
-        opdaterBrugerinfo();
-        
-        // Automatisk ny opgave
-        setTimeout(() => {
-          genererOpgave();
-        }, 1500);
-        
+        // Automatisk niveau opgradering (hver 5 rigtige)
+        if (userData.topics[topic].correctCount % 5 === 0 && userData.topics[topic].level < 5) {
+          userData.topics[topic].level++;
+        }
       } else {
-        streak = 0;
-        showFeedback(`❌ ${formatNumber(brugerSvar)} er ikke rigtigt. Prøv igen!`, false);
-        
-        // Gem data
-        saveUserData();
-        opdaterBrugerinfo();
-      }
-    }
-
-    // NY OPGAVE
-    function nyOpgave() {
-      genererOpgave();
-      document.getElementById('feedback').textContent = '';
-      document.getElementById('feedback').className = 'feedback';
-      animationActive = false;
-      clearTimeout(animationTimeout);
-      skjulHjaelp();
-    }
-
-    // VIS FORSØG
-    function visForsog() {
-      const container = document.getElementById('attemptsContainer');
-      if (!container) return;
-      
-      let html = '';
-      attempts.forEach((attempt, index) => {
-        html += `
-          <div style="padding: 10px; margin: 5px 0; background: ${attempt.korrekt ? '#c6f6d5' : '#fed7d7'}; border-radius: 5px; display: flex; justify-content: space-between; align-items: center;">
-            <div>
-              ${attempt.opgave} = ${attempt.svar} 
-              ${attempt.korrekt ? '✅' : '❌'}
-            </div>
-            <small style="color: #718096;">${attempt.tid}</small>
-          </div>
-        `;
-      });
-      
-      container.innerHTML = html || '<p>Ingen forsøg endnu...</p>';
-    }
-
-    // TÆLLELINJE FUNKTIONER (kun niveau 1-2)
-    function visTallelinje() {
-      if (currentLevel >= 3) {
-        showFeedback('Tællelinjen er kun tilgængelig i niveau 1 og 2', false);
-        return;
-      }
-      document.getElementById('tallelinjeContainer').style.display = 'block';
-      tegnTallelinje();
-      opdaterTallelinjeKnapper();
-      skjulHjaelp();
-    }
-
-    function skjulTallelinje() {
-      document.getElementById('tallelinjeContainer').style.display = 'none';
-      animationActive = false;
-      clearTimeout(animationTimeout);
-    }
-
-    function opdaterTallelinjeKnapper() {
-      const knapContainer = document.querySelector('.tallelinje-knapper');
-      
-      // Kun niveau 1 får animation
-      if (currentLevel === 1) {
-        knapContainer.innerHTML = `
-          <button onclick="startAnimation()" class="button" style="background: #48bb78; color: white;">
-            <i class="fas fa-play-circle"></i> Vis animation
-          </button>
-          <button onclick="skjulTallelinje()" class="close-hjaelp-btn">
-            <i class="fas fa-times"></i> Skjul tællelinje
-          </button>
-        `;
-      } else {
-        knapContainer.innerHTML = `
-          <button onclick="skjulTallelinje()" class="close-hjaelp-btn">
-            <i class="fas fa-times"></i> Skjul tællelinje
-          </button>
-        `;
-      }
-    }
-
-    function tegnTallelinje() {
-      if (currentLevel >= 3) return;
-      
-      const container = document.getElementById('tallelinje');
-      const mindsteTal = Math.min(currentTal1, currentTal2);
-      const storsteTal = Math.max(currentTal1, currentTal2);
-      const startTal = storsteTal; // Start på det største tal
-      const slutTal = correctAnswer;
-      
-      // ALTID vis alle tal fra mindste tal til resultat
-      const start = mindsteTal;
-      const slut = slutTal;
-      
-      let html = '';
-      
-      // Tegn hovedlinjen
-      html += `<div class="tallelinje-linje"></div>`;
-      
-      // Tegn ALLE tal og markeringer
-      for (let i = start; i <= slut; i++) {
-        const position = ((i - start) / (slut - start)) * 100;
-        
-        // Tegn markering for hvert tal
-        const isImportant = i === currentTal1 || i === currentTal2 || i === slutTal || i === startTal;
-        
-        html += `
-          <div class="tallelinje-markering" style="left: ${position}%; top: 60px;">
-            <div style="width: 2px; height: 15px; background: #4a5568; margin: 0 auto;"></div>
-          </div>
-        `;
-        
-        // Vis ALLE tal
-        const isOneOfOurNumbers = i === currentTal1 || i === currentTal2 || i === slutTal || i === startTal;
-        const color = isOneOfOurNumbers ? '#f56565' : '#4a5568';
-        const fontWeight = isOneOfOurNumbers ? 'bold' : 'normal';
-        
-        html += `
-          <div class="tallelinje-tal" style="left: ${position}%; top: 90px; 
-            font-size: 12px; 
-            color: ${color};
-            font-weight: ${fontWeight}">
-            ${i}
-          </div>
-        `;
+        // Nulstil streak ved forkert svar
+        userData.topics[topic].streak = 0;
       }
       
-      // NIVEAU 1: Vis start og slut cirkler med farver
-      if (currentLevel === 1) {
-        const startPosition = ((startTal - start) / (slut - start)) * 100;
-        const slutPosition = ((slutTal - start) / (slut - start)) * 100;
-        
-        html += `
-          <div class="tallelinje-start" style="left: ${startPosition}%; top: 60px;">
-            <div class="tallelinje-start-cirkel">
-              ${startTal}
-            </div>
-            <div style="text-align: center; margin-top: 10px; font-size: 14px; color: #48bb78; font-weight: bold;">
-              START
-            </div>
-          </div>
-          <div class="tallelinje-slut" style="left: ${slutPosition}%; top: 60px;">
-            <div class="tallelinje-slut-cirkel">
-              ${slutTal}
-            </div>
-            <div style="text-align: center; margin-top: 10px; font-size: 14px; color: #4299e1; font-weight: bold;">
-              SLUT
-            </div>
-          </div>
-        `;
-      } else {
-        // NIVEAU 2: Ingen farvede cirkler, kun tal
-        const tal1Position = ((currentTal1 - start) / (slut - start)) * 100;
-        const tal2Position = ((currentTal2 - start) / (slut - start)) * 100;
-        const sumPosition = ((correctAnswer - start) / (slut - start)) * 100;
-        const startPosition = ((startTal - start) / (slut - start)) * 100;
-        
-        // Ingen farvede cirkler på niveau 2
-        html += `
-          <div style="position: absolute; left: ${startPosition}%; top: 50px; transform: translateX(-50%); text-align: center;">
-            <div style="font-size: 16px; font-weight: bold; color: #48bb78;">${startTal}</div>
-            <div style="font-size: 12px; color: #48bb78; margin-top: 5px;">Start</div>
-          </div>
-          <div style="position: absolute; left: ${sumPosition}%; top: 120px; transform: translateX(-50%); text-align: center;">
-            <div style="font-size: 16px; font-weight: bold; color: #4299e1;">${slutTal}</div>
-            <div style="font-size: 12px; color: #4299e1; margin-top: 5px;">Resultat</div>
-          </div>
-        `;
-      }
+      // Gem data
+      saveUserData();
       
-      container.innerHTML = html;
-    }
+      return userData.topics[topic].level;
+    };
 
-    // ANIMATION FUNKTIONER (kun niveau 1) - FIXET VERSION
-    function startAnimation() {
-      if (animationActive || currentLevel !== 1) return;
-      
-      const container = document.getElementById('tallelinje');
-      const mindsteTal = Math.min(currentTal1, currentTal2);
-      const storsteTal = Math.max(currentTal1, currentTal2);
-      const startTal = storsteTal; // Start på det største tal
-      const antalSkridt = Math.abs(correctAnswer - startTal);
-      const slutTal = correctAnswer;
-      
-      const start = mindsteTal;
-      const slut = slutTal;
-      
-      // Beregn positionerne for hvert heltal
-      const positions = {};
-      for (let i = start; i <= slut; i++) {
-        positions[i] = ((i - start) / (slut - start)) * 100;
-      }
-      
-      const startPosition = positions[startTal];
-      const slutPosition = positions[slutTal];
-      
-      // Fjern evt. tidligere animation
-      const oldPrik = document.querySelector('.animation-prik');
-      if (oldPrik) oldPrik.remove();
-      
-      // Opret animation
-      const prik = document.createElement('div');
-      prik.className = 'animation-prik';
-      prik.style.width = '25px';
-      prik.style.height = '25px';
-      prik.style.background = '#667eea';
-      prik.style.left = `${startPosition}%`;
-      prik.style.top = '60px';
-      prik.innerHTML = `<div style="color: white; text-align: center; line-height: 25px; font-weight: bold;">${startTal}</div>`;
-      
-      container.appendChild(prik);
-      
-      // Start animation - spring fra heltal til heltal
-      animationActive = true;
-      animateStep(prik, 0, antalSkridt, positions, startTal);
-    }
-
-    function animateStep(prik, currentStep, totalSteps, positions, startNumber) {
-      if (currentStep > totalSteps || !animationActive) {
-        animationActive = false;
-        return;
-      }
-      
-      const currentNumber = startNumber + currentStep;
-      const currentPosition = positions[currentNumber];
-      
-      // Flyt prikken til næste heltal
-      if (currentPosition !== undefined) {
-        prik.style.left = `${currentPosition}%`;
-        prik.innerHTML = `<div style="color: white; text-align: center; line-height: 25px; font-weight: bold;">${currentNumber}</div>`;
-      }
-      
-      // Næste trin
-      currentStep++;
-      animationTimeout = setTimeout(() => {
-        animateStep(prik, currentStep, totalSteps, positions, startNumber);
-      }, animationSpeed);
-    }
-
-    // VIS MATEMATIKTUTOR (YouTube video)
-    function visMatematiktutor() {
-      // Åben YouTube video i nyt vindue/tab
-      const videoURL = "https://www.youtube.com/watch?v=AuX7nPBqDts"; // Eksempel video - kan ændres
-      window.open(videoURL, '_blank');
-    }
-
-    // VIS FEEDBACK
-    function showFeedback(message, isSuccess) {
-      const feedback = document.getElementById('feedback');
-      feedback.innerHTML = message;
-      feedback.className = isSuccess ? 'feedback success' : 'feedback error';
-      feedback.style.display = 'block';
-      
-      if (!isSuccess) {
-        // Fejl-feedback forsvinder efter 3 sekunder
-        setTimeout(() => {
-          feedback.style.display = 'none';
-        }, 3000);
-      }
-    }
-
-    // INITIALISER
-    visForsog();
+    // HJÆLPEFUNKTION TIL AT HENTE EMNE DATA
+    window.getTopicData = function(topic) {
+      return userData.topics[topic] || { level: 1, correctCount: 0, streak: 0 };
+    };
   </script>
 </body>
 </html>
