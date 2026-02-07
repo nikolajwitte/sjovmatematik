@@ -338,6 +338,33 @@
         min-width: 35px;
       }
     }
+    
+    /* SIMPLIFIKATION AF STATS BAR */
+    .stats-bar {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 15px;
+      padding: 15px 25px;
+      margin: 20px 0;
+      display: flex;
+      justify-content: space-around;
+      color: white;
+      box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    }
+    
+    .stat-item {
+      text-align: center;
+    }
+    
+    .stat-label {
+      font-size: 0.9rem;
+      opacity: 0.9;
+      margin-bottom: 5px;
+    }
+    
+    .stat-value {
+      font-size: 2rem;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
@@ -347,14 +374,15 @@
       <p>Lær at lægge tal sammen. Jo flere rigtige, jo sværere bliver opgaverne!</p>
     </header>
 
+    <!-- SIMPLIFICERET STATS BAR -->
     <div class="stats-bar">
       <div class="stat-item">
         <div class="stat-label">Niveau</div>
         <div class="stat-value" id="userLevel">1</div>
       </div>
       <div class="stat-item">
-        <div class="stat-label">Point</div>
-        <div class="stat-value" id="userPoints">0</div>
+        <div class="stat-label">Antal rigtige</div>
+        <div class="stat-value" id="correctCount">0</div>
       </div>
       <div class="stat-item">
         <div class="stat-label">I træk</div>
@@ -433,13 +461,12 @@
     </main>
   </div>
 
-  <!-- JAVASCRIPT -->
-  <script src="../js/app.js"></script>
   <script>
     // PLUS SPECIFIK KODE
     let currentLevel = 1;
     let currentTal1, currentTal2, correctAnswer;
     let streak = 0;
+    let correctCount = 0;
     let attempts = [];
     let animationActive = false;
     let animationTimeout;
@@ -467,18 +494,8 @@
 
     // NÅR SIDEN INDLÆSES
     document.addEventListener('DOMContentLoaded', function() {
-      // LAD CENTRAL BRUGERDATA FRA APP.JS
-      if (typeof window.loadUserData === 'function') {
-        window.loadUserData();
-      }
-      
-      // HENT NIVEAU FOR "PLUS" EMNET
-      if (window.MathApp && typeof window.MathApp.getTopicLevel === 'function') {
-        const topicLevel = window.MathApp.getTopicLevel('plus');
-        if (topicLevel) {
-          currentLevel = topicLevel;
-        }
-      }
+      // LÆS BRUGERDATA FRA LOCALSTORAGE
+      loadUserData();
       
       // OPDATER VISNING
       opdaterBrugerinfo();
@@ -492,15 +509,38 @@
       });
     });
 
+    // INDLÆS BRUGERDATA
+    function loadUserData() {
+      try {
+        const savedData = localStorage.getItem('plusData');
+        if (savedData) {
+          const data = JSON.parse(savedData);
+          correctCount = data.correctCount || 0;
+          streak = data.streak || 0;
+          currentLevel = data.level || 1;
+          attempts = data.attempts || [];
+        }
+      } catch (e) {
+        console.log("Ingen tidligere data fundet");
+      }
+    }
+
+    // GEM BRUGERDATA
+    function saveUserData() {
+      const data = {
+        correctCount: correctCount,
+        streak: streak,
+        level: currentLevel,
+        attempts: attempts.slice(0, 10) // Gem kun de sidste 10 forsøg
+      };
+      localStorage.setItem('plusData', JSON.stringify(data));
+    }
+
     // OPDATER BRUGERINFO VISNING
     function opdaterBrugerinfo() {
-      // HENT DATA FRA CENTRAL APP.JS
-      const centralData = window.MathApp ? window.MathApp.userData : { totalPoints: 0 };
-      const plusTopicData = centralData.topics ? centralData.topics.plus : { streak: 0 };
-      
       document.getElementById('userLevel').textContent = currentLevel;
-      document.getElementById('userPoints').textContent = centralData.totalPoints || 0;
-      document.getElementById('streak').textContent = plusTopicData.streak || streak;
+      document.getElementById('correctCount').textContent = correctCount;
+      document.getElementById('streak').textContent = streak;
     }
 
     // SETUP NIVEAU KNAPPER
@@ -514,7 +554,6 @@
           this.classList.add('active');
           // Opdater niveau
           currentLevel = parseInt(this.dataset.level);
-          opdaterBrugerinfo();
           genererOpgave();
           opdaterHjaelpeKnapper();
           // Skjul tællelinje og hjælp når niveau ændres
@@ -596,7 +635,7 @@
       
       correctAnswer = currentTal1 + currentTal2;
       
-      // VIS OPGAVEN - ALTID SAMME FORMAT (kun kolonne i hjælp)
+      // VIS OPGAVEN
       const opgaveTekst = document.getElementById('opgaveTekst');
       
       opgaveTekst.innerHTML = `
@@ -721,15 +760,15 @@
         });
       }
       
-      // Byg den visuelle kolonne - UDEN pladsbetegnelser over kasserne
+      // Byg den visuelle kolonne
       let kolonneHTML = '';
       
-      // Forbered tal til visning (lige længde) - i KORREKT rækkefølge!
+      // Forbered tal til visning (lige længde)
       const resultLength = resultDigits.length;
       const paddedNum1 = currentTal1.toString().padStart(resultLength, '0');
       const paddedNum2 = currentTal2.toString().padStart(resultLength, '0');
       
-      // Byg cifre i KORREKT rækkefølge (fra venstre mod højre)
+      // Byg cifre i korrekt rækkefølge (fra venstre mod højre)
       const digits1HTML = Array.from(paddedNum1).map(digit => 
         `<div class="kolonne-digit">${digit}</div>`
       ).join('');
@@ -748,8 +787,6 @@
         </div>
         
         <div class="kolonne-visual">
-          <!-- INGEN pladsbetegnelser over kasserne - kun cifre -->
-          
           <!-- Første tal -->
           <div class="kolonne-row">
             <span style="color: #718096; margin-right: 10px; width: 45px;">&nbsp;</span>
@@ -773,7 +810,7 @@
         </div>
       `;
       
-      // Trin-for-trin forklaring - MED pladsbetegnelser
+      // Trin-for-trin forklaring
       let stepsHTML = '<div style="margin-top: 25px;">';
       stepsHTML += '<div class="step-title" style="font-size: 1.1rem; margin-bottom: 15px;">📝 Sådan gør du:</div>';
       
@@ -823,7 +860,7 @@
       
       stepsHTML += '</div>';
       
-      // Samlet hjælp (uden resultatsektionen)
+      // Samlet hjælp
       const hjælpHTML = `
         ${kolonneHTML}
         ${stepsHTML}
@@ -847,10 +884,8 @@
       document.getElementById('hjaelpContainer').style.display = 'none';
     }
 
-       // TJEK SVAR - FIXET VERSION
+    // TJEK SVAR
     function tjekSvar() {
-      console.log("🎯 tjekSvar() START");
-      
       const svarInput = document.getElementById('svarInput');
       const brugerSvar = parseFloat(svarInput.value.replace(',', '.'));
       
@@ -861,8 +896,6 @@
       
       const tolerance = 0.01;
       const isCorrect = Math.abs(brugerSvar - correctAnswer) < tolerance;
-      
-      console.log("📝 Answer:", brugerSvar, "Correct:", correctAnswer, "Is correct?", isCorrect);
       
       // Gem forsøg lokalt
       attempts.unshift({
@@ -878,81 +911,44 @@
       
       if (isCorrect) {
         streak++;
-        console.log("✅ CORRECT! Local streak:", streak);
-        showFeedback(`✅ Fantastisk! ${formatNumber(currentTal1)} + ${formatNumber(currentTal2)} = ${formatNumber(correctAnswer)}`, true);
+        correctCount++;
         
-        // ⭐⭐ CENTRAL DATA OPDATERING - FIXET ⭐⭐
-        if (window.MathApp && typeof window.MathApp.updateTopicData === 'function') {
-          console.log("🔄 Calling MathApp.updateTopicData...");
+        // NIVEAU OPGRADERING (simplet system)
+        if (streak >= 5 && currentLevel < 5) {
+          currentLevel++;
+          streak = 0; // Nulstil streak ved niveauopgradering
+          showFeedback(`🎉 Tillykke! Du er nu steget til niveau ${currentLevel}!`, true);
           
-          // Kald MathApp - den opdaterer både points OG visning
-          const newLevel = window.MathApp.updateTopicData('plus', true, 10);
-          console.log("📊 MathApp returned level:", newLevel);
-          console.log("💰 Current points in MathApp:", window.MathApp.userData.totalPoints);
-          
-          // Tving en opdatering af display
-          window.MathApp.updateStatsDisplay();
-          
-          // Check for level change
-          if (newLevel && newLevel !== currentLevel) {
-            currentLevel = newLevel;
-            console.log("📈 Level changed to:", currentLevel);
-            
-            // Opdater knapper til nyt niveau
-            const buttons = document.querySelectorAll('.level-btn');
-            buttons.forEach(btn => {
-              btn.classList.remove('active');
-              if (parseInt(btn.dataset.level) === currentLevel) {
-                btn.classList.add('active');
-              }
-            });
-            opdaterHjaelpeKnapper();
-          }
+          // Opdater level-knapper
+          const buttons = document.querySelectorAll('.level-btn');
+          buttons.forEach(btn => {
+            btn.classList.remove('active');
+            if (parseInt(btn.dataset.level) === currentLevel) {
+              btn.classList.add('active');
+            }
+          });
+          opdaterHjaelpeKnapper();
         } else {
-          console.error("❌ MathApp.updateTopicData not found!");
-          // Emergency fallback
-          const pointsEl = document.getElementById('userPoints');
-          if (pointsEl) {
-            const current = parseInt(pointsEl.textContent) || 0;
-            pointsEl.textContent = current + 10;
-            console.log("🆘 Emergency points update:", current + 10);
-          }
+          showFeedback(`✅ Fantastisk! ${formatNumber(currentTal1)} + ${formatNumber(currentTal2)} = ${formatNumber(correctAnswer)}`, true);
         }
+        
+        // Gem data
+        saveUserData();
+        opdaterBrugerinfo();
         
         // Automatisk ny opgave
         setTimeout(() => {
           genererOpgave();
-          opdaterBrugerinfo(); // Dobbelt-check
         }, 1500);
         
       } else {
         streak = 0;
-        console.log("❌ WRONG! Reset local streak");
         showFeedback(`❌ ${formatNumber(brugerSvar)} er ikke rigtigt. Prøv igen!`, false);
         
-        // ⭐⭐ Også ved forkert svar ⭐⭐
-        if (window.MathApp && typeof window.MathApp.updateTopicData === 'function') {
-          console.log("🔄 Calling MathApp.updateTopicData for wrong answer");
-          const newLevel = window.MathApp.updateTopicData('plus', false, 0);
-          window.MathApp.updateStatsDisplay();
-          
-          if (newLevel && newLevel !== currentLevel) {
-            currentLevel = newLevel;
-            const buttons = document.querySelectorAll('.level-btn');
-            buttons.forEach(btn => {
-              btn.classList.remove('active');
-              if (parseInt(btn.dataset.level) === currentLevel) {
-                btn.classList.add('active');
-              }
-            });
-            opdaterHjaelpeKnapper();
-          }
-        }
+        // Gem data
+        saveUserData();
+        opdaterBrugerinfo();
       }
-      
-      // Altid opdater brugerinfo
-      opdaterBrugerinfo();
-      console.log("🏁 tjekSvar() END");
     }
 
     // NY OPGAVE
@@ -1211,7 +1207,7 @@
       }, animationSpeed);
     }
 
-    // VIS FEEDBACK (kun for svar-check, ikke hjælp)
+    // VIS FEEDBACK
     function showFeedback(message, isSuccess) {
       const feedback = document.getElementById('feedback');
       feedback.innerHTML = message;
