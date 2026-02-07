@@ -1,190 +1,256 @@
-// GLOBALE VARIABLER (gemmer i localStorage)
-let userData = {
-  totalPoints: 0,
-  totalCorrect: 0,
-  totalAttempts: 0,
-  currentLevel: 1,
-  lastTopics: {}
+// app.js - Kompatibel med plus.html
+// GLOBALE VARIABLER
+window.MathApp = {
+  userData: null,
+  
+  // Indlæs data fra localStorage
+  loadUserData: function() {
+    const saved = localStorage.getItem('mathAppUserData');
+    if (saved) {
+      this.userData = JSON.parse(saved);
+    } else {
+      // Initial data
+      this.userData = {
+        totalPoints: 0,
+        totalCorrect: 0,
+        totalAttempts: 0,
+        topics: {
+          plus: {
+            streak: 0,
+            level: 1,
+            correct: 0,
+            attempts: 0
+          },
+          minus: {
+            streak: 0,
+            level: 1,
+            correct: 0,
+            attempts: 0
+          }
+        }
+      };
+    }
+    this.updateStatsDisplay();
+    return this.userData;
+  },
+  
+  // Gem data til localStorage
+  saveUserData: function() {
+    localStorage.setItem('mathAppUserData', JSON.stringify(this.userData));
+  },
+  
+  // Opdater visning af statistik
+  updateStatsDisplay: function() {
+    const pointsEl = document.getElementById('userPoints');
+    const levelEl = document.getElementById('userLevel');
+    const streakEl = document.getElementById('streak');
+    
+    if (pointsEl) pointsEl.textContent = this.userData.totalPoints;
+    if (levelEl && this.userData.topics.plus) {
+      levelEl.textContent = this.userData.topics.plus.level;
+    }
+    if (streakEl && this.userData.topics.plus) {
+      streakEl.textContent = this.userData.topics.plus.streak;
+    }
+    
+    // Opdater også forsiden hvis vi er der
+    const totalPointsEl = document.getElementById('totalPoints');
+    const correctAnswersEl = document.getElementById('correctAnswers');
+    const currentLevelEl = document.getElementById('currentLevel');
+    
+    if (totalPointsEl) {
+      totalPointsEl.textContent = this.userData.totalPoints;
+    }
+    if (correctAnswersEl && this.userData.totalAttempts > 0) {
+      const percentage = Math.round((this.userData.totalCorrect / this.userData.totalAttempts) * 100);
+      correctAnswersEl.textContent = percentage + '%';
+    }
+    if (currentLevelEl && this.userData.topics.plus) {
+      currentLevelEl.textContent = this.userData.topics.plus.level;
+    }
+  },
+  
+  // Opdater emne-data (kaldes fra plus.html)
+  updateTopicData: function(topic, isCorrect, points) {
+    // Sikre at emnet eksisterer
+    if (!this.userData.topics[topic]) {
+      this.userData.topics[topic] = {
+        streak: 0,
+        level: 1,
+        correct: 0,
+        attempts: 0
+      };
+    }
+    
+    const topicData = this.userData.topics[topic];
+    
+    // Opdater forsøg
+    this.userData.totalAttempts++;
+    topicData.attempts++;
+    
+    if (isCorrect) {
+      // Rigtigt svar
+      this.userData.totalCorrect++;
+      topicData.correct++;
+      
+      // Opdater streak
+      topicData.streak++;
+      
+      // Tilføj point
+      const pointsToAdd = points || 10;
+      this.userData.totalPoints += pointsToAdd;
+      
+      // Opdater niveau baseret på streak
+      if (topicData.streak >= 3 && topicData.level < 5) {
+        topicData.level++;
+        topicData.streak = 0; // Nulstil streak ved niveauopgradering
+      }
+    } else {
+      // Forkert svar
+      topicData.streak = 0;
+      
+      // Muligvis sænk niveau hvis niveau er højt og for mange fejl
+      if (topicData.level > 1 && topicData.correct / topicData.attempts < 0.5) {
+        topicData.level = Math.max(1, topicData.level - 0.5);
+      }
+    }
+    
+    // Gem data
+    this.saveUserData();
+    
+    // Opdater visning
+    this.updateStatsDisplay();
+    
+    // Returner nyt niveau
+    return topicData.level;
+  },
+  
+  // Hent emne-niveau (kaldes fra plus.html)
+  getTopicLevel: function(topic) {
+    if (this.userData.topics && this.userData.topics[topic]) {
+      return this.userData.topics[topic].level;
+    }
+    return 1;
+  },
+  
+  // Hent emne-streak
+  getTopicStreak: function(topic) {
+    if (this.userData.topics && this.userData.topics[topic]) {
+      return this.userData.topics[topic].streak;
+    }
+    return 0;
+  },
+  
+  // Generer tal baseret på niveau
+  generateNumberForLevel: function(level, operation) {
+    let maxNumber = 10;
+    
+    if (level <= 3) {
+      maxNumber = 10 * level;
+    } else if (level <= 6) {
+      maxNumber = 20 + (level - 3) * 10;
+    } else {
+      maxNumber = 50 + (level - 6) * 25;
+    }
+    
+    if (operation === 'division') {
+      const factor = Math.floor(Math.random() * 10) + 1;
+      const result = Math.floor(Math.random() * maxNumber) + 1;
+      return [result * factor, factor];
+    }
+    
+    return Math.floor(Math.random() * maxNumber) + 1;
+  },
+  
+  // Vis feedback
+  showFeedback: function(message, isCorrect, elementId = 'feedback') {
+    const feedbackDiv = document.getElementById(elementId);
+    if (!feedbackDiv) return;
+    
+    feedbackDiv.textContent = message;
+    feedbackDiv.className = 'feedback ' + (isCorrect ? 'success' : 'error');
+    
+    if (!isCorrect) {
+      setTimeout(() => {
+        if (feedbackDiv.textContent === message) {
+          feedbackDiv.textContent = '';
+          feedbackDiv.className = 'feedback';
+        }
+      }, 3000);
+    }
+  },
+  
+  // Nulstil alt data
+  resetAllData: function() {
+    this.userData = {
+      totalPoints: 0,
+      totalCorrect: 0,
+      totalAttempts: 0,
+      topics: {
+        plus: { streak: 0, level: 1, correct: 0, attempts: 0 },
+        minus: { streak: 0, level: 1, correct: 0, attempts: 0 }
+      }
+    };
+    this.saveUserData();
+    this.updateStatsDisplay();
+    alert('Alle data er nulstillet!');
+  },
+  
+  // Vis debug info
+  showDebugInfo: function() {
+    console.log('MathApp Debug Info:', this.userData);
+    return this.userData;
+  }
 };
 
-// HENT DATA FRA LOCALSTORAGE
-function loadUserData() {
-  const saved = localStorage.getItem('matematikUserData');
-  if (saved) {
-    userData = JSON.parse(saved);
-    updateStatsDisplay();
-  }
-}
-
-// GEM DATA TIL LOCALSTORAGE
-function saveUserData() {
-  localStorage.setItem('matematikUserData', JSON.stringify(userData));
-}
-
-// OPDATER STATISTIK PÅ FORSIDE
-function updateStatsDisplay() {
-  if (document.getElementById('totalPoints')) {
-    document.getElementById('totalPoints').textContent = userData.totalPoints;
-    
-    const correctPercentage = userData.totalAttempts > 0 
-      ? Math.round((userData.totalCorrect / userData.totalAttempts) * 100)
-      : 0;
-    document.getElementById('correctAnswers').textContent = correctPercentage + '%';
-    
-    document.getElementById('currentLevel').textContent = userData.currentLevel;
-  }
-}
-
-// REGN NYT NIVEAU UD
-function calculateNewLevel(isCorrect) {
-  userData.totalAttempts++;
-  
-  if (isCorrect) {
-    userData.totalCorrect++;
-    userData.totalPoints += 10;
-    
-    // Hvis de har svaret rigtigt på 5 i træk, stig i niveau
-    if (userData.totalCorrect % 5 === 0) {
-      userData.currentLevel++;
-    }
-  } else {
-    // Hvis de har svaret forkert på 3 i træk, falder niveau
-    const lastFive = userData.totalAttempts % 5;
-    if (lastFive === 0 && userData.currentLevel > 1) {
-      userData.currentLevel--;
-    }
-  }
-  
-  saveUserData();
-  return userData.currentLevel;
-}
-
-// GENERER TAL BASERET PÅ NIVEAU
-function generateNumberForLevel(level, operation) {
-  let maxNumber = 10;
-  
-  if (level <= 3) {
-    maxNumber = 10 * level;
-  } else if (level <= 6) {
-    maxNumber = 20 + (level - 3) * 10;
-  } else {
-    maxNumber = 50 + (level - 6) * 25;
-  }
-  
-  if (operation === 'division') {
-    // For division, sørg for pæne tal
-    const factor = Math.floor(Math.random() * 10) + 1;
-    const result = Math.floor(Math.random() * maxNumber) + 1;
-    return [result * factor, factor]; // resultat, divisor
-  }
-  
-  return Math.floor(Math.random() * maxNumber) + 1;
-}
-
-// FEEDBACK FUNKTIONER
-function showFeedback(message, isCorrect) {
-  const feedbackDiv = document.getElementById('feedback');
-  if (!feedbackDiv) return;
-  
-  feedbackDiv.textContent = message;
-  feedbackDiv.className = 'feedback ' + (isCorrect ? 'correct' : 'incorrect');
-  
-  // Fjern feedback efter 3 sekunder
-  setTimeout(() => {
-    if (feedbackDiv.textContent === message) {
-      feedbackDiv.textContent = '';
-      feedbackDiv.className = 'feedback';
-    }
-  }, 3000);
-}
-
-// VIS HJÆLP
-function showHelp(operation, tal1, tal2) {
-  let helpText = '';
-  
-  switch(operation) {
-    case 'plus':
-      helpText = `Prøv at tælle fra ${tal1}. Læg ${tal2} til: ${tal1} + ${tal2} = ${tal1 + tal2}`;
-      break;
-    case 'minus':
-      helpText = `Start med ${tal1}. Træk ${tal2} fra: ${tal1} - ${tal2} = ${tal1 - tal2}`;
-      break;
-    case 'gange':
-      helpText = `${tal1} ganget med ${tal2} er det samme som ${tal1} lagt sammen ${tal2} gange`;
-      break;
-    case 'division':
-      helpText = `Hvor mange gange kan ${tal2} gå op i ${tal1}? Prøv at dele ${tal1} i ${tal2} lige store dele`;
-      break;
-  }
-  
-  const feedbackDiv = document.getElementById('feedback');
-  feedbackDiv.textContent = helpText;
-  feedbackDiv.className = 'feedback hjelp';
-}
-
-// KØR NÅR SIDEN INDLÆSES
+// Automatisk indlæsning når DOM er klar
 document.addEventListener('DOMContentLoaded', function() {
-  loadUserData();
-  
-  // Tilføj event listeners til alle hjælpeknapper
-  const helpButtons = document.querySelectorAll('.help-btn');
-  helpButtons.forEach(btn => {
-    btn.addEventListener('click', function() {
-      const operation = this.dataset.operation;
-      const tal1 = parseInt(this.dataset.tal1);
-      const tal2 = parseInt(this.dataset.tal2);
-      showHelp(operation, tal1, tal2);
-    });
-  });
+  window.MathApp.loadUserData();
+  console.log('MathApp initialized');
 });
 
-// PROGRESS BAR FUNKTION
-function updateProgress(topic, correct) {
-  // Gem pr. emne
-  if (!userData[topic]) {
-    userData[topic] = { attempts: 0, correct: 0, level: 1 };
-  }
-  
-  userData[topic].attempts++;
-  if (correct) userData[topic].correct++;
-  
-  // Opdater niveau pr. emne
-  const accuracy = userData[topic].correct / userData[topic].attempts;
-  if (accuracy > 0.8) userData[topic].level = Math.min(3, userData[topic].level + 0.1);
-  if (accuracy < 0.5) userData[topic].level = Math.max(1, userData[topic].level - 0.1);
-  
-  saveUserData();
-}
-
-// GET USER'S LEVEL FOR TOPIC
-function getUserLevelForTopic(topic) {
-  return userData[topic]?.level || 1;
-}
-
-// ACHIEVEMENTS SYSTEM
-const achievements = {
-  'first_correct': { name: 'Første rigtige!', points: 10 },
-  'five_streak': { name: '5 i træk!', points: 25 },
-  'level_up': { name: 'Niveau stigning!', points: 50 }
+// Behold også disse globale funktioner for bagudkompatibilitet
+window.loadUserData = function() {
+  return window.MathApp.loadUserData();
 };
 
-function checkAchievements() {
-  // Tjek for achievements
-  if (userData.totalCorrect === 1 && !userData.achievements?.first_correct) {
-    awardAchievement('first_correct');
+window.calculateNewLevel = function(isCorrect) {
+  // Denne funktion er for bagudkompatibilitet
+  const currentLevel = window.MathApp.userData.topics.plus.level;
+  
+  window.MathApp.userData.totalAttempts++;
+  
+  if (isCorrect) {
+    window.MathApp.userData.totalCorrect++;
+    window.MathApp.userData.totalPoints += 10;
+    
+    // Simpel niveau-logik
+    if (window.MathApp.userData.totalCorrect % 5 === 0) {
+      window.MathApp.userData.topics.plus.level++;
+    }
   }
   
-  if (userData.totalCorrect % 5 === 0 && userData.totalCorrect > 0) {
-    awardAchievement('five_streak');
-  }
-}
+  window.MathApp.saveUserData();
+  window.MathApp.updateStatsDisplay();
+  return window.MathApp.userData.topics.plus.level;
+};
 
-function awardAchievement(id) {
-  if (!userData.achievements) userData.achievements = {};
-  userData.achievements[id] = true;
-  userData.totalPoints += achievements[id].points;
+window.updateStatsDisplay = function() {
+  window.MathApp.updateStatsDisplay();
+};
+
+window.getUserLevelForTopic = function(topic) {
+  return window.MathApp.getTopicLevel(topic);
+};
+
+window.updateProgress = function(topic, correct) {
+  // Simpel implementering for bagudkompatibilitet
+  if (!window.MathApp.userData[topic]) {
+    window.MathApp.userData[topic] = { attempts: 0, correct: 0, level: 1 };
+  }
   
-  // Vis popup (simpel version)
-  alert(`🎉 Achievement: ${achievements[id].name}! +${achievements[id].points} point!`);
-  saveUserData();
-}
+  window.MathApp.userData[topic].attempts++;
+  if (correct) window.MathApp.userData[topic].correct++;
+  
+  window.MathApp.saveUserData();
+};
