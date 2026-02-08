@@ -38,6 +38,50 @@
       border-color: #48bb78;
     }
     
+    /* NY STATISTIK LAYOUT */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+      margin: 20px 0;
+    }
+    
+    .stat-box {
+      background: white;
+      border-radius: 10px;
+      padding: 15px;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      border: 2px solid #e2e8f0;
+      transition: all 0.3s;
+    }
+    
+    .stat-box.active {
+      border-color: #48bb78;
+      background: #f0fff4;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(72, 187, 120, 0.2);
+    }
+    
+    .stat-box-label {
+      font-size: 0.9rem;
+      color: #718096;
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+    
+    .stat-box-value {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #2d3748;
+    }
+    
+    .stat-box-sub {
+      font-size: 0.8rem;
+      color: #a0aec0;
+      margin-top: 3px;
+    }
+    
     /* TÆLLELINJE STYLES */
     .tallelinje-container {
       margin-top: 30px;
@@ -370,43 +414,19 @@
         max-width: 250px;
       }
       
-      .stats-bar {
-        flex-direction: column;
-        gap: 15px;
+      .stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
       }
       
-      .stat-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+      .stat-box-value {
+        font-size: 1.5rem;
       }
-    }
-    
-    /* SIMPLIFICERET STATS BAR */
-    .stats-bar {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      border-radius: 15px;
-      padding: 15px 25px;
-      margin: 20px 0;
-      display: flex;
-      justify-content: space-around;
-      color: white;
-      box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-    }
-    
-    .stat-item {
-      text-align: center;
-    }
-    
-    .stat-label {
-      font-size: 0.9rem;
-      opacity: 0.9;
-      margin-bottom: 5px;
-    }
-    
-    .stat-value {
-      font-size: 2rem;
-      font-weight: bold;
     }
   </style>
 </head>
@@ -417,24 +437,9 @@
       <p>Lær at lægge tal sammen. Vælg en sværhedsgrad og start!</p>
     </header>
 
-    <!-- SIMPLIFICERET STATS BAR - KUN VALGT NIVEAU + ANTAL RIGTIGE I DET NIVEAU -->
-    <div class="stats-bar">
-      <div class="stat-item">
-        <div class="stat-label">Valgt niveau</div>
-        <div class="stat-value" id="currentDifficulty">Let</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-label">Rigtige i Let</div>
-        <div class="stat-value" id="correctLet">0</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-label">Rigtige i Mellem</div>
-        <div class="stat-value" id="correctMellem">0</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-label">Rigtige i Svær</div>
-        <div class="stat-value" id="correctSvaer">0</div>
-      </div>
+    <!-- ANTAL RIGTIGE FOR ALLE 5 NIVEAUER -->
+    <div class="stats-grid" id="statsGrid">
+      <!-- Statistik for hvert niveau vises her dynamisk -->
     </div>
 
     <main>
@@ -512,19 +517,18 @@
     // PLUS SPECIFIK KODE
     let currentDifficulty = "let"; // "let", "mellem", "svaer", "ekspert", "mester"
     let currentTal1, currentTal2, correctAnswer;
-    let streak = 0;
     let attempts = [];
     let animationActive = false;
     let animationTimeout;
     let animationSpeed = 800;
 
-    // DATA FOR HVER SVÆRHEDSGRAD
+    // DATA FOR HVER SVÆRHEDSGRAD - KUN "Antal rigtige"
     let difficultyData = {
-      let: { correctCount: 0, streak: 0 },
-      mellem: { correctCount: 0, streak: 0 },
-      svaer: { correctCount: 0, streak: 0 },
-      ekspert: { correctCount: 0, streak: 0 },
-      mester: { correctCount: 0, streak: 0 }
+      let: { correctCount: 0 },
+      mellem: { correctCount: 0 },
+      svaer: { correctCount: 0 },
+      ekspert: { correctCount: 0 },
+      mester: { correctCount: 0 }
     };
 
     // FORMAT NUMBER WITH THOUSAND SEPARATORS
@@ -553,7 +557,7 @@
       loadUserData();
       
       // OPDATER VISNING
-      opdaterBrugerinfo();
+      updateStatsDisplay();
       setupDifficultyButtons();
       genererOpgave();
       opdaterHjaelpeKnapper();
@@ -571,7 +575,6 @@
         if (savedData) {
           const data = JSON.parse(savedData);
           difficultyData = data.difficultyData || difficultyData;
-          streak = data.streak || 0;
           currentDifficulty = data.currentDifficulty || "let";
           attempts = data.attempts || [];
         }
@@ -584,30 +587,42 @@
     function saveUserData() {
       const data = {
         difficultyData: difficultyData,
-        streak: streak,
         currentDifficulty: currentDifficulty,
         attempts: attempts.slice(0, 10) // Gem kun de sidste 10 forsøg
       };
       localStorage.setItem('plusData', JSON.stringify(data));
     }
 
-    // OPDATER BRUGERINFO VISNING
-    function opdaterBrugerinfo() {
-      // Vis valgt sværhedsgrad
-      const difficultyNames = {
-        let: "Let",
-        mellem: "Mellem",
-        svaer: "Svær",
-        ekspert: "Ekspert",
-        mester: "Mester"
+    // OPDATER STATISTIK VISNING
+    function updateStatsDisplay() {
+      const statsGrid = document.getElementById('statsGrid');
+      if (!statsGrid) return;
+      
+      const difficultyInfo = {
+        let: { name: "Let", range: "1-10" },
+        mellem: { name: "Mellem", range: "1-20" },
+        svaer: { name: "Svær", range: "1-99" },
+        ekspert: { name: "Ekspert", range: "100-999" },
+        mester: { name: "Mester", range: "1000-999.999" }
       };
       
-      document.getElementById('currentDifficulty').textContent = difficultyNames[currentDifficulty];
+      let html = '';
       
-      // Vis antal rigtige for hver sværhedsgrad
-      document.getElementById('correctLet').textContent = difficultyData.let.correctCount;
-      document.getElementById('correctMellem').textContent = difficultyData.mellem.correctCount;
-      document.getElementById('correctSvaer').textContent = difficultyData.svaer.correctCount;
+      // Loop gennem alle 5 niveauer
+      Object.entries(difficultyInfo).forEach(([key, info]) => {
+        const isActive = key === currentDifficulty;
+        const correctCount = difficultyData[key].correctCount || 0;
+        
+        html += `
+          <div class="stat-box ${isActive ? 'active' : ''}">
+            <div class="stat-box-label">${info.name}</div>
+            <div class="stat-box-value">${correctCount}</div>
+            <div class="stat-box-sub">${info.range}</div>
+          </div>
+        `;
+      });
+      
+      statsGrid.innerHTML = html;
     }
 
     // SETUP SVÆRHEDSGRAD KNAPPER
@@ -628,7 +643,7 @@
           currentDifficulty = this.dataset.difficulty;
           genererOpgave();
           opdaterHjaelpeKnapper();
-          opdaterBrugerinfo();
+          updateStatsDisplay();
           // Skjul tællelinje og hjælp når sværhedsgrad ændres
           document.getElementById('tallelinjeContainer').style.display = 'none';
           document.getElementById('hjaelpContainer').style.display = 'none';
@@ -998,18 +1013,14 @@
       skjulHjaelp();
       
       if (isCorrect) {
-        // Opdater streak for denne sværhedsgrad
-        difficultyData[currentDifficulty].streak++;
-        streak = difficultyData[currentDifficulty].streak;
-        
         // Opdater antal rigtige for denne sværhedsgrad
         difficultyData[currentDifficulty].correctCount++;
         
         showFeedback(`✅ Fantastisk! ${formatNumber(currentTal1)} + ${formatNumber(currentTal2)} = ${formatNumber(correctAnswer)}`, true);
         
-        // Gem data
+        // Gem data og opdater visning
         saveUserData();
-        opdaterBrugerinfo();
+        updateStatsDisplay();
         
         // Automatisk ny opgave
         setTimeout(() => {
@@ -1017,15 +1028,7 @@
         }, 1500);
         
       } else {
-        // Nulstil streak ved forkert svar
-        difficultyData[currentDifficulty].streak = 0;
-        streak = 0;
-        
         showFeedback(`❌ ${formatNumber(brugerSvar)} er ikke rigtigt. Prøv igen!`, false);
-        
-        // Gem data
-        saveUserData();
-        opdaterBrugerinfo();
       }
     }
 
