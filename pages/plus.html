@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /* NIVEAU KNAPPER */
+    /* NIVEAU KNAPPER (erstattes nu af stat-bokse) */
     .level-buttons {
       display: flex;
       gap: 10px;
@@ -38,10 +38,10 @@
       border-color: #48bb78;
     }
     
-    /* NY STATISTIK LAYOUT */
+    /* NYT STATISTIK LAYOUT - SOM KNAPPER */
     .stats-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      grid-template-columns: repeat(2, 1fr);
       gap: 10px;
       margin: 20px 0;
     }
@@ -54,6 +54,12 @@
       box-shadow: 0 4px 6px rgba(0,0,0,0.1);
       border: 2px solid #e2e8f0;
       transition: all 0.3s;
+      cursor: pointer;
+    }
+    
+    .stat-box:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
     }
     
     .stat-box.active {
@@ -80,6 +86,55 @@
       font-size: 0.8rem;
       color: #a0aec0;
       margin-top: 3px;
+    }
+    
+    /* MESTER STAT-BOX - FULD LÆNGDE, MINDRE HØJ */
+    .mester-stat-box {
+      grid-column: 1 / -1; /* Spænder over begge kolonner */
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: 2px solid #5a67d8;
+      color: white;
+      padding: 12px 15px;
+      margin-top: 5px;
+    }
+    
+    .mester-stat-box:hover {
+      background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+    }
+    
+    .mester-stat-box.active {
+      border-color: #f6ad55;
+      background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+    }
+    
+    .mester-stat-box .stat-box-label {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 1rem;
+    }
+    
+    .mester-stat-box .stat-box-value {
+      color: white;
+      font-size: 1.5rem;
+    }
+    
+    .mester-stat-box .stat-box-sub {
+      color: rgba(255, 255, 255, 0.7);
+    }
+    
+    /* SVÆRHEDSGRAD TEKST - VISER VALGT NIVEAU */
+    .selected-difficulty {
+      text-align: center;
+      margin: 10px 0 30px 0;
+      font-size: 1.2rem;
+      color: #2d3748;
+    }
+    
+    .selected-difficulty span {
+      background: #48bb78;
+      color: white;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-weight: bold;
     }
     
     /* TÆLLELINJE STYLES */
@@ -415,17 +470,11 @@
       }
       
       .stats-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
-    
-    @media (max-width: 480px) {
-      .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: 1fr;
       }
       
-      .stat-box-value {
-        font-size: 1.5rem;
+      .mester-stat-box {
+        grid-column: 1;
       }
     }
   </style>
@@ -434,27 +483,20 @@
   <div class="container">
     <header class="header">
       <h1><i class="fas fa-plus"></i> Plus (Addition)</h1>
-      <p>Lær at lægge tal sammen. Vælg en sværhedsgrad og start!</p>
+      <p>Lær at lægge tal sammen. Klik på et niveau for at starte!</p>
     </header>
 
-    <!-- ANTAL RIGTIGE FOR ALLE 5 NIVEAUER -->
+    <!-- ANTAL RIGTIGE FOR ALLE 5 NIVEAUER - NU SOM KNAPPER -->
     <div class="stats-grid" id="statsGrid">
       <!-- Statistik for hvert niveau vises her dynamisk -->
     </div>
+    
+    <!-- VISER VALGT NIVEAU -->
+    <div class="selected-difficulty">
+      Du spiller: <span id="currentDifficultyText">Let (1-10)</span>
+    </div>
 
     <main>
-      <!-- SVÆRHEDSGRAD VÆLGER -->
-      <div style="margin-bottom: 30px; text-align: center;">
-        <h3>Vælg sværhedsgrad:</h3>
-        <div class="level-buttons">
-          <button class="level-btn active" data-difficulty="let">Let (1-10)</button>
-          <button class="level-btn" data-difficulty="mellem">Mellem (1-20)</button>
-          <button class="level-btn" data-difficulty="svaer">Svær (1-99)</button>
-          <button class="level-btn" data-difficulty="ekspert">Ekspert (100-999)</button>
-          <button class="level-btn" data-difficulty="mester">Mester (1000-999.999)</button>
-        </div>
-      </div>
-
       <!-- OPGAVE -->
       <div class="opgave-container">
         <div class="opgave-tekst" id="opgaveTekst">
@@ -531,6 +573,40 @@
       mester: { correctCount: 0 }
     };
 
+    // INFORMATION OM HVERT NIVEAU
+    const difficultyInfo = {
+      let: { 
+        name: "Let", 
+        range: "1-10",
+        displayName: "Let (1-10)",
+        description: "Lærer fingertælling og tællelinje"
+      },
+      mellem: { 
+        name: "Mellem", 
+        range: "1-20",
+        displayName: "Mellem (1-20)",
+        description: "Overgang over 10, mentale strategier"
+      },
+      svaer: { 
+        name: "Svær", 
+        range: "1-99",
+        displayName: "Svær (1-99)",
+        description: "Introducerer kolonneaddition"
+      },
+      ekspert: { 
+        name: "Ekspert", 
+        range: "100-999",
+        displayName: "Ekspert (100-999)",
+        description: "Mester kolonneaddition"
+      },
+      mester: { 
+        name: "Mester", 
+        range: "1000-999.999",
+        displayName: "Mester (1000-999.999)",
+        description: "Ultimativ udfordring med store tal"
+      }
+    };
+
     // FORMAT NUMBER WITH THOUSAND SEPARATORS
     function formatNumber(num) {
       return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -558,7 +634,6 @@
       
       // OPDATER VISNING
       updateStatsDisplay();
-      setupDifficultyButtons();
       genererOpgave();
       opdaterHjaelpeKnapper();
       
@@ -593,28 +668,24 @@
       localStorage.setItem('plusData', JSON.stringify(data));
     }
 
-    // OPDATER STATISTIK VISNING
+    // OPDATER STATISTIK VISNING - NU SOM KNAPPER
     function updateStatsDisplay() {
       const statsGrid = document.getElementById('statsGrid');
       if (!statsGrid) return;
       
-      const difficultyInfo = {
-        let: { name: "Let", range: "1-10" },
-        mellem: { name: "Mellem", range: "1-20" },
-        svaer: { name: "Svær", range: "1-99" },
-        ekspert: { name: "Ekspert", range: "100-999" },
-        mester: { name: "Mester", range: "1000-999.999" }
-      };
-      
       let html = '';
       
-      // Loop gennem alle 5 niveauer
-      Object.entries(difficultyInfo).forEach(([key, info]) => {
+      // De første 4 niveauer i 2×2 grid
+      const firstFour = ['let', 'mellem', 'svaer', 'ekspert'];
+      firstFour.forEach(key => {
+        const info = difficultyInfo[key];
         const isActive = key === currentDifficulty;
         const correctCount = difficultyData[key].correctCount || 0;
         
         html += `
-          <div class="stat-box ${isActive ? 'active' : ''}">
+          <div class="stat-box ${isActive ? 'active' : ''}" 
+               onclick="setDifficulty('${key}')"
+               title="Klik for at spille ${info.displayName}">
             <div class="stat-box-label">${info.name}</div>
             <div class="stat-box-value">${correctCount}</div>
             <div class="stat-box-sub">${info.range}</div>
@@ -622,36 +693,47 @@
         `;
       });
       
+      // Mester niveau - fuld længde, mindre høj
+      const mesterInfo = difficultyInfo.mester;
+      const mesterIsActive = currentDifficulty === "mester";
+      const mesterCorrectCount = difficultyData.mester.correctCount || 0;
+      
+      html += `
+        <div class="stat-box mester-stat-box ${mesterIsActive ? 'active' : ''}" 
+             onclick="setDifficulty('mester')"
+             title="Klik for at spille ${mesterInfo.displayName} - Den ultimative udfordring!">
+          <div class="stat-box-label">${mesterInfo.name} 🏆</div>
+          <div class="stat-box-value">${mesterCorrectCount}</div>
+          <div class="stat-box-sub">${mesterInfo.range} - Den ultimative udfordring!</div>
+        </div>
+      `;
+      
       statsGrid.innerHTML = html;
+      
+      // Opdater tekst om valgt niveau
+      document.getElementById('currentDifficultyText').textContent = 
+        difficultyInfo[currentDifficulty].displayName;
     }
 
-    // SETUP SVÆRHEDSGRAD KNAPPER
-    function setupDifficultyButtons() {
-      const buttons = document.querySelectorAll('.level-btn');
-      buttons.forEach(btn => {
-        // Sæt aktiv knap baseret på gemt data
-        if (btn.dataset.difficulty === currentDifficulty) {
-          btn.classList.add('active');
-        }
-        
-        btn.addEventListener('click', function() {
-          // Fjern active fra alle
-          buttons.forEach(b => b.classList.remove('active'));
-          // Tilføj active til klikket
-          this.classList.add('active');
-          // Opdater sværhedsgrad
-          currentDifficulty = this.dataset.difficulty;
-          genererOpgave();
-          opdaterHjaelpeKnapper();
-          updateStatsDisplay();
-          // Skjul tællelinje og hjælp når sværhedsgrad ændres
-          document.getElementById('tallelinjeContainer').style.display = 'none';
-          document.getElementById('hjaelpContainer').style.display = 'none';
-          
-          // Gem valgt sværhedsgrad
-          saveUserData();
-        });
-      });
+    // ÆNDRE SVÆRHEDSGRAD (kaldt når man klikker på en stat-boks)
+    function setDifficulty(difficulty) {
+      currentDifficulty = difficulty;
+      
+      // Opdater statistik visning
+      updateStatsDisplay();
+      
+      // Generer ny opgave
+      genererOpgave();
+      
+      // Opdater hjælpeknapper
+      opdaterHjaelpeKnapper();
+      
+      // Skjul tællelinje og hjælp
+      document.getElementById('tallelinjeContainer').style.display = 'none';
+      document.getElementById('hjaelpContainer').style.display = 'none';
+      
+      // Gem valgt sværhedsgrad
+      saveUserData();
     }
 
     // OPDATER HJÆLPEKNAPPER BASERET PÅ SVÆRHEDSGRAD
