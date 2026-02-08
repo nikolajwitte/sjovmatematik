@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /* TILPASSET STATS BAR TIL FORSIDEN */
+    /* SIMPLIFICERET STATS BAR TIL FORSIDEN */
     .stats-bar {
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       border-radius: 15px;
@@ -34,7 +34,7 @@
       font-weight: bold;
     }
     
-    /* MENU ITEMS MED NIVEAU INDIKATOR */
+    /* MENU ITEMS */
     .menu-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -82,22 +82,6 @@
       margin-bottom: 15px;
     }
     
-    .menu-level {
-      position: absolute;
-      top: 15px;
-      right: 15px;
-      background: #48bb78;
-      color: white;
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      font-size: 0.9rem;
-    }
-    
     .menu-progress {
       height: 6px;
       background: #e2e8f0;
@@ -123,6 +107,28 @@
       font-weight: 600;
     }
     
+    /* RESET KNAP */
+    .reset-btn {
+      background: #f56565;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin: 0 auto;
+      transition: all 0.3s;
+    }
+    
+    .reset-btn:hover {
+      background: #e53e3e;
+      transform: translateY(-2px);
+    }
+    
     /* RESPONSIVITET */
     @media (max-width: 768px) {
       .stats-bar {
@@ -144,26 +150,6 @@
         grid-template-columns: 1fr;
       }
     }
-    
-    /* TOP EMNE SECTION */
-    .top-topic {
-      background: linear-gradient(135deg, #f6ad55 0%, #ed8936 100%);
-      border-radius: 15px;
-      padding: 20px;
-      color: white;
-      margin-top: 30px;
-      box-shadow: 0 10px 20px rgba(237, 137, 54, 0.3);
-    }
-    
-    .top-topic h3 {
-      margin-top: 0;
-      margin-bottom: 10px;
-    }
-    
-    .top-topic p {
-      margin-bottom: 0;
-      opacity: 0.9;
-    }
   </style>
 </head>
 <body>
@@ -172,15 +158,15 @@
       <h1><i class="fas fa-calculator"></i> Sjov Matematik</h1>
       <p>Træn matematik fra 5. til 9. klasse. Vælg en regnearter at starte med!</p>
       
-      <!-- SIMPLIFICERET STATS BAR -->
+      <!-- SAMLET STATISTIK -->
       <div class="stats-bar">
         <div class="stat-item">
-          <div class="stat-label">Samlet antal rigtige</div>
+          <div class="stat-label">Samlet rigtige</div>
           <div class="stat-value" id="totalCorrect">0</div>
         </div>
         <div class="stat-item">
-          <div class="stat-label">I træk rekord</div>
-          <div class="stat-value" id="maxStreak">0</div>
+          <div class="stat-label">I Plus</div>
+          <div class="stat-value" id="plusCorrect">0</div>
         </div>
         <div class="stat-item">
           <div class="stat-label">Aktivitetsdage</div>
@@ -190,16 +176,9 @@
     </header>
 
     <main>
-      <!-- TOP EMNE (VALGFRIT) -->
-      <div class="top-topic" style="display: none;" id="topTopic">
-        <h3><i class="fas fa-trophy"></i> Dit bedste emne</h3>
-        <p>Du har flest rigtige i <span id="bestTopicName">Plus</span> (<span id="bestTopicScore">0</span> rigtige)</p>
-      </div>
-      
       <h2 style="margin-top: 30px;">Vælg et emne:</h2>
       <div class="menu-grid">
         <a href="pages/plus.html" class="menu-item">
-          <div class="menu-level" id="plusLevel">1</div>
           <div class="menu-icon">➕</div>
           <div class="menu-text">Plus</div>
           <small class="menu-desc">Lær at lægge tal sammen</small>
@@ -209,7 +188,6 @@
         </a>
         
         <a href="pages/minus.html" class="menu-item">
-          <div class="menu-level" id="minusLevel">1</div>
           <div class="menu-icon">➖</div>
           <div class="menu-text">Minus</div>
           <small class="menu-desc">Træk tal fra hinanden</small>
@@ -219,7 +197,6 @@
         </a>
         
         <a href="pages/gange.html" class="menu-item">
-          <div class="menu-level" id="gangeLevel">1</div>
           <div class="menu-icon">✖️</div>
           <div class="menu-text">Gange</div>
           <small class="menu-desc">Mestring af multiplikation</small>
@@ -229,7 +206,6 @@
         </a>
         
         <a href="pages/division.html" class="menu-item">
-          <div class="menu-level" id="divisionLevel">1</div>
           <div class="menu-icon">➗</div>
           <div class="menu-text">Division</div>
           <small class="menu-desc">Del tal ligeligt</small>
@@ -252,10 +228,10 @@
       
       <!-- RESET KNAP -->
       <div style="text-align: center; margin-top: 40px;">
-        <button onclick="resetAllData()" class="button" style="background: #f56565; color: white;">
+        <button onclick="resetAllData()" class="reset-btn">
           <i class="fas fa-trash-alt"></i> Nulstil alle data
         </button>
-        <p style="font-size: 0.8rem; color: #718096; margin-top: 5px;">Sletter alle dine fremskridt og nulstiller til niveau 1</p>
+        <p style="font-size: 0.8rem; color: #718096; margin-top: 5px;">Sletter alle dine fremskridt i alle emner</p>
       </div>
     </main>
   </div>
@@ -264,14 +240,13 @@
     // GLOBALE VARIABLER
     let userData = {
       totalCorrect: 0,
-      maxStreak: 0,
       activeDays: 1,
       lastActiveDate: null,
       topics: {
-        plus: { level: 1, correctCount: 0, streak: 0 },
-        minus: { level: 1, correctCount: 0, streak: 0 },
-        gange: { level: 1, correctCount: 0, streak: 0 },
-        division: { level: 1, correctCount: 0, streak: 0 }
+        plus: { totalCorrect: 0 },
+        minus: { totalCorrect: 0 },
+        gange: { totalCorrect: 0 },
+        division: { totalCorrect: 0 }
       }
     };
 
@@ -279,8 +254,6 @@
     document.addEventListener('DOMContentLoaded', function() {
       loadUserData();
       updateStatsDisplay();
-      updateTopicsDisplay();
-      updateTopTopic();
       checkActiveDay();
     });
 
@@ -292,16 +265,31 @@
           const data = JSON.parse(savedData);
           // Merge med standard data for at sikre alle felter er der
           userData = { ...userData, ...data };
-          
-          // Sørg for at topics altid har alle felter
-          Object.keys(userData.topics).forEach(topic => {
-            userData.topics[topic] = { 
-              level: userData.topics[topic].level || 1,
-              correctCount: userData.topics[topic].correctCount || 0,
-              streak: userData.topics[topic].streak || 0
-            };
-          });
         }
+        
+        // Indlæs Plus data separat (fra den nye struktur)
+        try {
+          const plusData = localStorage.getItem('plusData');
+          if (plusData) {
+            const data = JSON.parse(plusData);
+            // Beregn total rigtige i Plus fra alle sværhedsgrader
+            let plusTotal = 0;
+            if (data.difficultyData) {
+              Object.values(data.difficultyData).forEach(diff => {
+                plusTotal += diff.correctCount || 0;
+              });
+            }
+            userData.topics.plus.totalCorrect = plusTotal;
+          }
+        } catch (e) {
+          console.log("Ingen Plus data fundet");
+        }
+        
+        // Beregn samlet antal rigtige
+        userData.totalCorrect = Object.values(userData.topics).reduce((sum, topic) => {
+          return sum + (topic.totalCorrect || 0);
+        }, 0);
+        
       } catch (e) {
         console.log("Ingen tidligere data fundet, starter fra ny");
       }
@@ -333,61 +321,17 @@
     // OPDATER STATISTIK VISNING
     function updateStatsDisplay() {
       document.getElementById('totalCorrect').textContent = userData.totalCorrect;
-      document.getElementById('maxStreak').textContent = userData.maxStreak;
+      document.getElementById('plusCorrect').textContent = userData.topics.plus.totalCorrect || 0;
       document.getElementById('activeDays').textContent = userData.activeDays;
-    }
-
-    // OPDATER EMNE VISNING
-    function updateTopicsDisplay() {
-      // Plus
-      const plusData = userData.topics.plus;
-      document.getElementById('plusLevel').textContent = plusData.level;
-      const plusProgress = Math.min((plusData.correctCount / 50) * 100, 100);
+      
+      // Opdater progress bars (simplificeret - viser % af 100)
+      const plusProgress = Math.min((userData.topics.plus.totalCorrect / 100) * 100, 100);
       document.getElementById('plusProgress').style.width = plusProgress + '%';
       
-      // Minus
-      const minusData = userData.topics.minus;
-      document.getElementById('minusLevel').textContent = minusData.level;
-      const minusProgress = Math.min((minusData.correctCount / 50) * 100, 100);
-      document.getElementById('minusProgress').style.width = minusProgress + '%';
-      
-      // Gange
-      const gangeData = userData.topics.gange;
-      document.getElementById('gangeLevel').textContent = gangeData.level;
-      const gangeProgress = Math.min((gangeData.correctCount / 50) * 100, 100);
-      document.getElementById('gangeProgress').style.width = gangeProgress + '%';
-      
-      // Division
-      const divisionData = userData.topics.division;
-      document.getElementById('divisionLevel').textContent = divisionData.level;
-      const divisionProgress = Math.min((divisionData.correctCount / 50) * 100, 100);
-      document.getElementById('divisionProgress').style.width = divisionProgress + '%';
-    }
-
-    // FIND BEDSTE EMNE
-    function updateTopTopic() {
-      let bestTopic = null;
-      let bestScore = -1;
-      
-      Object.entries(userData.topics).forEach(([topic, data]) => {
-        if (data.correctCount > bestScore) {
-          bestScore = data.correctCount;
-          bestTopic = topic;
-        }
-      });
-      
-      if (bestScore > 10) { // Vis kun hvis brugeren har mere end 10 rigtige
-        const topicNames = {
-          plus: 'Plus',
-          minus: 'Minus', 
-          gange: 'Gange',
-          division: 'Division'
-        };
-        
-        document.getElementById('bestTopicName').textContent = topicNames[bestTopic];
-        document.getElementById('bestTopicScore').textContent = bestScore;
-        document.getElementById('topTopic').style.display = 'block';
-      }
+      // De andre emner viser 0 indtil de er implementeret
+      document.getElementById('minusProgress').style.width = '0%';
+      document.getElementById('gangeProgress').style.width = '0%';
+      document.getElementById('divisionProgress').style.width = '0%';
     }
 
     // NULSTIL ALLE DATA
@@ -396,70 +340,51 @@
         // Reset til standard data
         userData = {
           totalCorrect: 0,
-          maxStreak: 0,
           activeDays: 1,
           lastActiveDate: new Date().toDateString(),
           topics: {
-            plus: { level: 1, correctCount: 0, streak: 0 },
-            minus: { level: 1, correctCount: 0, streak: 0 },
-            gange: { level: 1, correctCount: 0, streak: 0 },
-            division: { level: 1, correctCount: 0, streak: 0 }
+            plus: { totalCorrect: 0 },
+            minus: { totalCorrect: 0 },
+            gange: { totalCorrect: 0 },
+            division: { totalCorrect: 0 }
           }
         };
         
-        // Gem også lokale data for hvert emne
+        // Slet også Plus data
         localStorage.removeItem('plusData');
-        localStorage.removeItem('minusData');
-        localStorage.removeItem('gangeData');
-        localStorage.removeItem('divisionData');
         
         // Gem ny data
         saveUserData();
         
         // Opdater visning
         updateStatsDisplay();
-        updateTopicsDisplay();
-        document.getElementById('topTopic').style.display = 'none';
         
-        alert('Alle data er nulstillet! Du starter fra niveau 1.');
+        alert('Alle data er nulstillet!');
       }
     }
 
     // HJÆLPEFUNKTION TIL AT OPDATERE EMNE DATA (kan kaldes fra andre sider)
-    window.updateTopicData = function(topic, isCorrect) {
+    window.updateTopicData = function(topic, correctCount) {
       if (!userData.topics[topic]) {
-        userData.topics[topic] = { level: 1, correctCount: 0, streak: 0 };
+        userData.topics[topic] = { totalCorrect: 0 };
       }
       
-      if (isCorrect) {
-        // Opdater correct count
-        userData.topics[topic].correctCount++;
-        userData.totalCorrect++;
-        
-        // Opdater streak
-        userData.topics[topic].streak++;
-        if (userData.topics[topic].streak > userData.maxStreak) {
-          userData.maxStreak = userData.topics[topic].streak;
-        }
-        
-        // Automatisk niveau opgradering (hver 5 rigtige)
-        if (userData.topics[topic].correctCount % 5 === 0 && userData.topics[topic].level < 5) {
-          userData.topics[topic].level++;
-        }
-      } else {
-        // Nulstil streak ved forkert svar
-        userData.topics[topic].streak = 0;
-      }
+      userData.topics[topic].totalCorrect = correctCount;
+      
+      // Beregn samlet antal rigtige
+      userData.totalCorrect = Object.values(userData.topics).reduce((sum, topicData) => {
+        return sum + (topicData.totalCorrect || 0);
+      }, 0);
       
       // Gem data
       saveUserData();
       
-      return userData.topics[topic].level;
+      return userData.topics[topic].totalCorrect;
     };
 
     // HJÆLPEFUNKTION TIL AT HENTE EMNE DATA
     window.getTopicData = function(topic) {
-      return userData.topics[topic] || { level: 1, correctCount: 0, streak: 0 };
+      return userData.topics[topic] || { totalCorrect: 0 };
     };
   </script>
 </body>

@@ -300,28 +300,6 @@
       transform: translateY(-2px);
     }
     
-    /* RESET KNAP */
-    .reset-btn {
-      background: #f56565;
-      color: white;
-      border: none;
-      padding: 12px 20px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition: all 0.3s;
-      min-width: 150px;
-    }
-    
-    .reset-btn:hover {
-      background: #e53e3e;
-      transform: translateY(-2px);
-    }
-    
     /* RESPONSIVITET */
     @media (max-width: 768px) {
       .tallelinje-ramme {
@@ -391,6 +369,44 @@
         width: 100%;
         max-width: 250px;
       }
+      
+      .stats-bar {
+        flex-direction: column;
+        gap: 15px;
+      }
+      
+      .stat-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+    }
+    
+    /* SIMPLIFICERET STATS BAR */
+    .stats-bar {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 15px;
+      padding: 15px 25px;
+      margin: 20px 0;
+      display: flex;
+      justify-content: space-around;
+      color: white;
+      box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    }
+    
+    .stat-item {
+      text-align: center;
+    }
+    
+    .stat-label {
+      font-size: 0.9rem;
+      opacity: 0.9;
+      margin-bottom: 5px;
+    }
+    
+    .stat-value {
+      font-size: 2rem;
+      font-weight: bold;
     }
   </style>
 </head>
@@ -398,35 +414,39 @@
   <div class="container">
     <header class="header">
       <h1><i class="fas fa-plus"></i> Plus (Addition)</h1>
-      <p>Lær at lægge tal sammen. Jo flere rigtige, jo sværere bliver opgaverne!</p>
+      <p>Lær at lægge tal sammen. Vælg en sværhedsgrad og start!</p>
     </header>
 
-    <!-- SIMPLIFICERET STATS BAR -->
+    <!-- SIMPLIFICERET STATS BAR - KUN VALGT NIVEAU + ANTAL RIGTIGE I DET NIVEAU -->
     <div class="stats-bar">
       <div class="stat-item">
-        <div class="stat-label">Niveau</div>
-        <div class="stat-value" id="userLevel">1</div>
+        <div class="stat-label">Valgt niveau</div>
+        <div class="stat-value" id="currentDifficulty">Let</div>
       </div>
       <div class="stat-item">
-        <div class="stat-label">Antal rigtige</div>
-        <div class="stat-value" id="correctCount">0</div>
+        <div class="stat-label">Rigtige i Let</div>
+        <div class="stat-value" id="correctLet">0</div>
       </div>
       <div class="stat-item">
-        <div class="stat-label">I træk</div>
-        <div class="stat-value" id="streak">0</div>
+        <div class="stat-label">Rigtige i Mellem</div>
+        <div class="stat-value" id="correctMellem">0</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">Rigtige i Svær</div>
+        <div class="stat-value" id="correctSvaer">0</div>
       </div>
     </div>
 
     <main>
-      <!-- NIVEAU VÆLGER -->
+      <!-- SVÆRHEDSGRAD VÆLGER -->
       <div style="margin-bottom: 30px; text-align: center;">
         <h3>Vælg sværhedsgrad:</h3>
         <div class="level-buttons">
-          <button class="level-btn active" data-level="1">Let (1-10)</button>
-          <button class="level-btn" data-level="2">Mellem (1-20)</button>
-          <button class="level-btn" data-level="3">Svær (1-99)</button>
-          <button class="level-btn" data-level="4">Ekspert (100-999)</button>
-          <button class="level-btn" data-level="5">Mester (1000-999.999)</button>
+          <button class="level-btn active" data-difficulty="let">Let (1-10)</button>
+          <button class="level-btn" data-difficulty="mellem">Mellem (1-20)</button>
+          <button class="level-btn" data-difficulty="svaer">Svær (1-99)</button>
+          <button class="level-btn" data-difficulty="ekspert">Ekspert (100-999)</button>
+          <button class="level-btn" data-difficulty="mester">Mester (1000-999.999)</button>
         </div>
       </div>
 
@@ -448,19 +468,11 @@
         
         <!-- HJÆLPEKNAPPER -->
         <div id="hjaelpeKnapper" style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
-          <!-- Knapper vises dynamisk baseret på niveau -->
-        </div>
-        
-        <!-- BEGYND FORFRA KNAP -->
-        <div style="text-align: center; margin: 20px 0;">
-          <button onclick="begyndForfra()" class="reset-btn">
-            <i class="fas fa-undo"></i> Begynd forfra
-          </button>
-          <p style="font-size: 0.8rem; color: #718096; margin-top: 5px;">Nulstiller niveau og antal rigtige</p>
+          <!-- Knapper vises dynamisk baseret på sværhedsgrad -->
         </div>
       </div>
       
-      <!-- TÆLLELINJE - Vises kun i niveau 1 og 2 -->
+      <!-- TÆLLELINJE - Vises kun i Let og Mellem -->
       <div id="tallelinjeContainer" class="tallelinje-container">
         <h3>Tællelinje - Visualiser regnestykket:</h3>
         <div class="tallelinje-wrapper">
@@ -468,7 +480,7 @@
             <!-- Tællelinjen tegnes her med JavaScript -->
           </div>
           <div class="tallelinje-knapper">
-            <!-- Knapper vises dynamisk baseret på niveau -->
+            <!-- Knapper vises dynamisk baseret på sværhedsgrad -->
           </div>
         </div>
       </div>
@@ -498,14 +510,22 @@
 
   <script>
     // PLUS SPECIFIK KODE
-    let currentLevel = 1;
+    let currentDifficulty = "let"; // "let", "mellem", "svaer", "ekspert", "mester"
     let currentTal1, currentTal2, correctAnswer;
     let streak = 0;
-    let correctCount = 0;
     let attempts = [];
     let animationActive = false;
     let animationTimeout;
     let animationSpeed = 800;
+
+    // DATA FOR HVER SVÆRHEDSGRAD
+    let difficultyData = {
+      let: { correctCount: 0, streak: 0 },
+      mellem: { correctCount: 0, streak: 0 },
+      svaer: { correctCount: 0, streak: 0 },
+      ekspert: { correctCount: 0, streak: 0 },
+      mester: { correctCount: 0, streak: 0 }
+    };
 
     // FORMAT NUMBER WITH THOUSAND SEPARATORS
     function formatNumber(num) {
@@ -534,7 +554,7 @@
       
       // OPDATER VISNING
       opdaterBrugerinfo();
-      setupLevelButtons();
+      setupDifficultyButtons();
       genererOpgave();
       opdaterHjaelpeKnapper();
       
@@ -550,9 +570,9 @@
         const savedData = localStorage.getItem('plusData');
         if (savedData) {
           const data = JSON.parse(savedData);
-          correctCount = data.correctCount || 0;
+          difficultyData = data.difficultyData || difficultyData;
           streak = data.streak || 0;
-          currentLevel = data.level || 1;
+          currentDifficulty = data.currentDifficulty || "let";
           attempts = data.attempts || [];
         }
       } catch (e) {
@@ -563,9 +583,9 @@
     // GEM BRUGERDATA
     function saveUserData() {
       const data = {
-        correctCount: correctCount,
+        difficultyData: difficultyData,
         streak: streak,
-        level: currentLevel,
+        currentDifficulty: currentDifficulty,
         attempts: attempts.slice(0, 10) // Gem kun de sidste 10 forsøg
       };
       localStorage.setItem('plusData', JSON.stringify(data));
@@ -573,37 +593,58 @@
 
     // OPDATER BRUGERINFO VISNING
     function opdaterBrugerinfo() {
-      document.getElementById('userLevel').textContent = currentLevel;
-      document.getElementById('correctCount').textContent = correctCount;
-      document.getElementById('streak').textContent = streak;
+      // Vis valgt sværhedsgrad
+      const difficultyNames = {
+        let: "Let",
+        mellem: "Mellem",
+        svaer: "Svær",
+        ekspert: "Ekspert",
+        mester: "Mester"
+      };
+      
+      document.getElementById('currentDifficulty').textContent = difficultyNames[currentDifficulty];
+      
+      // Vis antal rigtige for hver sværhedsgrad
+      document.getElementById('correctLet').textContent = difficultyData.let.correctCount;
+      document.getElementById('correctMellem').textContent = difficultyData.mellem.correctCount;
+      document.getElementById('correctSvaer').textContent = difficultyData.svaer.correctCount;
     }
 
-    // SETUP NIVEAU KNAPPER
-    function setupLevelButtons() {
+    // SETUP SVÆRHEDSGRAD KNAPPER
+    function setupDifficultyButtons() {
       const buttons = document.querySelectorAll('.level-btn');
       buttons.forEach(btn => {
+        // Sæt aktiv knap baseret på gemt data
+        if (btn.dataset.difficulty === currentDifficulty) {
+          btn.classList.add('active');
+        }
+        
         btn.addEventListener('click', function() {
           // Fjern active fra alle
           buttons.forEach(b => b.classList.remove('active'));
           // Tilføj active til klikket
           this.classList.add('active');
-          // Opdater niveau
-          currentLevel = parseInt(this.dataset.level);
+          // Opdater sværhedsgrad
+          currentDifficulty = this.dataset.difficulty;
           genererOpgave();
           opdaterHjaelpeKnapper();
-          // Skjul tællelinje og hjælp når niveau ændres
+          opdaterBrugerinfo();
+          // Skjul tællelinje og hjælp når sværhedsgrad ændres
           document.getElementById('tallelinjeContainer').style.display = 'none';
           document.getElementById('hjaelpContainer').style.display = 'none';
+          
+          // Gem valgt sværhedsgrad
+          saveUserData();
         });
       });
     }
 
-    // OPDATER HJÆLPEKNAPPER BASERET PÅ NIVEAU
+    // OPDATER HJÆLPEKNAPPER BASERET PÅ SVÆRHEDSGRAD
     function opdaterHjaelpeKnapper() {
       const knapContainer = document.getElementById('hjaelpeKnapper');
       
-      if (currentLevel === 1 || currentLevel === 2) {
-        // Niveau 1 og 2 har tællelinje og simpel hjælp
+      if (currentDifficulty === "let" || currentDifficulty === "mellem") {
+        // Let og Mellem har tællelinje og simpel hjælp
         knapContainer.innerHTML = `
           <button onclick="visTallelinje()" class="button" style="background: #667eea; color: white; flex: 1; min-width: 150px;">
             <i class="fas fa-ruler-combined"></i> Vis tællelinje
@@ -616,8 +657,8 @@
           </button>
         `;
         knapContainer.style.display = 'flex';
-      } else if (currentLevel === 3) {
-        // Niveau 3 har begge muligheder
+      } else if (currentDifficulty === "svaer") {
+        // Svær har begge muligheder
         knapContainer.innerHTML = `
           <button onclick="visSimpelHjaelp()" class="button" style="background: #f6ad55; color: white; flex: 1; min-width: 150px;">
             <i class="fas fa-lightbulb"></i> Simpel hjælp
@@ -631,7 +672,7 @@
         `;
         knapContainer.style.display = 'flex';
       } else {
-        // Niveau 4 og 5 har kun kolonnehjælp
+        // Ekspert og Mester har kun kolonnehjælp
         knapContainer.innerHTML = `
           <button onclick="visKolonneHjaelp()" class="button" style="background: #90cdf4; color: white; flex: 1; min-width: 200px;">
             <i class="fas fa-calculator"></i> Kolonnehjælp
@@ -646,29 +687,29 @@
 
     // GENERER NY PLUS OPGAVE (INGEN 0-TAL)
     function genererOpgave() {
-      switch(currentLevel) {
-        case 1: 
-          // Niveau 1: Tal 1-10 (ingen 0)
+      switch(currentDifficulty) {
+        case "let": 
+          // Let: Tal 1-10 (ingen 0)
           currentTal1 = Math.floor(Math.random() * 10) + 1; // 1-10
           currentTal2 = Math.floor(Math.random() * 10) + 1;
           break;
-        case 2: 
-          // Niveau 2: Tal 1-20 (ingen 0)
+        case "mellem": 
+          // Mellem: Tal 1-20 (ingen 0)
           currentTal1 = Math.floor(Math.random() * 20) + 1; // 1-20
           currentTal2 = Math.floor(Math.random() * 20) + 1;
           break;
-        case 3: 
-          // Niveau 3: Tal 1-99 (ingen 0)
+        case "svaer": 
+          // Svær: Tal 1-99 (ingen 0)
           currentTal1 = Math.floor(Math.random() * 99) + 1; // 1-99
           currentTal2 = Math.floor(Math.random() * 99) + 1;
           break;
-        case 4:
-          // Niveau 4: Tal 100-999
+        case "ekspert":
+          // Ekspert: Tal 100-999
           currentTal1 = Math.floor(Math.random() * 900) + 100; // 100-999
           currentTal2 = Math.floor(Math.random() * 900) + 100;
           break;
-        case 5:
-          // Niveau 5: Tal 1000-999.999
+        case "mester":
+          // Mester: Tal 1000-999.999
           currentTal1 = Math.floor(Math.random() * 999000) + 1000; // 1000-999.999
           currentTal2 = Math.floor(Math.random() * 999000) + 1000;
           break;
@@ -689,7 +730,8 @@
           <span class="regnearter">${formatNumber(currentTal2)}</span> 
           ?
         </div>
-        ${currentLevel >= 3 ? '<div style="font-size: 0.9rem; color: #718096; background: #f7fafc; padding: 8px; border-radius: 5px; margin-top: 5px;">💡 Tip: For større tal kan du bruge kolonneaddition</div>' : ''}
+        ${currentDifficulty === "svaer" || currentDifficulty === "ekspert" || currentDifficulty === "mester" ? 
+          '<div style="font-size: 0.9rem; color: #718096; background: #f7fafc; padding: 8px; border-radius: 5px; margin-top: 5px;">💡 Tip: For større tal kan du bruge kolonneaddition</div>' : ''}
       `;
       
       // Nulstil input
@@ -701,7 +743,7 @@
       document.getElementById('hjaelpContainer').style.display = 'none';
     }
 
-    // SIMPEL HJÆLP (kun niveau 1-3)
+    // SIMPEL HJÆLP (kun for let, mellem, svær)
     function visSimpelHjaelp() {
       const hjælpContainer = document.getElementById('hjaelpContainer');
       
@@ -751,7 +793,7 @@
       hjælpContainer.scrollIntoView({ behavior: 'smooth' });
     }
 
-    // KOLONNEADDITION HJÆLP (niveau 3-5) - UDEN LEDENDE NULLER
+    // KOLONNEADDITION HJÆLP (for svær, ekspert, mester)
     function visKolonneHjaelp() {
       const hjælpContainer = document.getElementById('hjaelpContainer');
       
@@ -929,37 +971,6 @@
       document.getElementById('hjaelpContainer').style.display = 'none';
     }
 
-    // BEGYND FORFRA - NULSTIL NIVEAU OG ANTAL RIGTIGE
-    function begyndForfra() {
-      if (confirm('Er du sikker på at du vil begynde forfra? Dette vil nulstille dit niveau til 1 og slette alle dine rigtige svar. Streak og forsøg bevares.')) {
-        currentLevel = 1;
-        correctCount = 0;
-        
-        // Opdater knapper til niveau 1
-        const buttons = document.querySelectorAll('.level-btn');
-        buttons.forEach(btn => {
-          btn.classList.remove('active');
-          if (parseInt(btn.dataset.level) === 1) {
-            btn.classList.add('active');
-          }
-        });
-        
-        // Gem data
-        saveUserData();
-        
-        // Opdater visning
-        opdaterBrugerinfo();
-        opdaterHjaelpeKnapper();
-        genererOpgave();
-        
-        // Skjul tællelinje og hjælp
-        document.getElementById('tallelinjeContainer').style.display = 'none';
-        document.getElementById('hjaelpContainer').style.display = 'none';
-        
-        showFeedback('✅ Du er nu tilbage på niveau 1! Antal rigtige er nulstillet.', true);
-      }
-    }
-
     // TJEK SVAR
     function tjekSvar() {
       const svarInput = document.getElementById('svarInput');
@@ -978,7 +989,8 @@
         opgave: `${formatNumber(currentTal1)} + ${formatNumber(currentTal2)}`,
         svar: formatNumber(brugerSvar),
         korrekt: isCorrect,
-        tid: new Date().toLocaleTimeString()
+        tid: new Date().toLocaleTimeString(),
+        difficulty: currentDifficulty
       });
       
       if (attempts.length > 5) attempts.pop();
@@ -986,27 +998,14 @@
       skjulHjaelp();
       
       if (isCorrect) {
-        streak++;
-        correctCount++;
+        // Opdater streak for denne sværhedsgrad
+        difficultyData[currentDifficulty].streak++;
+        streak = difficultyData[currentDifficulty].streak;
         
-        // NIVEAU OPGRADERING (simplet system)
-        if (streak >= 5 && currentLevel < 5) {
-          currentLevel++;
-          streak = 0; // Nulstil streak ved niveauopgradering
-          showFeedback(`🎉 Tillykke! Du er nu steget til niveau ${currentLevel}!`, true);
-          
-          // Opdater level-knapper
-          const buttons = document.querySelectorAll('.level-btn');
-          buttons.forEach(btn => {
-            btn.classList.remove('active');
-            if (parseInt(btn.dataset.level) === currentLevel) {
-              btn.classList.add('active');
-            }
-          });
-          opdaterHjaelpeKnapper();
-        } else {
-          showFeedback(`✅ Fantastisk! ${formatNumber(currentTal1)} + ${formatNumber(currentTal2)} = ${formatNumber(correctAnswer)}`, true);
-        }
+        // Opdater antal rigtige for denne sværhedsgrad
+        difficultyData[currentDifficulty].correctCount++;
+        
+        showFeedback(`✅ Fantastisk! ${formatNumber(currentTal1)} + ${formatNumber(currentTal2)} = ${formatNumber(correctAnswer)}`, true);
         
         // Gem data
         saveUserData();
@@ -1018,7 +1017,10 @@
         }, 1500);
         
       } else {
+        // Nulstil streak ved forkert svar
+        difficultyData[currentDifficulty].streak = 0;
         streak = 0;
+        
         showFeedback(`❌ ${formatNumber(brugerSvar)} er ikke rigtigt. Prøv igen!`, false);
         
         // Gem data
@@ -1044,11 +1046,20 @@
       
       let html = '';
       attempts.forEach((attempt, index) => {
+        const difficultyNames = {
+          let: "Let",
+          mellem: "Mellem",
+          svaer: "Svær",
+          ekspert: "Ekspert",
+          mester: "Mester"
+        };
+        
         html += `
           <div style="padding: 10px; margin: 5px 0; background: ${attempt.korrekt ? '#c6f6d5' : '#fed7d7'}; border-radius: 5px; display: flex; justify-content: space-between; align-items: center;">
             <div>
               ${attempt.opgave} = ${attempt.svar} 
               ${attempt.korrekt ? '✅' : '❌'}
+              <small style="color: #718096; margin-left: 10px;">${difficultyNames[attempt.difficulty]}</small>
             </div>
             <small style="color: #718096;">${attempt.tid}</small>
           </div>
@@ -1058,10 +1069,10 @@
       container.innerHTML = html || '<p>Ingen forsøg endnu...</p>';
     }
 
-    // TÆLLELINJE FUNKTIONER (kun niveau 1-2)
+    // TÆLLELINJE FUNKTIONER (kun for let og mellem)
     function visTallelinje() {
-      if (currentLevel >= 3) {
-        showFeedback('Tællelinjen er kun tilgængelig i niveau 1 og 2', false);
+      if (currentDifficulty !== "let" && currentDifficulty !== "mellem") {
+        showFeedback('Tællelinjen er kun tilgængelig i Let og Mellem', false);
         return;
       }
       document.getElementById('tallelinjeContainer').style.display = 'block';
@@ -1079,8 +1090,8 @@
     function opdaterTallelinjeKnapper() {
       const knapContainer = document.querySelector('.tallelinje-knapper');
       
-      // Kun niveau 1 får animation
-      if (currentLevel === 1) {
+      // Kun "Let" får animation
+      if (currentDifficulty === "let") {
         knapContainer.innerHTML = `
           <button onclick="startAnimation()" class="button" style="background: #48bb78; color: white;">
             <i class="fas fa-play-circle"></i> Vis animation
@@ -1099,7 +1110,7 @@
     }
 
     function tegnTallelinje() {
-      if (currentLevel >= 3) return;
+      if (currentDifficulty !== "let" && currentDifficulty !== "mellem") return;
       
       const container = document.getElementById('tallelinje');
       const mindsteTal = Math.min(currentTal1, currentTal2);
@@ -1127,8 +1138,8 @@
           </div>
         `;
         
-        // Vis ALLE tal - KUN på niveau 1
-        if (currentLevel === 1) {
+        // Vis ALLE tal - forskel mellem Let og Mellem
+        if (currentDifficulty === "let") {
           const isOneOfOurNumbers = i === currentTal1 || i === currentTal2 || i === slutTal || i === startTal;
           const color = isOneOfOurNumbers ? '#f56565' : '#4a5568';
           const fontWeight = isOneOfOurNumbers ? 'bold' : 'normal';
@@ -1142,7 +1153,7 @@
             </div>
           `;
         } else {
-          // NIVEAU 2: Kun vis alle tal uden farver eller tyk skrift
+          // Mellem: Kun vis alle tal uden farver eller tyk skrift
           html += `
             <div class="tallelinje-tal" style="left: ${position}%; top: 90px; 
               font-size: 12px; 
@@ -1154,8 +1165,8 @@
         }
       }
       
-      // KUN på NIVEAU 1: Vis start og slut cirkler med farver
-      if (currentLevel === 1) {
+      // KUN på "Let": Vis start og slut cirkler med farver
+      if (currentDifficulty === "let") {
         const startPosition = ((startTal - start) / (slut - start)) * 100;
         const slutPosition = ((slutTal - start) / (slut - start)) * 100;
         
@@ -1178,14 +1189,14 @@
           </div>
         `;
       }
-      // NIVEAU 2: INGEN ekstra markeringer - kun tal på linjen
+      // Mellem: INGEN ekstra markeringer - kun tal på linjen
       
       container.innerHTML = html;
     }
 
-    // ANIMATION FUNKTIONER (kun niveau 1)
+    // ANIMATION FUNKTIONER (kun for Let)
     function startAnimation() {
-      if (animationActive || currentLevel !== 1) return;
+      if (animationActive || currentDifficulty !== "let") return;
       
       const container = document.getElementById('tallelinje');
       const mindsteTal = Math.min(currentTal1, currentTal2);
