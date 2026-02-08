@@ -7,54 +7,28 @@
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /* NIVEAU KNAPPER (erstattes nu af stat-bokse) */
-    .level-buttons {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-      margin-top: 15px;
-      flex-wrap: wrap;
-    }
-    
-    .level-btn {
-      padding: 12px 20px;
-      border: 2px solid #cbd5e0;
-      background: white;
-      border-radius: 10px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: all 0.3s;
-      min-width: 160px;
-    }
-    
-    .level-btn:hover {
-      border-color: #48bb78;
-      background: #f0fff4;
-    }
-    
-    .level-btn.active {
-      background: #48bb78;
-      color: white;
-      border-color: #48bb78;
-    }
-    
     /* NYT STATISTIK LAYOUT - SOM KNAPPER */
     .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      display: flex;
+      flex-wrap: wrap;
       gap: 10px;
       margin: 20px 0;
+      justify-content: center;
     }
     
+    /* De første 4 niveau knapper på én linje */
     .stat-box {
       background: white;
-      border-radius: 10px;
+      border-radius: 12px;
       padding: 15px;
       text-align: center;
       box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-      border: 2px solid #e2e8f0;
+      border: 3px solid #e2e8f0;
       transition: all 0.3s;
       cursor: pointer;
+      flex: 1;
+      min-width: 150px;
+      max-width: 200px;
     }
     
     .stat-box:hover {
@@ -70,71 +44,89 @@
     }
     
     .stat-box-label {
-      font-size: 0.9rem;
+      font-size: 1rem;
       color: #718096;
-      margin-bottom: 5px;
-      font-weight: 600;
+      margin-bottom: 8px;
+      font-weight: 700;
     }
     
     .stat-box-value {
       font-size: 1.8rem;
       font-weight: bold;
       color: #2d3748;
+      line-height: 1.2;
     }
     
     .stat-box-sub {
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       color: #a0aec0;
       margin-top: 3px;
     }
     
-    /* MESTER STAT-BOX - FULD LÆNGDE, MINDRE HØJ */
+    .stat-box-total {
+      font-size: 0.9rem;
+      color: #718096;
+      margin-top: 2px;
+      font-weight: 600;
+    }
+    
+    /* MESTER STAT-BOX - FULD LÆNGDE, IMPONERENDE */
     .mester-stat-box {
-      grid-column: 1 / -1; /* Spænder over begge kolonner */
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      border: 2px solid #5a67d8;
+      width: 100%;
+      max-width: 600px;
+      margin: 10px auto 0 auto;
+      background: linear-gradient(135deg, #f6ad55 0%, #ed8936 50%, #dd6b20 100%);
+      border: 3px solid #ed8936;
       color: white;
-      padding: 12px 15px;
-      margin-top: 5px;
+      padding: 15px;
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .mester-stat-box::before {
+      content: "🏆 MASTER LEVEL";
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: rgba(0,0,0,0.2);
+      padding: 4px 10px;
+      font-size: 0.7rem;
+      font-weight: bold;
+      border-bottom-left-radius: 8px;
     }
     
     .mester-stat-box:hover {
-      background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+      background: linear-gradient(135deg, #ed8936 0%, #dd6b20 50%, #c05621 100%);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 16px rgba(237, 137, 54, 0.3);
     }
     
     .mester-stat-box.active {
-      border-color: #f6ad55;
-      background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+      border-color: #f6e05e;
+      background: linear-gradient(135deg, #f6e05e 0%, #ecc94b 50%, #d69e2e 100%);
+      box-shadow: 0 8px 20px rgba(246, 224, 94, 0.4);
     }
     
     .mester-stat-box .stat-box-label {
-      color: rgba(255, 255, 255, 0.9);
-      font-size: 1rem;
+      color: rgba(255, 255, 255, 0.95);
+      font-size: 1.2rem;
+      font-weight: 800;
     }
     
     .mester-stat-box .stat-box-value {
       color: white;
-      font-size: 1.5rem;
+      font-size: 2rem;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
     }
     
     .mester-stat-box .stat-box-sub {
-      color: rgba(255, 255, 255, 0.7);
+      color: rgba(255, 255, 255, 0.85);
     }
     
-    /* SVÆRHEDSGRAD TEKST - VISER VALGT NIVEAU */
-    .selected-difficulty {
-      text-align: center;
-      margin: 10px 0 30px 0;
-      font-size: 1.2rem;
-      color: #2d3748;
-    }
-    
-    .selected-difficulty span {
-      background: #48bb78;
-      color: white;
-      padding: 5px 15px;
-      border-radius: 20px;
-      font-weight: bold;
+    .mester-stat-box .stat-box-total {
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 700;
     }
     
     /* TÆLLELINJE STYLES */
@@ -410,16 +402,6 @@
         font-size: 12px;
       }
       
-      .level-buttons {
-        flex-direction: column;
-        align-items: center;
-      }
-      
-      .level-btn {
-        width: 100%;
-        max-width: 250px;
-      }
-      
       .tallelinje-knapper {
         flex-direction: column;
         align-items: center;
@@ -470,11 +452,27 @@
       }
       
       .stats-grid {
-        grid-template-columns: 1fr;
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .stat-box {
+        width: 100%;
+        max-width: 300px;
       }
       
       .mester-stat-box {
-        grid-column: 1;
+        max-width: 300px;
+      }
+    }
+    
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .stats-grid {
+        flex-wrap: wrap;
+      }
+      
+      .stat-box {
+        min-width: 120px;
       }
     }
   </style>
@@ -489,11 +487,6 @@
     <!-- ANTAL RIGTIGE FOR ALLE 5 NIVEAUER - NU SOM KNAPPER -->
     <div class="stats-grid" id="statsGrid">
       <!-- Statistik for hvert niveau vises her dynamisk -->
-    </div>
-    
-    <!-- VISER VALGT NIVEAU -->
-    <div class="selected-difficulty">
-      Du spiller: <span id="currentDifficultyText">Let (1-10)</span>
     </div>
 
     <main>
@@ -564,13 +557,13 @@
     let animationTimeout;
     let animationSpeed = 800;
 
-    // DATA FOR HVER SVÆRHEDSGRAD - KUN "Antal rigtige"
+    // DATA FOR HVER SVÆRHEDSGRAD - "Antal rigtige" og "Antal forsøg"
     let difficultyData = {
-      let: { correctCount: 0 },
-      mellem: { correctCount: 0 },
-      svaer: { correctCount: 0 },
-      ekspert: { correctCount: 0 },
-      mester: { correctCount: 0 }
+      let: { correctCount: 0, totalAttempts: 0 },
+      mellem: { correctCount: 0, totalAttempts: 0 },
+      svaer: { correctCount: 0, totalAttempts: 0 },
+      ekspert: { correctCount: 0, totalAttempts: 0 },
+      mester: { correctCount: 0, totalAttempts: 0 }
     };
 
     // INFORMATION OM HVERT NIVEAU
@@ -675,12 +668,13 @@
       
       let html = '';
       
-      // De første 4 niveauer i 2×2 grid
+      // De første 4 niveauer på én linje
       const firstFour = ['let', 'mellem', 'svaer', 'ekspert'];
       firstFour.forEach(key => {
         const info = difficultyInfo[key];
         const isActive = key === currentDifficulty;
         const correctCount = difficultyData[key].correctCount || 0;
+        const totalAttempts = difficultyData[key].totalAttempts || 0;
         
         html += `
           <div class="stat-box ${isActive ? 'active' : ''}" 
@@ -688,31 +682,30 @@
                title="Klik for at spille ${info.displayName}">
             <div class="stat-box-label">${info.name}</div>
             <div class="stat-box-value">${correctCount}</div>
+            <div class="stat-box-total">ud af ${totalAttempts}</div>
             <div class="stat-box-sub">${info.range}</div>
           </div>
         `;
       });
       
-      // Mester niveau - fuld længde, mindre høj
+      // Mester niveau - fuld længde på sin egen linje
       const mesterInfo = difficultyInfo.mester;
       const mesterIsActive = currentDifficulty === "mester";
       const mesterCorrectCount = difficultyData.mester.correctCount || 0;
+      const mesterTotalAttempts = difficultyData.mester.totalAttempts || 0;
       
       html += `
         <div class="stat-box mester-stat-box ${mesterIsActive ? 'active' : ''}" 
              onclick="setDifficulty('mester')"
              title="Klik for at spille ${mesterInfo.displayName} - Den ultimative udfordring!">
-          <div class="stat-box-label">${mesterInfo.name} 🏆</div>
+          <div class="stat-box-label">${mesterInfo.name}</div>
           <div class="stat-box-value">${mesterCorrectCount}</div>
-          <div class="stat-box-sub">${mesterInfo.range} - Den ultimative udfordring!</div>
+          <div class="stat-box-total">ud af ${mesterTotalAttempts}</div>
+          <div class="stat-box-sub">${mesterInfo.range}</div>
         </div>
       `;
       
       statsGrid.innerHTML = html;
-      
-      // Opdater tekst om valgt niveau
-      document.getElementById('currentDifficultyText').textContent = 
-        difficultyInfo[currentDifficulty].displayName;
     }
 
     // ÆNDRE SVÆRHEDSGRAD (kaldt når man klikker på en stat-boks)
@@ -1081,6 +1074,9 @@
       const tolerance = 0.01;
       const isCorrect = Math.abs(brugerSvar - correctAnswer) < tolerance;
       
+      // Opdater totalAttempts for denne sværhedsgrad
+      difficultyData[currentDifficulty].totalAttempts = (difficultyData[currentDifficulty].totalAttempts || 0) + 1;
+      
       // Gem forsøg lokalt
       attempts.unshift({
         opgave: `${formatNumber(currentTal1)} + ${formatNumber(currentTal2)}`,
@@ -1111,6 +1107,10 @@
         
       } else {
         showFeedback(`❌ ${formatNumber(brugerSvar)} er ikke rigtigt. Prøv igen!`, false);
+        
+        // Gem data og opdater visning (kun totalAttempts er opdateret)
+        saveUserData();
+        updateStatsDisplay();
       }
     }
 
@@ -1203,47 +1203,42 @@
       const startTal = storsteTal; // Start på det største tal
       const slutTal = correctAnswer;
       
-      // ALTID vis alle tal fra mindste tal til resultat
-      const start = mindsteTal;
-      const slut = slutTal;
+      // NY LOGIK: Start ved mindste tal minus 2, slut ved resultat plus 2
+      const start = Math.max(1, mindsteTal - 2); // Mindst 1
+      const slut = slutTal + 2;
       
       let html = '';
       
       // Tegn hovedlinjen
       html += `<div class="tallelinje-linje"></div>`;
       
-      // Tegn ALLE tal og markeringer
+      // Tegn markeringer og tal
       for (let i = start; i <= slut; i++) {
         const position = ((i - start) / (slut - start)) * 100;
         
         // Tegn markering for hvert tal
+        const isImportant = i % 5 === 0 || i === currentTal1 || i === currentTal2 || i === slutTal || i === startTal;
+        
         html += `
           <div class="tallelinje-markering" style="left: ${position}%; top: 60px;">
-            <div style="width: 2px; height: 15px; background: #4a5568; margin: 0 auto;"></div>
+            <div style="width: ${isImportant ? '2px' : '1px'}; 
+                        height: ${isImportant ? '15px' : '10px'}; 
+                        background: #4a5568; margin: 0 auto;"></div>
           </div>
         `;
         
-        // Vis ALLE tal - forskel mellem Let og Mellem
-        if (currentDifficulty === "let") {
+        // Vis vigtige tal
+        if (isImportant) {
           const isOneOfOurNumbers = i === currentTal1 || i === currentTal2 || i === slutTal || i === startTal;
           const color = isOneOfOurNumbers ? '#f56565' : '#4a5568';
           const fontWeight = isOneOfOurNumbers ? 'bold' : 'normal';
+          const fontSize = i % 10 === 0 ? '13px' : '12px';
           
           html += `
             <div class="tallelinje-tal" style="left: ${position}%; top: 90px; 
-              font-size: 12px; 
+              font-size: ${fontSize}; 
               color: ${color};
               font-weight: ${fontWeight}">
-              ${i}
-            </div>
-          `;
-        } else {
-          // Mellem: Kun vis alle tal uden farver eller tyk skrift
-          html += `
-            <div class="tallelinje-tal" style="left: ${position}%; top: 90px; 
-              font-size: 12px; 
-              color: #4a5568;
-              font-weight: normal">
               ${i}
             </div>
           `;
@@ -1285,13 +1280,13 @@
       
       const container = document.getElementById('tallelinje');
       const mindsteTal = Math.min(currentTal1, currentTal2);
-      const storsteTal = Math.max(currentTal1, currentTal2);
-      const startTal = storsteTal; // Start på det største tal
+      const startTal = Math.max(currentTal1, currentTal2); // Start på det største tal
       const antalSkridt = Math.abs(correctAnswer - startTal);
       const slutTal = correctAnswer;
       
-      const start = mindsteTal;
-      const slut = slutTal;
+      // NY LOGIK: Start ved mindste tal minus 2
+      const start = Math.max(1, mindsteTal - 2);
+      const slut = slutTal + 2;
       
       // Beregn positionerne for hvert heltal
       const positions = {};
