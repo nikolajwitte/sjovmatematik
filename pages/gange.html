@@ -6,56 +6,526 @@
   <title>Gange - Sjov Matematik</title>
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .stats-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 20px 0;
+      justify-content: center;
+    }
+    
+    .stat-box {
+      background: white;
+      border-radius: 12px;
+      padding: 15px;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      border: 3px solid #e2e8f0;
+      transition: all 0.3s;
+      cursor: pointer;
+      flex: 1;
+      min-width: 150px;
+      max-width: 200px;
+    }
+    
+    .stat-box:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
+    
+    .stat-box.active {
+      border-color: #4299e1;
+      background: #ebf8ff;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(66, 153, 225, 0.2);
+    }
+    
+    .stat-box-label {
+      font-size: 1rem;
+      color: #718096;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+    
+    .stat-box-value {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #2d3748;
+      line-height: 1.2;
+    }
+    
+    .stat-box-sub {
+      font-size: 0.85rem;
+      color: #a0aec0;
+      margin-top: 3px;
+    }
+    
+    .stat-box-total {
+      font-size: 0.9rem;
+      color: #718096;
+      margin-top: 2px;
+      font-weight: 600;
+    }
+    
+    .mester-stat-box {
+      width: 100%;
+      max-width: 600px;
+      height: 60px;
+      margin: 10px auto 0 auto;
+      background: linear-gradient(135deg, #4299e1 0%, #3182ce 50%, #2b6cb0 100%);
+      border: 3px solid #3182ce;
+      color: white;
+      padding: 0 20px;
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .mester-stat-box::before {
+      content: "🏆 MASTER LEVEL";
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: rgba(0,0,0,0.2);
+      padding: 4px 10px;
+      font-size: 0.7rem;
+      font-weight: bold;
+      border-bottom-left-radius: 8px;
+    }
+    
+    .mester-stat-box:hover {
+      background: linear-gradient(135deg, #3182ce 0%, #2b6cb0 50%, #2c5282 100%);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 16px rgba(49, 130, 206, 0.3);
+    }
+    
+    .mester-stat-box.active {
+      border-color: #f6e05e;
+      background: linear-gradient(135deg, #4299e1 0%, #f6e05e 50%, #2b6cb0 100%);
+      box-shadow: 0 8px 20px rgba(246, 224, 94, 0.4);
+    }
+    
+    .mester-stat-box .stat-box-label {
+      color: rgba(255, 255, 255, 0.95);
+      font-size: 1.2rem;
+      font-weight: 800;
+      margin-bottom: 0;
+      display: inline;
+    }
+    
+    .mester-stat-box .stat-box-value {
+      color: white;
+      font-size: 1.8rem;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      display: inline;
+      margin: 0 5px;
+    }
+    
+    .mester-stat-box .stat-box-sub {
+      color: rgba(255, 255, 255, 0.85);
+      display: inline;
+      margin-left: 10px;
+    }
+    
+    .mester-stat-box .stat-box-total {
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 700;
+      display: inline;
+      margin-left: 5px;
+    }
+    
+    .mester-stat-box-content {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    
+    .punkter-visual-container {
+      margin-top: 30px;
+      display: none;
+    }
+    
+    .punkter-wrapper {
+      background: white;
+      border: 2px solid #4299e1;
+      border-radius: 10px;
+      padding: 25px;
+      overflow-x: auto;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    }
+    
+    .punkter-grid {
+      display: grid;
+      gap: 5px;
+      margin: 20px auto;
+      justify-content: center;
+    }
+    
+    .punkt {
+      width: 25px;
+      height: 25px;
+      background: #4299e1;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    
+    .punkter-explanation {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 1.1rem;
+      color: #4a5568;
+    }
+    
+    .punkter-knapper {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+    
+    .punkter-knapper button {
+      min-width: 180px;
+      padding: 12px 20px;
+    }
+    
+    .kolonne-help-container {
+      background: white;
+      border: 2px solid #e2e8f0;
+      border-radius: 15px;
+      padding: 25px;
+      margin: 20px 0;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+    
+    .kolonne-title {
+      color: #2d3748;
+      font-size: 1.3rem;
+      margin-bottom: 20px;
+      text-align: center;
+      font-weight: bold;
+    }
+    
+    .kolonne-visual {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 10px;
+      font-family: 'Courier New', monospace;
+      font-size: 1.4rem;
+      margin: 0 auto;
+      max-width: 700px;
+      padding: 15px;
+      background: #f8fafc;
+      border-radius: 8px;
+    }
+    
+    .kolonne-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .kolonne-digit {
+      width: 45px;
+      height: 45px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #cbd5e0;
+      border-radius: 5px;
+      background: white;
+      position: relative;
+    }
+    
+    .kolonne-digit.empty {
+      background: #f7fafc;
+      border: 1px dashed #cbd5e0;
+    }
+    
+    .kolonne-digit.carry {
+      background: #fed7d7;
+      border-color: #f56565;
+      font-weight: bold;
+      font-size: 0.9rem;
+      margin-bottom: 5px;
+    }
+    
+    .kolonne-digit.highlight {
+      background: #bee3f8;
+      border-color: #4299e1;
+      font-weight: bold;
+    }
+    
+    .kolonne-operator {
+      color: #4299e1;
+      font-weight: bold;
+      margin-right: 10px;
+      width: 45px;
+      text-align: center;
+    }
+    
+    .kolonne-line {
+      border-top: 2px solid #4a5568;
+      margin: 10px 0;
+      width: 100%;
+    }
+    
+    .step-explanation {
+      background: #ebf8ff;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 10px;
+      border-left: 4px solid #4299e1;
+    }
+    
+    .step-title {
+      color: #2d3748;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+    
+    .step-content {
+      color: #4a5568;
+      line-height: 1.5;
+    }
+    
+    .hjaelp-container {
+      max-height: 600px;
+      overflow-y: auto;
+      margin-top: 20px;
+    }
+    
+    .close-hjaelp-btn {
+      background: #f56565;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    
+    .close-hjaelp-btn:hover {
+      background: #e53e3e;
+    }
+    
+    .step-number {
+      display: inline-block;
+      background: #4299e1;
+      color: white;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 24px;
+      margin-right: 8px;
+      font-weight: bold;
+    }
+    
+    .tutor-btn {
+      background: #9f7aea;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.3s;
+      min-width: 150px;
+    }
+    
+    .tutor-btn:hover {
+      background: #805ad5;
+      transform: translateY(-2px);
+    }
+    
+    .gange-tabel-visual {
+      display: grid;
+      grid-template-columns: repeat(13, 1fr);
+      gap: 5px;
+      margin: 20px auto;
+      max-width: 700px;
+    }
+    
+    .gange-celle {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #cbd5e0;
+      background: white;
+      font-weight: bold;
+      position: relative;
+    }
+    
+    .gange-celle.header {
+      background: #4299e1;
+      color: white;
+      font-weight: bold;
+    }
+    
+    .gange-celle.active {
+      background: #c6f6d5;
+      border-color: #48bb78;
+      font-weight: bold;
+      transform: scale(1.1);
+      z-index: 2;
+    }
+    
+    .gange-celle.result {
+      background: #fed7d7;
+      border-color: #f56565;
+      font-weight: bold;
+    }
+    
+    @media (max-width: 768px) {
+      .punkter-grid {
+        gap: 3px;
+      }
+      
+      .punkt {
+        width: 20px;
+        height: 20px;
+        font-size: 10px;
+      }
+      
+      .punkter-knapper {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .punkter-knapper button {
+        width: 90%;
+        margin-bottom: 10px;
+      }
+      
+      .input-group {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .input-group input,
+      .input-group button {
+        width: 90%;
+        max-width: 250px;
+        margin-bottom: 10px;
+      }
+      
+      .kolonne-visual {
+        font-size: 1.1rem;
+        max-width: 95%;
+        overflow-x: auto;
+      }
+      
+      .kolonne-digit {
+        width: 35px;
+        height: 35px;
+        min-width: 35px;
+      }
+      
+      .kolonne-operator {
+        width: 35px;
+        min-width: 35px;
+      }
+      
+      #hjaelpeKnapper {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      #hjaelpeKnapper button {
+        width: 100%;
+        max-width: 250px;
+      }
+      
+      .stats-grid {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .stat-box {
+        width: 100%;
+        max-width: 300px;
+      }
+      
+      .mester-stat-box {
+        max-width: 300px;
+        height: auto;
+        padding: 15px;
+        flex-direction: column;
+        gap: 5px;
+      }
+      
+      .mester-stat-box-content {
+        flex-direction: column;
+        gap: 5px;
+        text-align: center;
+      }
+      
+      .mester-stat-box .stat-box-label,
+      .mester-stat-box .stat-box-sub,
+      .mester-stat-box .stat-box-value,
+      .mester-stat-box .stat-box-total {
+        display: block;
+        margin: 2px 0;
+      }
+      
+      .gange-tabel-visual {
+        grid-template-columns: repeat(7, 1fr);
+        max-width: 300px;
+      }
+      
+      .gange-celle {
+        width: 30px;
+        height: 30px;
+        font-size: 0.9rem;
+      }
+    }
+    
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .stats-grid {
+        flex-wrap: wrap;
+      }
+      
+      .stat-box {
+        min-width: 120px;
+      }
+    }
+  </style>
 </head>
 <body>
   <div class="container">
     <header class="header">
       <h1><i class="fas fa-times"></i> Gange (Multiplikation)</h1>
-      <p>Lær at gange tal sammen. Øv gangetabellerne og bliv hurtig!</p>
+      <p>Lær at gange tal sammen. Klik på et niveau for at starte!</p>
     </header>
 
-    <div class="stats-bar">
-      <div class="stat-item">
-        <div class="stat-label">Niveau</div>
-        <div class="stat-value" id="userLevel">1</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-label">Point</div>
-        <div class="stat-value" id="userPoints">0</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-label">I træk</div>
-        <div class="stat-value" id="streak">0</div>
-      </div>
-    </div>
+    <div class="stats-grid" id="statsGrid"></div>
 
     <main>
-      <!-- NIVEAU VÆLGER -->
-      <div style="margin-bottom: 30px; text-align: center;">
-        <h3>Vælg sværhedsgrad:</h3>
-        <div class="level-buttons">
-          <button class="level-btn active" data-level="1">Let (gangetabellen)</button>
-          <button class="level-btn" data-level="2">Mellem (op til 12×12)</button>
-          <button class="level-btn" data-level="3">Svær (store tal & decimaler)</button>
-        </div>
-      </div>
-
-      <!-- GANGETABEL HJÆLP -->
-      <div id="timesTableHelp" style="display: none; background: #fff3cd; border: 2px solid #ffd54f; border-radius: 10px; padding: 15px; margin-bottom: 20px;">
-        <h4 style="margin-top: 0; color: #856404;">Gangetabel for <span id="currentTable">?</span>:</h4>
-        <div id="timesTableContent" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px;"></div>
-        <button onclick="skjulGangetabel()" style="margin-top: 10px; padding: 5px 10px; background: #856404; color: white; border: none; border-radius: 5px;">Skjul</button>
-      </div>
-
-      <!-- OPGAVE -->
       <div class="opgave-container">
-        <div class="opgave-tekst" id="opgaveTekst">
-          <!-- Opgaven vises her -->
-        </div>
+        <div class="opgave-tekst" id="opgaveTekst"></div>
         
         <div class="input-group">
           <input type="number" id="svarInput" class="answer-input" placeholder="Dit svar" autofocus>
-          <button onclick="tjekSvar()" class="button primary-btn" style="background: #d69e2e;">
+          <button onclick="tjekSvar()" class="button primary-btn">
             <i class="fas fa-check"></i> Tjek svar
           </button>
           <button onclick="nyOpgave()" class="button secondary-btn">
@@ -63,29 +533,32 @@
           </button>
         </div>
         
-        <div style="margin-top: 20px;">
-          <button onclick="visGangetabel()" class="button" style="background: #f6ad55; color: white;">
-            <i class="fas fa-table"></i> Vis gangetabel
-          </button>
-          <button onclick="visHjaelp()" class="button" style="background: #f6ad55; color: white;">
-            <i class="fas fa-question-circle"></i> Få hjælp
-          </button>
-          <button onclick="visForklaring()" class="button" style="background: #90cdf4; color: white;">
-            <i class="fas fa-lightbulb"></i> Se løsning
-          </button>
+        <div id="hjaelpeKnapper" style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;"></div>
+      </div>
+      
+      <div id="punkterContainer" class="punkter-visual-container">
+        <h3>Punkter - Visualiser gangestykket:</h3>
+        <div class="punkter-wrapper">
+          <div id="punkterGrid" class="punkter-grid"></div>
+          <div id="punkterExplanation" class="punkter-explanation"></div>
+          <div class="punkter-knapper"></div>
         </div>
       </div>
       
-      <!-- FEEDBACK -->
-      <div id="feedback" class="feedback"></div>
-      
-      <!-- GANGETABEL ØVELSE -->
-      <div id="tablePractice" style="margin-top: 30px; display: none;">
-        <h3>Øv gangetabellen for <span id="practiceTable">?</span>:</h3>
-        <div id="tableQuestions" style="margin-top: 10px;"></div>
+      <div id="gangeTabelContainer" class="kolonne-help-container" style="display: none;">
+        <h3>Gange-tabel hjælp:</h3>
+        <div id="gangeTabel" class="gange-tabel-visual"></div>
       </div>
       
-      <!-- TILBAGE -->
+      <div id="hjaelpContainer" class="kolonne-help-container" style="display: none;"></div>
+      
+      <div id="feedback" class="feedback"></div>
+      
+      <div id="attemptsList" style="margin-top: 30px;">
+        <h3>Dine seneste forsøg:</h3>
+        <div id="attemptsContainer" style="margin-top: 10px;"></div>
+      </div>
+      
       <div style="text-align: center; margin-top: 40px;">
         <a href="../index.html" class="back-link">
           <i class="fas fa-arrow-left"></i> Tilbage til menuen
@@ -94,275 +567,785 @@
     </main>
   </div>
 
-  <!-- JAVASCRIPT -->
-  <script src="../js/app.js"></script>
   <script>
-    // GANGE SPECIFIK KODE
-    let currentLevel = 1;
+    let currentDifficulty = "let";
     let currentTal1, currentTal2, correctAnswer;
-    let streak = 0;
-    let currentTable = 0;
+    let attempts = [];
+    let animationActive = false;
 
-    // NÅR SIDEN INDLÆSES
+    let difficultyData = {
+      let: { correctCount: 0, totalAttempts: 0 },
+      mellem: { correctCount: 0, totalAttempts: 0 },
+      svaer: { correctCount: 0, totalAttempts: 0 },
+      ekspert: { correctCount: 0, totalAttempts: 0 },
+      mester: { correctCount: 0, totalAttempts: 0 }
+    };
+
+    const difficultyInfo = {
+      let: { 
+        name: "Let", 
+        range: "2-5",
+        displayName: "Let (gange med 2, 3, 4, 5)",
+        description: "Lærer grundlæggende gangestykker"
+      },
+      mellem: { 
+        name: "Mellem", 
+        range: "2-10",
+        displayName: "Mellem (gange med 2-10)",
+        description: "Hele gangetabellen indtil 10"
+      },
+      svaer: { 
+        name: "Svær", 
+        range: "10-20",
+        displayName: "Svær (10-20)",
+        description: "Gang med større tal, intro til kolonne"
+      },
+      ekspert: { 
+        name: "Ekspert", 
+        range: "20-99",
+        displayName: "Ekspert (20-99)",
+        description: "Tocifrede tal med kolonnemetode"
+      },
+      mester: { 
+        name: "Mester", 
+        range: "100-999",
+        displayName: "Mester (100-999)",
+        description: "Tricifrede tal med kompleks gange"
+      }
+    };
+
+    function formatNumber(num) {
+      return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
       loadUserData();
-      opdaterBrugerinfo();
-      setupLevelButtons();
+      updateStatsDisplay();
       genererOpgave();
+      opdaterHjaelpeKnapper();
       
-      // Enter-tasten
       document.getElementById('svarInput').addEventListener('keypress', function(e) {
         if (e.key === 'Enter') tjekSvar();
       });
     });
 
-    // OPDATER BRUGERINFO
-    function opdaterBrugerinfo() {
-      document.getElementById('userLevel').textContent = currentLevel;
-      document.getElementById('userPoints').textContent = userData.totalPoints;
-      document.getElementById('streak').textContent = streak;
+    function loadUserData() {
+      try {
+        const savedData = localStorage.getItem('gangeData');
+        if (savedData) {
+          const data = JSON.parse(savedData);
+          difficultyData = data.difficultyData || difficultyData;
+          currentDifficulty = data.currentDifficulty || "let";
+          attempts = data.attempts || [];
+        }
+      } catch (e) {
+        console.log("Ingen tidligere gange data fundet");
+      }
     }
 
-    // SETUP NIVEAU KNAPPER
-    function setupLevelButtons() {
-      const buttons = document.querySelectorAll('.level-btn');
-      buttons.forEach(btn => {
-        btn.addEventListener('click', function() {
-          buttons.forEach(b => b.classList.remove('active'));
-          this.classList.add('active');
-          currentLevel = parseInt(this.dataset.level);
-          opdaterBrugerinfo();
-          genererOpgave();
-        });
-      });
+    function saveUserData() {
+      const data = {
+        difficultyData: difficultyData,
+        currentDifficulty: currentDifficulty,
+        attempts: attempts.slice(0, 10)
+      };
+      localStorage.setItem('gangeData', JSON.stringify(data));
     }
 
-    // GENERER NY GANGE OPGAVE
-    function genererOpgave() {
-      let maxTal1, maxTal2;
+    function updateStatsDisplay() {
+      const statsGrid = document.getElementById('statsGrid');
+      if (!statsGrid) return;
       
-      switch(currentLevel) {
-        case 1: // Gangetabellen 1-10
-          maxTal1 = 10;
-          maxTal2 = 10;
-          currentTal1 = Math.floor(Math.random() * maxTal1) + 1;
-          currentTal2 = Math.floor(Math.random() * maxTal2) + 1;
-          currentTable = currentTal1; // For gangetabel-hjælp
+      let html = '';
+      
+      const firstFour = ['let', 'mellem', 'svaer', 'ekspert'];
+      firstFour.forEach(key => {
+        const info = difficultyInfo[key];
+        const isActive = key === currentDifficulty;
+        const correctCount = difficultyData[key].correctCount || 0;
+        const totalAttempts = difficultyData[key].totalAttempts || 0;
+        
+        html += `
+          <div class="stat-box ${isActive ? 'active' : ''}" 
+               onclick="setDifficulty('${key}')"
+               title="Klik for at spille ${info.displayName}">
+            <div class="stat-box-label">${info.name}</div>
+            <div class="stat-box-value">${correctCount}</div>
+            <div class="stat-box-total">ud af ${totalAttempts}</div>
+            <div class="stat-box-sub">${info.range}</div>
+          </div>
+        `;
+      });
+      
+      const mesterInfo = difficultyInfo.mester;
+      const mesterIsActive = currentDifficulty === "mester";
+      const mesterCorrectCount = difficultyData.mester.correctCount || 0;
+      const mesterTotalAttempts = difficultyData.mester.totalAttempts || 0;
+      
+      html += `
+        <div class="stat-box mester-stat-box ${mesterIsActive ? 'active' : ''}" 
+             onclick="setDifficulty('mester')"
+             title="Klik for at spille ${mesterInfo.displayName} - Den ultimative udfordring!">
+          <div class="mester-stat-box-content">
+            <span class="stat-box-label">${mesterInfo.name}</span>
+            <span class="stat-box-sub">(${mesterInfo.range})</span>
+            <span class="stat-box-value">${mesterCorrectCount}</span>
+            <span class="stat-box-total">ud af ${mesterTotalAttempts}</span>
+          </div>
+        </div>
+      `;
+      
+      statsGrid.innerHTML = html;
+    }
+
+    function setDifficulty(difficulty) {
+      currentDifficulty = difficulty;
+      updateStatsDisplay();
+      genererOpgave();
+      opdaterHjaelpeKnapper();
+      document.getElementById('punkterContainer').style.display = 'none';
+      document.getElementById('hjaelpContainer').style.display = 'none';
+      document.getElementById('gangeTabelContainer').style.display = 'none';
+      saveUserData();
+    }
+
+    function opdaterHjaelpeKnapper() {
+      const knapContainer = document.getElementById('hjaelpeKnapper');
+      
+      if (currentDifficulty === "let") {
+        knapContainer.innerHTML = `
+          <button onclick="visPunkter()" class="button" style="background: #4299e1; color: white; flex: 1; min-width: 150px;">
+            <i class="fas fa-th"></i> Vis med punkter
+          </button>
+          <button onclick="visGangeTabel()" class="button" style="background: #90cdf4; color: white; flex: 1; min-width: 150px;">
+            <i class="fas fa-table"></i> Gange-tabel
+          </button>
+          <button onclick="visSimpelHjaelp()" class="button" style="background: #9ae6b4; color: white; flex: 1; min-width: 150px;">
+            <i class="fas fa-lightbulb"></i> Tæl op strategi
+          </button>
+          <button onclick="visMatematiktutor()" class="tutor-btn" style="flex: 1; min-width: 150px;">
+            <i class="fas fa-chalkboard-teacher"></i> Matematiktutor
+          </button>
+        `;
+        knapContainer.style.display = 'flex';
+      } else if (currentDifficulty === "mellem") {
+        knapContainer.innerHTML = `
+          <button onclick="visPunkter()" class="button" style="background: #4299e1; color: white; flex: 1; min-width: 150px;">
+            <i class="fas fa-th"></i> Vis med punkter
+          </button>
+          <button onclick="visGangeTabel()" class="button" style="background: #90cdf4; color: white; flex: 1; min-width: 150px;">
+            <i class="fas fa-table"></i> Gange-tabel
+          </button>
+          <button onclick="visSimpelHjaelp()" class="button" style="background: #9ae6b4; color: white; flex: 1; min-width: 150px;">
+            <i class="fas fa-lightbulb"></i> Tæl op strategi
+          </button>
+          <button onclick="visMatematiktutor()" class="tutor-btn" style="flex: 1; min-width: 150px;">
+            <i class="fas fa-chalkboard-teacher"></i> Matematiktutor
+          </button>
+        `;
+        knapContainer.style.display = 'flex';
+      } else if (currentDifficulty === "svaer") {
+        knapContainer.innerHTML = `
+          <button onclick="visSimpelHjaelp()" class="button" style="background: #9ae6b4; color: white; flex: 1; min-width: 150px;">
+            <i class="fas fa-lightbulb"></i> Tæl op strategi
+          </button>
+          <button onclick="visKolonneHjaelp()" class="button" style="background: #90cdf4; color: white; flex: 1; min-width: 150px;">
+            <i class="fas fa-calculator"></i> Kolonnehjælp
+          </button>
+          <button onclick="visMatematiktutor()" class="tutor-btn" style="flex: 1; min-width: 150px;">
+            <i class="fas fa-chalkboard-teacher"></i> Matematiktutor
+          </button>
+        `;
+        knapContainer.style.display = 'flex';
+      } else {
+        knapContainer.innerHTML = `
+          <button onclick="visKolonneHjaelp()" class="button" style="background: #90cdf4; color: white; flex: 1; min-width: 200px;">
+            <i class="fas fa-calculator"></i> Kolonnehjælp
+          </button>
+          <button onclick="visMatematiktutor()" class="tutor-btn" style="flex: 1; min-width: 200px;">
+            <i class="fas fa-chalkboard-teacher"></i> Matematiktutor
+          </button>
+        `;
+        knapContainer.style.display = 'flex';
+      }
+    }
+
+    function genererOpgave() {
+      switch(currentDifficulty) {
+        case "let": 
+          // Gange med 2, 3, 4, 5
+          const letGangeTal = [2, 3, 4, 5];
+          currentTal1 = letGangeTal[Math.floor(Math.random() * letGangeTal.length)];
+          currentTal2 = Math.floor(Math.random() * 5) + 1; // 1-5
           break;
-          
-        case 2: // Op til 12×12
-          maxTal1 = 12;
-          maxTal2 = 12;
-          currentTal1 = Math.floor(Math.random() * maxTal1) + 1;
-          currentTal2 = Math.floor(Math.random() * maxTal2) + 1;
-          currentTable = currentTal1;
+        case "mellem": 
+          // Hele gangetabellen 1-10
+          currentTal1 = Math.floor(Math.random() * 10) + 1; // 1-10
+          currentTal2 = Math.floor(Math.random() * 10) + 1; // 1-10
           break;
-          
-        case 3: // Store tal og decimaler
-          // 50% chance for decimaltal
-          if (Math.random() > 0.5) {
-            currentTal1 = (Math.floor(Math.random() * 20) + 1) * 0.5; // 0.5, 1.0, 1.5...
-            currentTal2 = Math.floor(Math.random() * 10) + 1;
-          } else {
-            currentTal1 = Math.floor(Math.random() * 30) + 10;
-            currentTal2 = Math.floor(Math.random() * 20) + 5;
-          }
-          currentTable = 0; // Ingen gangetabel for store tal
+        case "svaer": 
+          // Større tal, men stadig overskuelige
+          currentTal1 = Math.floor(Math.random() * 11) + 10; // 10-20
+          currentTal2 = Math.floor(Math.random() * 5) + 1; // 1-5
           break;
+        case "ekspert":
+          // Tocifrede tal
+          currentTal1 = Math.floor(Math.random() * 80) + 20; // 20-99
+          currentTal2 = Math.floor(Math.random() * 9) + 2; // 2-10
+          break;
+        case "mester":
+          // Tricifrede tal
+          currentTal1 = Math.floor(Math.random() * 900) + 100; // 100-999
+          currentTal2 = Math.floor(Math.random() * 9) + 2; // 2-10
+          break;
+        default: 
+          currentTal1 = 2;
+          currentTal2 = 3;
       }
       
       correctAnswer = currentTal1 * currentTal2;
       
-      // Vis opgaven
-      document.getElementById('opgaveTekst').innerHTML = `
-        Hvad er <span class="regnearter">${currentTal1}</span> 
-        <i class="fas fa-times" style="color: #d69e2e;"></i> 
-        <span class="regnearter">${currentTal2}</span> 
-        ?
-        ${currentLevel === 3 && currentTal1 % 1 !== 0 ? '<br><small>(Afrund til 2 decimaler hvis nødvendigt)</small>' : ''}
+      const opgaveTekst = document.getElementById('opgaveTekst');
+      
+      let gangeTips = '';
+      if (currentDifficulty === "let" || currentDifficulty === "mellem") {
+        gangeTips = `
+          <div style="font-size: 0.9rem; color: #718096; background: #ebf8ff; padding: 8px; border-radius: 5px; margin-top: 5px;">
+            💡 Tip: ${currentTal1} × ${currentTal2} betyder "${currentTal1} lagt sammen ${currentTal2} gange"
+          </div>
+        `;
+      }
+      
+      opgaveTekst.innerHTML = `
+        <div style="font-size: 1.4rem; margin-bottom: 10px;">
+          Hvad er <span class="regnearter">${formatNumber(currentTal1)}</span> 
+          <i class="fas fa-times" style="color: #4299e1; margin: 0 10px;"></i> 
+          <span class="regnearter">${formatNumber(currentTal2)}</span> 
+          ?
+        </div>
+        ${gangeTips}
+        ${currentDifficulty === "ekspert" || currentDifficulty === "mester" ? 
+          '<div style="font-size: 0.9rem; color: #718096; background: #f7fafc; padding: 8px; border-radius: 5px; margin-top: 5px;">💡 Tip: Brug kolonnemetoden. Gange hvert ciffer og husk at lægge evt. tal i mente til næste ciffer.</div>' : ''}
       `;
       
-      // Nulstil input
       document.getElementById('svarInput').value = '';
       document.getElementById('svarInput').focus();
-      
-      // Opdater gangetabel hjælp
-      if (currentLevel < 3 && currentTable > 0) {
-        document.getElementById('currentTable').textContent = currentTable;
-      }
+      document.getElementById('punkterContainer').style.display = 'none';
+      document.getElementById('hjaelpContainer').style.display = 'none';
+      document.getElementById('gangeTabelContainer').style.display = 'none';
     }
 
-    // TJEK SVAR
+    function visSimpelHjaelp() {
+      const hjælpContainer = document.getElementById('hjaelpContainer');
+      
+      const hjælpHTML = `
+        <div class="kolonne-title">
+          <i class="fas fa-lightbulb"></i> Tæl op strategi for ${currentTal1} × ${currentTal2}
+        </div>
+        
+        <div class="step-explanation">
+          <div class="step-title"><span class="step-number">1</span> Forstå hvad gangestykket betyder</div>
+          <div class="step-content">
+            ${currentTal1} × ${currentTal2} betyder:<br>
+            <strong>"${currentTal1} lagt sammen med sig selv ${currentTal2} gange"</strong><br><br>
+            Eller omvendt: "${currentTal2} lagt sammen med sig selv ${currentTal1} gange"
+          </div>
+        </div>
+        
+        <div class="step-explanation" style="background: #c6f6d5; border-left-color: #48bb78;">
+          <div class="step-title"><span class="step-number">2</span> Brug gentagen addition</div>
+          <div class="step-content">
+            Du kan tælle op med ${currentTal1}'erne:<br>
+            ${Array.from({length: currentTal2}, (_, i) => currentTal1).join(' + ')}<br><br>
+            
+            <strong>Eller med ${currentTal2}'erne:</strong><br>
+            ${Array.from({length: currentTal1}, (_, i) => currentTal2).join(' + ')}
+          </div>
+        </div>
+        
+        <div class="step-explanation" style="background: #fed7d7; border-left-color: #f56565;">
+          <div class="step-title"><span class="step-number">3</span> Brug gangetabellen hvis muligt</div>
+          <div class="step-content">
+            ${currentDifficulty === "let" || currentDifficulty === "mellem" ? `
+            <strong>Huskeregler:</strong><br>
+            • ${currentTal1} × ${currentTal2} = ${currentTal2} × ${currentTal1} (det samme resultat)<br>
+            • ${currentTal1} × 10 = ${currentTal1}0<br>
+            • ${currentTal1} × 5 = halvdelen af ${currentTal1} × 10<br><br>
+            ` : ''}
+            
+            <strong>Par som giver 10:</strong><br>
+            2 × 5 = 10<br>
+            4 × 25 = 100<br>
+            8 × 125 = 1000
+          </div>
+        </div>
+        
+        <div class="step-explanation" style="background: #fffaf0; border-left-color: #f6ad55;">
+          <div class="step-title"><span class="step-number">4</span> Kontroller dit svar</div>
+          <div class="step-content">
+            <strong>Sådan tjekker du om dit svar er rigtigt:</strong><br><br>
+            
+            ${currentTal2 <= 10 ? `
+            <div style="margin: 10px 0;">
+              <strong>Metode 1: Deling</strong><br>
+              Del dit svar med ${currentTal1}. Får du ${currentTal2}?<br>
+              Del dit svar med ${currentTal2}. Får du ${currentTal1}?
+            </div>
+            ` : ''}
+            
+            <div style="margin: 10px 0;">
+              <strong>Metode 2: Runde tal</strong><br>
+              Rund ${currentTal1} og ${currentTal2} til nærmeste 10'ere og gange:<br>
+              ${Math.round(currentTal1/10)*10} × ${Math.round(currentTal2/10)*10} ≈ ${Math.round(currentTal1/10)*10 * Math.round(currentTal2/10)*10}
+            </div>
+          </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 20px;">
+          <button onclick="skjulHjaelp()" class="close-hjaelp-btn">
+            <i class="fas fa-times"></i> Luk hjælp
+          </button>
+        </div>
+      `;
+      
+      hjælpContainer.innerHTML = hjælpHTML;
+      hjælpContainer.style.display = 'block';
+      hjælpContainer.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function visKolonneHjaelp() {
+      const hjælpContainer = document.getElementById('hjaelpContainer');
+      const num1Str = currentTal1.toString();
+      const num2Str = currentTal2.toString();
+      
+      let kolonneHTML = `
+        <div class="kolonne-title">
+          <i class="fas fa-calculator"></i> Kolonnehjælp for ${currentTal1} × ${currentTal2}
+        </div>
+      `;
+      
+      // For let og mellem niveauer - simplere forklaring
+      if (currentDifficulty === "let" || currentDifficulty === "mellem") {
+        kolonneHTML += `
+          <div class="step-explanation">
+            <div class="step-title"><span class="step-number">1</span> Skriv tallene under hinanden</div>
+            <div class="step-content">
+              <div style="font-family: 'Courier New', monospace; font-size: 1.4rem; text-align: right; margin: 10px 0; padding: 10px; background: #f8fafc; border-radius: 5px;">
+                <div>${currentTal1}</div>
+                <div>× ${currentTal2.toString().padStart(currentTal1.toString().length, ' ')}</div>
+                <div style="border-top: 2px solid #4a5568; margin-top: 5px;"></div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="step-explanation" style="background: #c6f6d5; border-left-color: #48bb78;">
+            <div class="step-title"><span class="step-number">2</span> Gange enere først</div>
+            <div class="step-content">
+              <strong>${currentTal2}'ernes plads:</strong><br>
+              ${currentTal1} × ${currentTal2 % 10} = ${currentTal1 * (currentTal2 % 10)}
+            </div>
+          </div>
+          
+          <div class="step-explanation" style="background: #fffaf0; border-left-color: #f6ad55;">
+            <div class="step-title"><span class="step-number">3</span> Færdig!</div>
+            <div class="step-content">
+              Da ${currentTal2} kun har en plads, er vi færdige!<br>
+              Resultat: ${currentTal1} × ${currentTal2} = ${currentTal1 * currentTal2}
+            </div>
+          </div>
+        `;
+      } else {
+        // For svær, ekspert og mester - rigtig kolonnemetode
+        const digits2 = num2Str.split('').reverse().map(Number); // Start fra enere
+        
+        kolonneHTML += `
+          <div class="step-explanation">
+            <div class="step-title"><span class="step-number">1</span> Skriv tallene under hinanden</div>
+            <div class="step-content">
+              <div style="font-family: 'Courier New', monospace; font-size: 1.4rem; text-align: right; margin: 10px 0; padding: 10px; background: #f8fafc; border-radius: 5px;">
+                <div>${currentTal1}</div>
+                <div>× ${currentTal2.toString().padStart(currentTal1.toString().length, ' ')}</div>
+                <div style="border-top: 2px solid #4a5568; margin-top: 5px;"></div>
+              </div>
+            </div>
+          </div>
+        `;
+        
+        // KOLONNE VISUAL
+        let kolonneVisual = '<div class="kolonne-visual">';
+        
+        // Første tal
+        kolonneVisual += `<div class="kolonne-row">`;
+        kolonneVisual += `<span style="color: #718096; margin-right: 10px; width: 45px;">&nbsp;</span>`;
+        for (let i = num1Str.length - 1; i >= 0; i--) {
+          kolonneVisual += `<div class="kolonne-digit">${num1Str[i]}</div>`;
+        }
+        kolonneVisual += `</div>`;
+        
+        // Andet tal med gange
+        kolonneVisual += `<div class="kolonne-row">`;
+        kolonneVisual += `<span class="kolonne-operator">×</span>`;
+        for (let i = num2Str.length - 1; i >= 0; i--) {
+          kolonneVisual += `<div class="kolonne-digit">${num2Str[i]}</div>`;
+        }
+        kolonneVisual += `</div>`;
+        
+        // Linje
+        kolonneVisual += `<div class="kolonne-line"></div>`;
+        
+        // Mellemregninger
+        for (let i = 0; i < digits2.length; i++) {
+          const multiplier = digits2[i];
+          const partialResult = currentTal1 * multiplier;
+          const partialStr = partialResult.toString().padEnd(num1Str.length + i, '0');
+          
+          kolonneVisual += `<div class="kolonne-row">`;
+          kolonneVisual += `<span style="color: #718096; margin-right: 10px; width: 45px;">${multiplier}×:</span>`;
+          
+          for (let j = 0; j < num1Str.length + digits2.length; j++) {
+            const digit = partialStr.length > j ? partialStr[partialStr.length - 1 - j] : '';
+            if (digit !== '') {
+              kolonneVisual += `<div class="kolonne-digit ${i > 0 && j < i ? 'empty' : ''}">${digit}</div>`;
+            } else {
+              kolonneVisual += `<div class="kolonne-digit empty"></div>`;
+            }
+          }
+          kolonneVisual += `</div>`;
+        }
+        
+        // Endelig linje
+        kolonneVisual += `<div class="kolonne-line"></div>`;
+        
+        // Resultat (tomme kasser)
+        kolonneVisual += `<div class="kolonne-row">`;
+        kolonneVisual += `<span style="color: #718096; margin-right: 10px; width: 45px;">&nbsp;</span>`;
+        for (let i = 0; i < num1Str.length + num2Str.length; i++) {
+          kolonneVisual += `<div class="kolonne-digit empty"></div>`;
+        }
+        kolonneVisual += `</div>`;
+        
+        kolonneVisual += '</div>';
+        kolonneHTML += kolonneVisual;
+        
+        // Trin-for-trin forklaring
+        kolonneHTML += `
+          <div class="step-explanation" style="background: #c6f6d5; border-left-color: #48bb78;">
+            <div class="step-title"><span class="step-number">2</span> Trin for trin - Start fra højre</div>
+            <div class="step-content">
+              <strong>Start med ${currentTal2}'s enere og arbejd mod venstre:</strong><br><br>
+              
+              <div style="display: flex; align-items: flex-start; gap: 15px; flex-wrap: wrap;">
+                <!-- Trin 1 -->
+                <div style="flex: 1; min-width: 200px; background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px;">
+                  <div style="font-weight: bold; color: #4299e1; margin-bottom: 5px;">Trin 1: Enere</div>
+                  <div>${currentTal1} × ${digits2[0]}</div>
+                  <div style="color: #48bb78; font-size: 0.9rem;">→ ${currentTal1} × ${digits2[0]} = ${currentTal1 * digits2[0]}</div>
+                </div>
+                
+                <!-- Trin 2 -->
+                ${digits2.length > 1 ? `
+                <div style="flex: 1; min-width: 200px; background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px;">
+                  <div style="font-weight: bold; color: #4299e1; margin-bottom: 5px;">Trin 2: Tiere</div>
+                  <div>${currentTal1} × ${digits2[1]}0</div>
+                  <div style="color: #48bb78; font-size: 0.9rem;">→ ${currentTal1} × ${digits2[1]}0 = ${currentTal1 * digits2[1] * 10}</div>
+                </div>
+                ` : ''}
+                
+                <!-- Trin 3 -->
+                ${digits2.length > 2 ? `
+                <div style="flex: 1; min-width: 200px; background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px;">
+                  <div style="font-weight: bold; color: #4299e1; margin-bottom: 5px;">Trin 3: Hundreder</div>
+                  <div>${currentTal1} × ${digits2[2]}00</div>
+                  <div style="color: #48bb78; font-size: 0.9rem;">→ ${currentTal1} × ${digits2[2]}00 = ${currentTal1 * digits2[2] * 100}</div>
+                </div>
+                ` : ''}
+              </div>
+            </div>
+          </div>
+          
+          <div class="step-explanation" style="background: #fed7d7; border-left-color: #f56565;">
+            <div class="step-title"><span class="step-number">3</span> Læg delresultaterne sammen</div>
+            <div class="step-content">
+              <strong>Læg alle delresultaterne sammen:</strong><br><br>
+              
+              ${digits2.map((digit, index) => {
+                const partial = currentTal1 * digit * Math.pow(10, index);
+                return `${currentTal1} × ${digit}${'0'.repeat(index)} = ${partial}`;
+              }).join('<br>+ ')}<br>
+              <div style="border-top: 2px solid #4a5568; margin-top: 5px; padding-top: 5px; font-weight: bold;">
+                I ALT: ${correctAnswer}
+              </div>
+            </div>
+          </div>
+          
+          <div class="step-explanation" style="background: #fffaf0; border-left-color: #f6ad55;">
+            <div class="step-title"><span class="step-number">4</span> Kontroller dit svar</div>
+            <div class="step-content">
+              <strong>Sådan tjekker du om dit svar er rigtigt:</strong><br><br>
+              
+              <div style="margin: 10px 0;">
+                <strong>Metode 1: Deling</strong><br>
+                Del ${correctAnswer} med ${currentTal1}. Får du ${currentTal2}?<br>
+                Del ${correctAnswer} med ${currentTal2}. Får du ${currentTal1}?
+              </div>
+              
+              <div style="margin: 10px 0;">
+                <strong>Metode 2: Anslå</strong><br>
+                Rund til nærmeste 10'ere:<br>
+                ${Math.round(currentTal1/10)*10} × ${Math.round(currentTal2/10)*10} ≈ ${Math.round(currentTal1/10)*10 * Math.round(currentTal2/10)*10}<br>
+                Dit svar skal være tæt på dette!
+              </div>
+            </div>
+          </div>
+        `;
+      }
+      
+      kolonneHTML += `
+        <div style="text-align: center; margin-top: 20px;">
+          <button onclick="skjulHjaelp()" class="close-hjaelp-btn">
+            <i class="fas fa-times"></i> Luk hjælp
+          </button>
+        </div>
+      `;
+      
+      hjælpContainer.innerHTML = kolonneHTML;
+      hjælpContainer.style.display = 'block';
+      hjælpContainer.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function skjulHjaelp() {
+      document.getElementById('hjaelpContainer').style.display = 'none';
+    }
+
+    function visPunkter() {
+      if (currentDifficulty !== "let" && currentDifficulty !== "mellem") {
+        showFeedback('Punktvisualisering er kun tilgængelig i Let og Mellem', false);
+        return;
+      }
+      
+      document.getElementById('punkterContainer').style.display = 'block';
+      tegnPunkter();
+      opdaterPunkterKnapper();
+      skjulHjaelp();
+    }
+
+    function tegnPunkter() {
+      const container = document.getElementById('punkterGrid');
+      const explanation = document.getElementById('punkterExplanation');
+      
+      // Begræns antallet af punkter for ikke at overbelaste
+      const maxPunkter = currentDifficulty === "let" ? 50 : 100;
+      
+      if (currentTal1 * currentTal2 > maxPunkter) {
+        container.innerHTML = `
+          <div style="text-align: center; padding: 40px; color: #718096;">
+            <i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 20px;"></i>
+            <h3>For mange punkter at vise!</h3>
+            <p>${currentTal1} × ${currentTal2} = ${currentTal1 * currentTal2} punkter vil være for mange at vise klart.</p>
+            <p>Prøv i stedet at bruge "Tæl op strategi" eller "Gange-tabel" hjælp.</p>
+          </div>
+        `;
+        explanation.innerHTML = `
+          ${currentTal1} rækker med ${currentTal2} punkter i hver = ${currentTal1 * currentTal2} punkter totalt
+        `;
+        return;
+      }
+      
+      // Opret grid af punkter
+      const rows = Math.min(currentTal1, 10); // Max 10 rækker for klarhed
+      const cols = Math.min(currentTal2, 10); // Max 10 kolonner for klarhed
+      
+      container.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+      
+      let html = '';
+      let count = 0;
+      
+      for (let i = 0; i < rows; i++) {
+        for (let j = 0; j < cols; j++) {
+          count++;
+          html += `<div class="punkt">${count <= 99 ? count : ''}</div>`;
+        }
+      }
+      
+      container.innerHTML = html;
+      
+      explanation.innerHTML = `
+        <strong>${currentTal1} × ${currentTal2} = ${currentTal1 * currentTal2}</strong><br>
+        Viser ${rows} rækker med ${cols} punkter i hver. ${rows * cols} punkter totalt.<br>
+        ${currentTal1} grupper med ${currentTal2} i hver = ${currentTal1 * currentTal2} totalt
+      `;
+    }
+
+    function opdaterPunkterKnapper() {
+      const knapContainer = document.querySelector('.punkter-knapper');
+      
+      knapContainer.innerHTML = `
+        <button onclick="skjulPunkter()" class="close-hjaelp-btn" style="min-width: 180px; padding: 12px 20px;">
+          <i class="fas fa-times"></i> Skjul punkter
+        </button>
+      `;
+    }
+
+    function skjulPunkter() {
+      document.getElementById('punkterContainer').style.display = 'none';
+    }
+
+    function visGangeTabel() {
+      if (currentDifficulty !== "let" && currentDifficulty !== "mellem") {
+        showFeedback('Gange-tabel hjælp er kun tilgængelig i Let og Mellem', false);
+        return;
+      }
+      
+      const container = document.getElementById('gangeTabelContainer');
+      const tabel = document.getElementById('gangeTabel');
+      
+      // Opret en 12x12 gangetabel
+      let html = '';
+      
+      // Headers
+      html += `<div class="gange-celle header"></div>`; // Øverste venstre hjørne
+      for (let i = 1; i <= 12; i++) {
+        html += `<div class="gange-celle header">${i}</div>`;
+      }
+      
+      // Rækker
+      for (let i = 1; i <= 12; i++) {
+        html += `<div class="gange-celle header">${i}</div>`; // Venstre header
+        for (let j = 1; j <= 12; j++) {
+          const isActive = (i === currentTal1 && j === currentTal2) || (i === currentTal2 && j === currentTal1);
+          const isResult = i * j === correctAnswer;
+          
+          let className = 'gange-celle';
+          if (isActive) className += ' active';
+          if (isResult && isActive) className += ' result';
+          
+          html += `<div class="${className}">${i * j}</div>`;
+        }
+      }
+      
+      tabel.innerHTML = html;
+      container.style.display = 'block';
+      container.scrollIntoView({ behavior: 'smooth' });
+      
+      // Tilføj forklaring
+      const existingExplanation = container.querySelector('.tabel-explanation');
+      if (existingExplanation) existingExplanation.remove();
+      
+      const explanation = document.createElement('div');
+      explanation.className = 'step-explanation tabel-explanation';
+      explanation.innerHTML = `
+        <div class="step-title"><i class="fas fa-info-circle"></i> Sådan bruger du gangetabellen</div>
+        <div class="step-content">
+          <strong>Find ${currentTal1} i venstre kolonne og ${currentTal2} i øverste række.</strong><br>
+          Celle hvor de mødes viser resultatet: ${currentTal1} × ${currentTal2} = ${correctAnswer}<br><br>
+          
+          <strong>Husk:</strong> ${currentTal2} × ${currentTal1} giver det samme resultat!<br>
+          Det kaldes den <em>kommutative egenskab</em>.
+        </div>
+      `;
+      
+      container.appendChild(explanation);
+    }
+
     function tjekSvar() {
       const svarInput = document.getElementById('svarInput');
-      let brugerSvar = parseFloat(svarInput.value);
+      const brugerSvar = parseFloat(svarInput.value.replace(',', '.'));
       
       if (isNaN(brugerSvar)) {
         showFeedback('Skriv venligst et tal før du tjekker svar', false);
         return;
       }
       
-      // Afrund til 2 decimaler for niveau 3
-      if (currentLevel === 3) {
-        brugerSvar = Math.round(brugerSvar * 100) / 100;
-        correctAnswer = Math.round(correctAnswer * 100) / 100;
-      }
+      const tolerance = 0.01;
+      const isCorrect = Math.abs(brugerSvar - correctAnswer) < tolerance;
       
-      const isCorrect = brugerSvar === correctAnswer;
+      difficultyData[currentDifficulty].totalAttempts = (difficultyData[currentDifficulty].totalAttempts || 0) + 1;
+      
+      attempts.unshift({
+        opgave: `${formatNumber(currentTal1)} × ${formatNumber(currentTal2)}`,
+        svar: formatNumber(brugerSvar),
+        korrekt: isCorrect,
+        tid: new Date().toLocaleTimeString(),
+        difficulty: currentDifficulty
+      });
+      
+      if (attempts.length > 5) attempts.pop();
+      visForsog();
+      skjulHjaelp();
       
       if (isCorrect) {
-        streak++;
-        showFeedback(`✅ Fremragende! ${currentTal1} × ${currentTal2} = ${correctAnswer}`, true);
-        calculateNewLevel(true);
+        difficultyData[currentDifficulty].correctCount++;
+        showFeedback(`✅ Fantastisk! ${formatNumber(currentTal1)} × ${formatNumber(currentTal2)} = ${formatNumber(correctAnswer)}`, true);
+        saveUserData();
+        updateStatsDisplay();
         
-        // Automatisk ny opgave
         setTimeout(() => {
           genererOpgave();
-          opdaterBrugerinfo();
         }, 1500);
+        
       } else {
-        streak = 0;
-        showFeedback(`❌ ${brugerSvar} er ikke rigtigt. Prøv igen!`, false);
-        calculateNewLevel(false);
+        showFeedback(`❌ ${formatNumber(brugerSvar)} er ikke rigtigt. Prøv igen!`, false);
+        saveUserData();
+        updateStatsDisplay();
       }
-      
-      opdaterBrugerinfo();
     }
 
-    // NY OPGAVE
     function nyOpgave() {
       genererOpgave();
       document.getElementById('feedback').textContent = '';
       document.getElementById('feedback').className = 'feedback';
-      skjulGangetabel();
-      document.getElementById('tablePractice').style.display = 'none';
+      animationActive = false;
+      skjulHjaelp();
     }
 
-    // VIS GANGETABEL
-    function visGangetabel() {
-      if (currentLevel === 3) {
-        showFeedback('Gangetabel hjælp er kun tilgængelig på niveau 1 og 2', false);
-        return;
-      }
-      
-      const table = currentTable || Math.floor(Math.random() * 10) + 1;
-      document.getElementById('currentTable').textContent = table;
+    function visForsog() {
+      const container = document.getElementById('attemptsContainer');
+      if (!container) return;
       
       let html = '';
-      for (let i = 1; i <= 10; i++) {
-        html += `<div style="padding: 5px; text-align: center; background: ${i % 2 === 0 ? '#f8f9fa' : 'white'};">
-                  ${table} × ${i} = ${table * i}
-                </div>`;
-      }
-      
-      document.getElementById('timesTableContent').innerHTML = html;
-      document.getElementById('timesTableHelp').style.display = 'block';
-    }
-
-    function skjulGangetabel() {
-      document.getElementById('timesTableHelp').style.display = 'none';
-    }
-
-    // VIS HJÆLP
-    function visHjaelp() {
-      let hjaelpTekst;
-      
-      if (currentLevel < 3) {
-        hjaelpTekst = `
-          <strong>Tips til multiplikation:</strong><br>
-          1. Husk gangetabellen for ${currentTal1}<br>
-          2. ${currentTal1} × ${currentTal2} er det samme som ${currentTal1} lagt sammen ${currentTal2} gange<br>
-          3. Prøv: ${currentTal1} + ${currentTal1} + ... (${currentTal2} gange)<br><br>
-          <em>Brug gangetabel-knappen hvis du er i tvivl!</em>
-        `;
-      } else {
-        hjaelpTekst = `
-          <strong>Tips til store tal/decimaler:</strong><br>
-          1. ${currentTal1} × ${currentTal2}<br>
-          2. Glem decimaltegnet først: ${Math.round(currentTal1 * 10)} × ${currentTal2} = ${Math.round(currentTal1 * 10) * currentTal2}<br>
-          3. Divider med 10 til sidst: ${(Math.round(currentTal1 * 10) * currentTal2) / 10}<br><br>
-          <em>Husk at afrunde til 2 decimaler!</em>
-        `;
-      }
-      
-      document.getElementById('feedback').innerHTML = hjaelpTekst;
-      document.getElementById('feedback').className = 'feedback hjelp';
-    }
-
-    // VIS FORKLARING
-    function visForklaring() {
-      const forklaring = `
-        <strong>Løsningsmetode:</strong><br>
-        1. ${currentTal1} × ${currentTal2}<br>
-        2. Resultat: ${correctAnswer}<br><br>
-        <em>Tænk på det som:<br>
-        ${Array(currentTal2).fill(currentTal1).join(' + ')}${currentTal2 > 1 ? ' = ' + correctAnswer : ''}</em>
-      `;
-      
-      document.getElementById('feedback').innerHTML = forklaring;
-      document.getElementById('feedback').className = 'feedback hjelp';
-    }
-
-    // START GANGETABEL ØVELSE
-    function startTablePractice(table) {
-      currentTable = table;
-      document.getElementById('practiceTable').textContent = table;
-      
-      let html = '';
-      for (let i = 1; i <= 10; i++) {
+      attempts.forEach((attempt, index) => {
+        const difficultyNames = {
+          let: "Let",
+          mellem: "Mellem",
+          svaer: "Svær",
+          ekspert: "Ekspert",
+          mester: "Mester"
+        };
+        
         html += `
-          <div style="margin: 5px 0; padding: 10px; background: #f8f9fa; border-radius: 5px;">
-            ${table} × ${i} = 
-            <input type="number" id="tableAnswer${i}" style="width: 60px; padding: 5px; margin-left: 10px;">
-            <span id="tableResult${i}" style="margin-left: 10px;"></span>
+          <div style="padding: 10px; margin: 5px 0; background: ${attempt.korrekt ? '#c6f6d5' : '#fed7d7'}; border-radius: 5px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              ${attempt.opgave} = ${attempt.svar} 
+              ${attempt.korrekt ? '✅' : '❌'}
+              <small style="color: #718096; margin-left: 10px;">${difficultyNames[attempt.difficulty]}</small>
+            </div>
+            <small style="color: #718096;">${attempt.tid}</small>
           </div>
         `;
-      }
+      });
       
-      document.getElementById('tableQuestions').innerHTML = html;
-      document.getElementById('tablePractice').style.display = 'block';
+      container.innerHTML = html || '<p>Ingen forsøg endnu...</p>';
     }
 
-    function checkTablePractice() {
-      let correctCount = 0;
-      for (let i = 1; i <= 10; i++) {
-        const answer = parseInt(document.getElementById(`tableAnswer${i}`).value) || 0;
-        const correct = currentTable * i;
-        const resultSpan = document.getElementById(`tableResult${i}`);
-        
-        if (answer === correct) {
-          resultSpan.innerHTML = '✅';
-          resultSpan.style.color = 'green';
-          correctCount++;
-        } else {
-          resultSpan.innerHTML = `❌ (${correct})`;
-          resultSpan.style.color = 'red';
-        }
-      }
-      
-      showFeedback(`Du fik ${correctCount} ud af 10 rigtige i ${currentTable}-tabellen!`, correctCount === 10);
+    function visMatematiktutor() {
+      const videoURL = "https://www.youtube.com/watch?v=RVYwunbpMHA";
+      window.open(videoURL, '_blank');
     }
+
+    function showFeedback(message, isSuccess) {
+      const feedback = document.getElementById('feedback');
+      feedback.innerHTML = message;
+      feedback.className = isSuccess ? 'feedback success' : 'feedback error';
+      feedback.style.display = 'block';
+      
+      if (!isSuccess) {
+        setTimeout(() => {
+          feedback.style.display = 'none';
+        }, 3000);
+      }
+    }
+
+    visForsog();
   </script>
-
-  <style>
-    .times-table-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 5px;
-      margin-top: 10px;
-    }
-    
-    .table-item {
-      padding: 8px;
-      text-align: center;
-      background: white;
-      border: 1px solid #e2e8f0;
-      border-radius: 5px;
-    }
-    
-    .table-item:nth-child(even) {
-      background: #f7fafc;
-    }
-  </style>
 </body>
 </html>
