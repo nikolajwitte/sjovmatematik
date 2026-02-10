@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /* NYT STATISTIK LAYOUT - SOM KNAPPER */
     .stats-grid {
       display: flex;
       flex-wrap: wrap;
@@ -16,7 +15,6 @@
       justify-content: center;
     }
     
-    /* De første 4 niveau knapper på én linje */
     .stat-box {
       background: white;
       border-radius: 12px;
@@ -70,18 +68,21 @@
       font-weight: 600;
     }
     
-    /* MESTER STAT-BOX - FULD LÆNGDE, IMPONERENDE */
     .mester-stat-box {
       width: 100%;
       max-width: 600px;
+      height: 60px;
       margin: 10px auto 0 auto;
       background: linear-gradient(135deg, #f6ad55 0%, #ed8936 50%, #dd6b20 100%);
       border: 3px solid #ed8936;
       color: white;
-      padding: 15px;
+      padding: 0 20px;
       border-radius: 12px;
       position: relative;
       overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
     
     .mester-stat-box::before {
@@ -112,24 +113,38 @@
       color: rgba(255, 255, 255, 0.95);
       font-size: 1.2rem;
       font-weight: 800;
+      margin-bottom: 0;
+      display: inline;
     }
     
     .mester-stat-box .stat-box-value {
       color: white;
-      font-size: 2rem;
+      font-size: 1.8rem;
       text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      display: inline;
+      margin: 0 5px;
     }
     
     .mester-stat-box .stat-box-sub {
       color: rgba(255, 255, 255, 0.85);
+      display: inline;
+      margin-left: 10px;
     }
     
     .mester-stat-box .stat-box-total {
       color: rgba(255, 255, 255, 0.9);
       font-weight: 700;
+      display: inline;
+      margin-left: 5px;
     }
     
-    /* TÆLLELINJE STYLES */
+    .mester-stat-box-content {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    
     .tallelinje-container {
       margin-top: 30px;
       display: none;
@@ -173,6 +188,7 @@
       transform: translateX(-50%);
       font-weight: bold;
       z-index: 3;
+      font-size: 12px;
     }
     
     .tallelinje-start {
@@ -225,7 +241,11 @@
       flex-wrap: wrap;
     }
     
-    /* ANIMATION */
+    .tallelinje-knapper button {
+      min-width: 180px;
+      padding: 12px 20px;
+    }
+    
     .animation-prik {
       position: absolute;
       border-radius: 50%;
@@ -235,7 +255,6 @@
       transition: all 0.5s ease;
     }
     
-    /* NY KOLONNEADDITION DESIGN - SIMPLERE OG TYDELIGERE */
     .kolonne-help-container {
       background: white;
       border: 2px solid #e2e8f0;
@@ -369,7 +388,6 @@
       font-weight: bold;
     }
     
-    /* TUTOR KNAP */
     .tutor-btn {
       background: #9f7aea;
       color: white;
@@ -391,7 +409,6 @@
       transform: translateY(-2px);
     }
     
-    /* RESPONSIVITET */
     @media (max-width: 768px) {
       .tallelinje-ramme {
         min-width: 300px;
@@ -399,7 +416,7 @@
       }
       
       .tallelinje-tal {
-        font-size: 12px;
+        font-size: 10px;
       }
       
       .tallelinje-knapper {
@@ -463,6 +480,24 @@
       
       .mester-stat-box {
         max-width: 300px;
+        height: auto;
+        padding: 15px;
+        flex-direction: column;
+        gap: 5px;
+      }
+      
+      .mester-stat-box-content {
+        flex-direction: column;
+        gap: 5px;
+        text-align: center;
+      }
+      
+      .mester-stat-box .stat-box-label,
+      .mester-stat-box .stat-box-sub,
+      .mester-stat-box .stat-box-value,
+      .mester-stat-box .stat-box-total {
+        display: block;
+        margin: 2px 0;
       }
     }
     
@@ -484,17 +519,11 @@
       <p>Lær at lægge tal sammen. Klik på et niveau for at starte!</p>
     </header>
 
-    <!-- ANTAL RIGTIGE FOR ALLE 5 NIVEAUER - NU SOM KNAPPER -->
-    <div class="stats-grid" id="statsGrid">
-      <!-- Statistik for hvert niveau vises her dynamisk -->
-    </div>
+    <div class="stats-grid" id="statsGrid"></div>
 
     <main>
-      <!-- OPGAVE -->
       <div class="opgave-container">
-        <div class="opgave-tekst" id="opgaveTekst">
-          <!-- Opgaven vises her -->
-        </div>
+        <div class="opgave-tekst" id="opgaveTekst"></div>
         
         <div class="input-group">
           <input type="number" id="svarInput" class="answer-input" placeholder="Dit svar" autofocus>
@@ -506,40 +535,26 @@
           </button>
         </div>
         
-        <!-- HJÆLPEKNAPPER -->
-        <div id="hjaelpeKnapper" style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
-          <!-- Knapper vises dynamisk baseret på sværhedsgrad -->
-        </div>
+        <div id="hjaelpeKnapper" style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;"></div>
       </div>
       
-      <!-- TÆLLELINJE - Vises kun i Let og Mellem -->
       <div id="tallelinjeContainer" class="tallelinje-container">
         <h3>Tællelinje - Visualiser regnestykket:</h3>
         <div class="tallelinje-wrapper">
-          <div id="tallelinje" class="tallelinje-ramme">
-            <!-- Tællelinjen tegnes her med JavaScript -->
-          </div>
-          <div class="tallelinje-knapper">
-            <!-- Knapper vises dynamisk baseret på sværhedsgrad -->
-          </div>
+          <div id="tallelinje" class="tallelinje-ramme"></div>
+          <div class="tallelinje-knapper"></div>
         </div>
       </div>
       
-      <!-- HJÆLP VISNING (Kolonnehjælp) -->
-      <div id="hjaelpContainer" class="kolonne-help-container" style="display: none;">
-        <!-- Kolonnehjælp vises her dynamisk -->
-      </div>
+      <div id="hjaelpContainer" class="kolonne-help-container" style="display: none;"></div>
       
-      <!-- FEEDBACK (kun for svar-check) -->
       <div id="feedback" class="feedback"></div>
       
-      <!-- FORSØG LISTE -->
       <div id="attemptsList" style="margin-top: 30px;">
         <h3>Dine seneste forsøg:</h3>
         <div id="attemptsContainer" style="margin-top: 10px;"></div>
       </div>
       
-      <!-- TILBAGE -->
       <div style="text-align: center; margin-top: 40px;">
         <a href="../index.html" class="back-link">
           <i class="fas fa-arrow-left"></i> Tilbage til menuen
@@ -549,15 +564,13 @@
   </div>
 
   <script>
-    // PLUS SPECIFIK KODE
-    let currentDifficulty = "let"; // "let", "mellem", "svaer", "ekspert", "mester"
+    let currentDifficulty = "let";
     let currentTal1, currentTal2, correctAnswer;
     let attempts = [];
     let animationActive = false;
     let animationTimeout;
     let animationSpeed = 800;
 
-    // DATA FOR HVER SVÆRHEDSGRAD - "Antal rigtige" og "Antal forsøg"
     let difficultyData = {
       let: { correctCount: 0, totalAttempts: 0 },
       mellem: { correctCount: 0, totalAttempts: 0 },
@@ -566,7 +579,6 @@
       mester: { correctCount: 0, totalAttempts: 0 }
     };
 
-    // INFORMATION OM HVERT NIVEAU
     const difficultyInfo = {
       let: { 
         name: "Let", 
@@ -600,12 +612,10 @@
       }
     };
 
-    // FORMAT NUMBER WITH THOUSAND SEPARATORS
     function formatNumber(num) {
       return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     }
 
-    // HJÆLPEFUNKTION TIL PLADSBETEGNELSER
     function getPlaceName(position) {
       const placeNames = [
         "1'ere",
@@ -616,27 +626,20 @@
         "100.000'ere",
         "1.000.000'ere"
       ];
-      
       return position < placeNames.length ? placeNames[position] : `${Math.pow(10, position)}'ere`;
     }
 
-    // NÅR SIDEN INDLÆSES
     document.addEventListener('DOMContentLoaded', function() {
-      // LÆS BRUGERDATA FRA LOCALSTORAGE
       loadUserData();
-      
-      // OPDATER VISNING
       updateStatsDisplay();
       genererOpgave();
       opdaterHjaelpeKnapper();
       
-      // ENTER-TASTEN
       document.getElementById('svarInput').addEventListener('keypress', function(e) {
         if (e.key === 'Enter') tjekSvar();
       });
     });
 
-    // INDLÆS BRUGERDATA
     function loadUserData() {
       try {
         const savedData = localStorage.getItem('plusData');
@@ -651,24 +654,21 @@
       }
     }
 
-    // GEM BRUGERDATA
     function saveUserData() {
       const data = {
         difficultyData: difficultyData,
         currentDifficulty: currentDifficulty,
-        attempts: attempts.slice(0, 10) // Gem kun de sidste 10 forsøg
+        attempts: attempts.slice(0, 10)
       };
       localStorage.setItem('plusData', JSON.stringify(data));
     }
 
-    // OPDATER STATISTIK VISNING - NU SOM KNAPPER
     function updateStatsDisplay() {
       const statsGrid = document.getElementById('statsGrid');
       if (!statsGrid) return;
       
       let html = '';
       
-      // De første 4 niveauer på én linje
       const firstFour = ['let', 'mellem', 'svaer', 'ekspert'];
       firstFour.forEach(key => {
         const info = difficultyInfo[key];
@@ -688,7 +688,6 @@
         `;
       });
       
-      // Mester niveau - fuld længde på sin egen linje
       const mesterInfo = difficultyInfo.mester;
       const mesterIsActive = currentDifficulty === "mester";
       const mesterCorrectCount = difficultyData.mester.correctCount || 0;
@@ -698,43 +697,32 @@
         <div class="stat-box mester-stat-box ${mesterIsActive ? 'active' : ''}" 
              onclick="setDifficulty('mester')"
              title="Klik for at spille ${mesterInfo.displayName} - Den ultimative udfordring!">
-          <div class="stat-box-label">${mesterInfo.name}</div>
-          <div class="stat-box-value">${mesterCorrectCount}</div>
-          <div class="stat-box-total">ud af ${mesterTotalAttempts}</div>
-          <div class="stat-box-sub">${mesterInfo.range}</div>
+          <div class="mester-stat-box-content">
+            <span class="stat-box-label">${mesterInfo.name}</span>
+            <span class="stat-box-sub">(${mesterInfo.range})</span>
+            <span class="stat-box-value">${mesterCorrectCount}</span>
+            <span class="stat-box-total">ud af ${mesterTotalAttempts}</span>
+          </div>
         </div>
       `;
       
       statsGrid.innerHTML = html;
     }
 
-    // ÆNDRE SVÆRHEDSGRAD (kaldt når man klikker på en stat-boks)
     function setDifficulty(difficulty) {
       currentDifficulty = difficulty;
-      
-      // Opdater statistik visning
       updateStatsDisplay();
-      
-      // Generer ny opgave
       genererOpgave();
-      
-      // Opdater hjælpeknapper
       opdaterHjaelpeKnapper();
-      
-      // Skjul tællelinje og hjælp
       document.getElementById('tallelinjeContainer').style.display = 'none';
       document.getElementById('hjaelpContainer').style.display = 'none';
-      
-      // Gem valgt sværhedsgrad
       saveUserData();
     }
 
-    // OPDATER HJÆLPEKNAPPER BASERET PÅ SVÆRHEDSGRAD
     function opdaterHjaelpeKnapper() {
       const knapContainer = document.getElementById('hjaelpeKnapper');
       
       if (currentDifficulty === "let" || currentDifficulty === "mellem") {
-        // Let og Mellem har tællelinje og simpel hjælp
         knapContainer.innerHTML = `
           <button onclick="visTallelinje()" class="button" style="background: #667eea; color: white; flex: 1; min-width: 150px;">
             <i class="fas fa-ruler-combined"></i> Vis tællelinje
@@ -748,7 +736,6 @@
         `;
         knapContainer.style.display = 'flex';
       } else if (currentDifficulty === "svaer") {
-        // Svær har begge muligheder
         knapContainer.innerHTML = `
           <button onclick="visSimpelHjaelp()" class="button" style="background: #f6ad55; color: white; flex: 1; min-width: 150px;">
             <i class="fas fa-lightbulb"></i> Simpel hjælp
@@ -762,7 +749,6 @@
         `;
         knapContainer.style.display = 'flex';
       } else {
-        // Ekspert og Mester har kun kolonnehjælp
         knapContainer.innerHTML = `
           <button onclick="visKolonneHjaelp()" class="button" style="background: #90cdf4; color: white; flex: 1; min-width: 200px;">
             <i class="fas fa-calculator"></i> Kolonnehjælp
@@ -775,32 +761,26 @@
       }
     }
 
-    // GENERER NY PLUS OPGAVE (INGEN 0-TAL)
     function genererOpgave() {
       switch(currentDifficulty) {
         case "let": 
-          // Let: Tal 1-10 (ingen 0)
-          currentTal1 = Math.floor(Math.random() * 10) + 1; // 1-10
+          currentTal1 = Math.floor(Math.random() * 10) + 1;
           currentTal2 = Math.floor(Math.random() * 10) + 1;
           break;
         case "mellem": 
-          // Mellem: Tal 1-20 (ingen 0)
-          currentTal1 = Math.floor(Math.random() * 20) + 1; // 1-20
+          currentTal1 = Math.floor(Math.random() * 20) + 1;
           currentTal2 = Math.floor(Math.random() * 20) + 1;
           break;
         case "svaer": 
-          // Svær: Tal 1-99 (ingen 0)
-          currentTal1 = Math.floor(Math.random() * 99) + 1; // 1-99
+          currentTal1 = Math.floor(Math.random() * 99) + 1;
           currentTal2 = Math.floor(Math.random() * 99) + 1;
           break;
         case "ekspert":
-          // Ekspert: Tal 100-999
-          currentTal1 = Math.floor(Math.random() * 900) + 100; // 100-999
+          currentTal1 = Math.floor(Math.random() * 900) + 100;
           currentTal2 = Math.floor(Math.random() * 900) + 100;
           break;
         case "mester":
-          // Mester: Tal 1000-999.999
-          currentTal1 = Math.floor(Math.random() * 999000) + 1000; // 1000-999.999
+          currentTal1 = Math.floor(Math.random() * 999000) + 1000;
           currentTal2 = Math.floor(Math.random() * 999000) + 1000;
           break;
         default: 
@@ -810,9 +790,7 @@
       
       correctAnswer = currentTal1 + currentTal2;
       
-      // VIS OPGAVEN
       const opgaveTekst = document.getElementById('opgaveTekst');
-      
       opgaveTekst.innerHTML = `
         <div style="font-size: 1.4rem; margin-bottom: 10px;">
           Hvad er <span class="regnearter">${formatNumber(currentTal1)}</span> 
@@ -824,19 +802,14 @@
           '<div style="font-size: 0.9rem; color: #718096; background: #f7fafc; padding: 8px; border-radius: 5px; margin-top: 5px;">💡 Tip: For større tal kan du bruge kolonneaddition</div>' : ''}
       `;
       
-      // Nulstil input
       document.getElementById('svarInput').value = '';
       document.getElementById('svarInput').focus();
-      
-      // Skjul tællelinje og hjælp
       document.getElementById('tallelinjeContainer').style.display = 'none';
       document.getElementById('hjaelpContainer').style.display = 'none';
     }
 
-    // SIMPEL HJÆLP (kun for let, mellem, svær)
     function visSimpelHjaelp() {
       const hjælpContainer = document.getElementById('hjaelpContainer');
-      
       const storsteTal = Math.max(currentTal1, currentTal2);
       const mindsteTal = Math.min(currentTal1, currentTal2);
       
@@ -878,23 +851,15 @@
       
       hjælpContainer.innerHTML = hjælpHTML;
       hjælpContainer.style.display = 'block';
-      
-      // Rul til hjælpen
       hjælpContainer.scrollIntoView({ behavior: 'smooth' });
     }
 
-    // KOLONNEADDITION HJÆLP (for svær, ekspert, mester)
     function visKolonneHjaelp() {
       const hjælpContainer = document.getElementById('hjaelpContainer');
-      
-      // Konverter tal til arrays af cifre (enere først)
       const digits1 = currentTal1.toString().split('').map(Number).reverse();
       const digits2 = currentTal2.toString().split('').map(Number).reverse();
-      
-      // Find længden af det længste tal
       const maxLength = Math.max(digits1.length, digits2.length);
       
-      // Beregn kolonneaddition
       let carry = 0;
       let resultDigits = [];
       let stepDetails = [];
@@ -903,7 +868,6 @@
         const d1 = digits1[i] || 0;
         const d2 = digits2[i] || 0;
         const sum = d1 + d2 + carry;
-        
         const resultDigit = sum % 10;
         const newCarry = Math.floor(sum / 10);
         
@@ -921,7 +885,6 @@
         carry = newCarry;
       }
       
-      // Hvis der er carry til sidst
       if (carry > 0) {
         resultDigits.unshift(carry);
         stepDetails.push({
@@ -936,25 +899,18 @@
         });
       }
       
-      // Byg den visuelle kolonne - UDEN LEDENDE NULLER
-      let kolonneHTML = '';
-      
-      // Vis talene uden ledende nuller
       const num1Str = currentTal1.toString();
       const num2Str = currentTal2.toString();
       const resultLength = Math.max(num1Str.length, num2Str.length, resultDigits.length);
-      
-      // Tilføj mellemrum foran for at få dem til at stå korrekt
       const paddedNum1 = num1Str.padStart(resultLength, ' ');
       const paddedNum2 = num2Str.padStart(resultLength, ' ');
       
-      kolonneHTML += `
+      let kolonneHTML = `
         <div class="kolonne-title">
           <i class="fas fa-calculator"></i> Kolonneaddition - Trin for trin
         </div>
         
         <div class="kolonne-visual">
-          <!-- Første tal -->
           <div class="kolonne-row">
             <span style="color: #718096; margin-right: 10px; width: 45px;">&nbsp;</span>
             ${Array.from(paddedNum1).map((digit, i) => 
@@ -964,7 +920,6 @@
             ).join('')}
           </div>
           
-          <!-- Andet tal med plus -->
           <div class="kolonne-row">
             <span class="kolonne-operator">+</span>
             ${Array.from(paddedNum2).map((digit, i) => 
@@ -974,10 +929,8 @@
             ).join('')}
           </div>
           
-          <!-- Linje -->
           <div class="kolonne-line"></div>
           
-          <!-- Tomme kasser til resultatet -->
           <div class="kolonne-row">
             <span style="color: #718096; margin-right: 10px; width: 45px;">&nbsp;</span>
             ${Array.from({length: resultLength}, (_, i) => 
@@ -987,11 +940,9 @@
         </div>
       `;
       
-      // Trin-for-trin forklaring
       let stepsHTML = '<div style="margin-top: 25px;">';
       stepsHTML += '<div class="step-title" style="font-size: 1.1rem; margin-bottom: 15px;">📝 Sådan gør du:</div>';
       
-      // Sorter stepDetails så de kommer i rigtig rækkefølge (1'ere først)
       const sortedStepDetails = [...stepDetails].sort((a, b) => a.position - b.position);
       
       sortedStepDetails.forEach((step, index) => {
@@ -1009,14 +960,12 @@
             </div>
           `;
         } else {
-          // Formater beregningen pænt
           let beregning = `${step.digit1} + ${step.digit2}`;
           if (step.carry > 0) {
             beregning += ` + ${step.carry} (overført)`;
           }
           beregning += ` = ${step.sum}`;
           
-          // Forklaring på resultatciffer og overførsel
           let forklaring = `→ Skriv ${step.resultDigit} i resultatet (i ${placeName})`;
           if (step.newCarry > 0) {
             const nextPlaceName = getPlaceName(step.position + 1);
@@ -1037,7 +986,6 @@
       
       stepsHTML += '</div>';
       
-      // Samlet hjælp
       const hjælpHTML = `
         ${kolonneHTML}
         ${stepsHTML}
@@ -1051,17 +999,13 @@
       
       hjælpContainer.innerHTML = hjælpHTML;
       hjælpContainer.style.display = 'block';
-      
-      // Rul til hjælpen
       hjælpContainer.scrollIntoView({ behavior: 'smooth' });
     }
 
-    // SKJUL HJÆLP
     function skjulHjaelp() {
       document.getElementById('hjaelpContainer').style.display = 'none';
     }
 
-    // TJEK SVAR
     function tjekSvar() {
       const svarInput = document.getElementById('svarInput');
       const brugerSvar = parseFloat(svarInput.value.replace(',', '.'));
@@ -1074,10 +1018,8 @@
       const tolerance = 0.01;
       const isCorrect = Math.abs(brugerSvar - correctAnswer) < tolerance;
       
-      // Opdater totalAttempts for denne sværhedsgrad
       difficultyData[currentDifficulty].totalAttempts = (difficultyData[currentDifficulty].totalAttempts || 0) + 1;
       
-      // Gem forsøg lokalt
       attempts.unshift({
         opgave: `${formatNumber(currentTal1)} + ${formatNumber(currentTal2)}`,
         svar: formatNumber(brugerSvar),
@@ -1091,30 +1033,22 @@
       skjulHjaelp();
       
       if (isCorrect) {
-        // Opdater antal rigtige for denne sværhedsgrad
         difficultyData[currentDifficulty].correctCount++;
-        
         showFeedback(`✅ Fantastisk! ${formatNumber(currentTal1)} + ${formatNumber(currentTal2)} = ${formatNumber(correctAnswer)}`, true);
-        
-        // Gem data og opdater visning
         saveUserData();
         updateStatsDisplay();
         
-        // Automatisk ny opgave
         setTimeout(() => {
           genererOpgave();
         }, 1500);
         
       } else {
         showFeedback(`❌ ${formatNumber(brugerSvar)} er ikke rigtigt. Prøv igen!`, false);
-        
-        // Gem data og opdater visning (kun totalAttempts er opdateret)
         saveUserData();
         updateStatsDisplay();
       }
     }
 
-    // NY OPGAVE
     function nyOpgave() {
       genererOpgave();
       document.getElementById('feedback').textContent = '';
@@ -1124,7 +1058,6 @@
       skjulHjaelp();
     }
 
-    // VIS FORSØG
     function visForsog() {
       const container = document.getElementById('attemptsContainer');
       if (!container) return;
@@ -1154,7 +1087,6 @@
       container.innerHTML = html || '<p>Ingen forsøg endnu...</p>';
     }
 
-    // TÆLLELINJE FUNKTIONER (kun for let og mellem)
     function visTallelinje() {
       if (currentDifficulty !== "let" && currentDifficulty !== "mellem") {
         showFeedback('Tællelinjen er kun tilgængelig i Let og Mellem', false);
@@ -1175,19 +1107,18 @@
     function opdaterTallelinjeKnapper() {
       const knapContainer = document.querySelector('.tallelinje-knapper');
       
-      // Kun "Let" får animation
       if (currentDifficulty === "let") {
         knapContainer.innerHTML = `
-          <button onclick="startAnimation()" class="button" style="background: #48bb78; color: white;">
+          <button onclick="startAnimation()" class="button" style="background: #48bb78; color: white; min-width: 180px; padding: 12px 20px;">
             <i class="fas fa-play-circle"></i> Vis animation
           </button>
-          <button onclick="skjulTallelinje()" class="close-hjaelp-btn">
+          <button onclick="skjulTallelinje()" class="close-hjaelp-btn" style="min-width: 180px; padding: 12px 20px;">
             <i class="fas fa-times"></i> Skjul tællelinje
           </button>
         `;
       } else {
         knapContainer.innerHTML = `
-          <button onclick="skjulTallelinje()" class="close-hjaelp-btn">
+          <button onclick="skjulTallelinje()" class="close-hjaelp-btn" style="min-width: 180px; padding: 12px 20px;">
             <i class="fas fa-times"></i> Skjul tællelinje
           </button>
         `;
@@ -1200,60 +1131,54 @@
       const container = document.getElementById('tallelinje');
       const mindsteTal = Math.min(currentTal1, currentTal2);
       const storsteTal = Math.max(currentTal1, currentTal2);
-      const startTal = storsteTal; // Start på det største tal
       const slutTal = correctAnswer;
       
-      // NY LOGIK: Start ved mindste tal minus 2, slut ved resultat plus 2
-      const start = Math.max(1, mindsteTal - 2); // Mindst 1
-      const slut = slutTal + 2;
+      let start, slut;
+      
+      if (currentDifficulty === "let") {
+        start = Math.max(1, mindsteTal - 2);
+        slut = slutTal + 2;
+      } else {
+        start = Math.max(1, mindsteTal - 2);
+        slut = slutTal + 2;
+      }
       
       let html = '';
-      
-      // Tegn hovedlinjen
       html += `<div class="tallelinje-linje"></div>`;
       
-      // Tegn markeringer og tal
       for (let i = start; i <= slut; i++) {
         const position = ((i - start) / (slut - start)) * 100;
         
-        // Tegn markering for hvert tal
-        const isImportant = i % 5 === 0 || i === currentTal1 || i === currentTal2 || i === slutTal || i === startTal;
-        
         html += `
           <div class="tallelinje-markering" style="left: ${position}%; top: 60px;">
-            <div style="width: ${isImportant ? '2px' : '1px'}; 
-                        height: ${isImportant ? '15px' : '10px'}; 
-                        background: #4a5568; margin: 0 auto;"></div>
+            <div style="width: 1px; height: 10px; background: #4a5568; margin: 0 auto;"></div>
           </div>
         `;
         
-        // Vis vigtige tal
-        if (isImportant) {
-          const isOneOfOurNumbers = i === currentTal1 || i === currentTal2 || i === slutTal || i === startTal;
-          const color = isOneOfOurNumbers ? '#f56565' : '#4a5568';
-          const fontWeight = isOneOfOurNumbers ? 'bold' : 'normal';
-          const fontSize = i % 10 === 0 ? '13px' : '12px';
-          
+        if (currentDifficulty === "let") {
+          const isOneOfOurNumbers = i === currentTal1 || i === currentTal2 || i === slutTal;
           html += `
-            <div class="tallelinje-tal" style="left: ${position}%; top: 90px; 
-              font-size: ${fontSize}; 
-              color: ${color};
-              font-weight: ${fontWeight}">
+            <div class="tallelinje-tal" style="left: ${position}%; top: 90px;">
+              ${i}
+            </div>
+          `;
+        } else if (currentDifficulty === "mellem") {
+          html += `
+            <div class="tallelinje-tal" style="left: ${position}%; top: 90px;">
               ${i}
             </div>
           `;
         }
       }
       
-      // KUN på "Let": Vis start og slut cirkler med farver
       if (currentDifficulty === "let") {
-        const startPosition = ((startTal - start) / (slut - start)) * 100;
+        const startPosition = ((storsteTal - start) / (slut - start)) * 100;
         const slutPosition = ((slutTal - start) / (slut - start)) * 100;
         
         html += `
           <div class="tallelinje-start" style="left: ${startPosition}%; top: 60px;">
             <div class="tallelinje-start-cirkel">
-              ${startTal}
+              ${storsteTal}
             </div>
             <div style="text-align: center; margin-top: 10px; font-size: 14px; color: #48bb78; font-weight: bold;">
               START
@@ -1269,26 +1194,22 @@
           </div>
         `;
       }
-      // Mellem: INGEN ekstra markeringer - kun tal på linjen
       
       container.innerHTML = html;
     }
 
-    // ANIMATION FUNKTIONER (kun for Let)
     function startAnimation() {
       if (animationActive || currentDifficulty !== "let") return;
       
       const container = document.getElementById('tallelinje');
       const mindsteTal = Math.min(currentTal1, currentTal2);
-      const startTal = Math.max(currentTal1, currentTal2); // Start på det største tal
+      const startTal = Math.max(currentTal1, currentTal2);
       const antalSkridt = Math.abs(correctAnswer - startTal);
       const slutTal = correctAnswer;
       
-      // NY LOGIK: Start ved mindste tal minus 2
       const start = Math.max(1, mindsteTal - 2);
       const slut = slutTal + 2;
       
-      // Beregn positionerne for hvert heltal
       const positions = {};
       for (let i = start; i <= slut; i++) {
         positions[i] = ((i - start) / (slut - start)) * 100;
@@ -1297,11 +1218,9 @@
       const startPosition = positions[startTal];
       const slutPosition = positions[slutTal];
       
-      // Fjern evt. tidligere animation
       const oldPrik = document.querySelector('.animation-prik');
       if (oldPrik) oldPrik.remove();
       
-      // Opret animation
       const prik = document.createElement('div');
       prik.className = 'animation-prik';
       prik.style.width = '25px';
@@ -1313,7 +1232,6 @@
       
       container.appendChild(prik);
       
-      // Start animation - spring fra heltal til heltal
       animationActive = true;
       animateStep(prik, 0, antalSkridt, positions, startTal);
     }
@@ -1327,27 +1245,22 @@
       const currentNumber = startNumber + currentStep;
       const currentPosition = positions[currentNumber];
       
-      // Flyt prikken til næste heltal
       if (currentPosition !== undefined) {
         prik.style.left = `${currentPosition}%`;
         prik.innerHTML = `<div style="color: white; text-align: center; line-height: 25px; font-weight: bold;">${currentNumber}</div>`;
       }
       
-      // Næste trin
       currentStep++;
       animationTimeout = setTimeout(() => {
         animateStep(prik, currentStep, totalSteps, positions, startNumber);
       }, animationSpeed);
     }
 
-    // VIS MATEMATIKTUTOR (YouTube video)
     function visMatematiktutor() {
-      // Åben YouTube video i nyt vindue/tab
-      const videoURL = "https://www.youtube.com/watch?v=AuX7nPBqDts"; // Eksempel video - kan ændres
+      const videoURL = "https://www.youtube.com/watch?v=AuX7nPBqDts";
       window.open(videoURL, '_blank');
     }
 
-    // VIS FEEDBACK
     function showFeedback(message, isSuccess) {
       const feedback = document.getElementById('feedback');
       feedback.innerHTML = message;
@@ -1355,14 +1268,12 @@
       feedback.style.display = 'block';
       
       if (!isSuccess) {
-        // Fejl-feedback forsvinder efter 3 sekunder
         setTimeout(() => {
           feedback.style.display = 'none';
         }, 3000);
       }
     }
 
-    // INITIALISER
     visForsog();
   </script>
 </body>
