@@ -145,12 +145,12 @@
       flex-wrap: wrap;
     }
     
-    .punkter-visual-container {
+    .grupper-visual-container {
       margin-top: 30px;
       display: none;
     }
     
-    .punkter-wrapper {
+    .grupper-wrapper {
       background: white;
       border: 2px solid #4299e1;
       border-radius: 10px;
@@ -159,10 +159,27 @@
       box-shadow: 0 10px 20px rgba(0,0,0,0.05);
     }
     
-    .punkter-grid {
+    .grupper-visual {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin: 20px auto;
+      justify-content: center;
+      max-width: 800px;
+    }
+    
+    .gruppe-container {
+      border: 2px solid #4299e1;
+      border-radius: 10px;
+      padding: 15px;
+      background: #ebf8ff;
+      text-align: center;
+    }
+    
+    .gruppe-grid {
       display: grid;
       gap: 5px;
-      margin: 20px auto;
+      margin: 10px 0;
       justify-content: center;
     }
     
@@ -179,14 +196,24 @@
       font-weight: bold;
     }
     
-    .punkter-explanation {
+    .gruppe-label {
+      font-weight: bold;
+      color: #2d3748;
+      margin-top: 10px;
+      font-size: 1.1rem;
+    }
+    
+    .grupper-explanation {
       text-align: center;
       margin-top: 15px;
       font-size: 1.1rem;
       color: #4a5568;
+      background: #f7fafc;
+      padding: 15px;
+      border-radius: 8px;
     }
     
-    .punkter-knapper {
+    .grupper-knapper {
       display: flex;
       gap: 15px;
       justify-content: center;
@@ -194,7 +221,7 @@
       flex-wrap: wrap;
     }
     
-    .punkter-knapper button {
+    .grupper-knapper button {
       min-width: 180px;
       padding: 12px 20px;
     }
@@ -216,69 +243,15 @@
       font-weight: bold;
     }
     
-    .kolonne-visual {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 10px;
+    .simplified-kolonne {
       font-family: 'Courier New', monospace;
-      font-size: 1.4rem;
-      margin: 0 auto;
-      max-width: 700px;
-      padding: 15px;
+      font-size: 1.3rem;
+      margin: 20px auto;
+      max-width: 300px;
+      padding: 20px;
       background: #f8fafc;
       border-radius: 8px;
-    }
-    
-    .kolonne-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    
-    .kolonne-digit {
-      width: 45px;
-      height: 45px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid #cbd5e0;
-      border-radius: 5px;
-      background: white;
-      position: relative;
-    }
-    
-    .kolonne-digit.empty {
-      background: #f7fafc;
-      border: 1px dashed #cbd5e0;
-    }
-    
-    .kolonne-digit.carry {
-      background: #fed7d7;
-      border-color: #f56565;
-      font-weight: bold;
-      font-size: 0.9rem;
-      margin-bottom: 5px;
-    }
-    
-    .kolonne-digit.highlight {
-      background: #bee3f8;
-      border-color: #4299e1;
-      font-weight: bold;
-    }
-    
-    .kolonne-operator {
-      color: #4299e1;
-      font-weight: bold;
-      margin-right: 10px;
-      width: 45px;
-      text-align: center;
-    }
-    
-    .kolonne-line {
-      border-top: 2px solid #4a5568;
-      margin: 10px 0;
-      width: 100%;
+      border: 2px solid #cbd5e0;
     }
     
     .step-explanation {
@@ -357,15 +330,15 @@
     
     .gange-tabel-visual {
       display: grid;
-      grid-template-columns: repeat(13, 1fr);
-      gap: 5px;
+      grid-template-columns: repeat(11, 1fr);
+      gap: 3px;
       margin: 20px auto;
-      max-width: 700px;
+      max-width: 500px;
     }
     
     .gange-celle {
-      width: 40px;
-      height: 40px;
+      width: 35px;
+      height: 35px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -373,6 +346,7 @@
       background: white;
       font-weight: bold;
       position: relative;
+      font-size: 0.9rem;
     }
     
     .gange-celle.header {
@@ -385,7 +359,7 @@
       background: #c6f6d5;
       border-color: #48bb78;
       font-weight: bold;
-      transform: scale(1.1);
+      transform: scale(1.05);
       z-index: 2;
     }
     
@@ -395,9 +369,14 @@
       font-weight: bold;
     }
     
+    .gange-celle.hidden {
+      background: #e2e8f0;
+      color: #a0aec0;
+    }
+    
     @media (max-width: 768px) {
-      .punkter-grid {
-        gap: 3px;
+      .grupper-visual {
+        gap: 10px;
       }
       
       .punkt {
@@ -406,12 +385,16 @@
         font-size: 10px;
       }
       
-      .punkter-knapper {
+      .gruppe-container {
+        padding: 10px;
+      }
+      
+      .grupper-knapper {
         flex-direction: column;
         align-items: center;
       }
       
-      .punkter-knapper button {
+      .grupper-knapper button {
         width: 90%;
         margin-bottom: 10px;
       }
@@ -428,21 +411,10 @@
         margin-bottom: 10px;
       }
       
-      .kolonne-visual {
+      .simplified-kolonne {
         font-size: 1.1rem;
-        max-width: 95%;
-        overflow-x: auto;
-      }
-      
-      .kolonne-digit {
-        width: 35px;
-        height: 35px;
-        min-width: 35px;
-      }
-      
-      .kolonne-operator {
-        width: 35px;
-        min-width: 35px;
+        max-width: 90%;
+        padding: 15px;
       }
       
       #hjaelpeKnapper {
@@ -488,14 +460,14 @@
       }
       
       .gange-tabel-visual {
-        grid-template-columns: repeat(7, 1fr);
-        max-width: 300px;
+        grid-template-columns: repeat(11, 1fr);
+        max-width: 350px;
       }
       
       .gange-celle {
-        width: 30px;
-        height: 30px;
-        font-size: 0.9rem;
+        width: 28px;
+        height: 28px;
+        font-size: 0.8rem;
       }
     }
     
@@ -536,12 +508,12 @@
         <div id="hjaelpeKnapper" style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;"></div>
       </div>
       
-      <div id="punkterContainer" class="punkter-visual-container">
-        <h3>Punkter - Visualiser gangestykket:</h3>
-        <div class="punkter-wrapper">
-          <div id="punkterGrid" class="punkter-grid"></div>
-          <div id="punkterExplanation" class="punkter-explanation"></div>
-          <div class="punkter-knapper"></div>
+      <div id="grupperContainer" class="grupper-visual-container">
+        <h3>Grupper - Se hvad gangestykket betyder:</h3>
+        <div class="grupper-wrapper">
+          <div id="grupperVisual" class="grupper-visual"></div>
+          <div id="grupperExplanation" class="grupper-explanation"></div>
+          <div class="grupper-knapper"></div>
         </div>
       </div>
       
@@ -571,7 +543,6 @@
     let currentDifficulty = "let";
     let currentTal1, currentTal2, correctAnswer;
     let attempts = [];
-    let animationActive = false;
 
     let difficultyData = {
       let: { correctCount: 0, totalAttempts: 0 },
@@ -703,7 +674,7 @@
       updateStatsDisplay();
       genererOpgave();
       opdaterHjaelpeKnapper();
-      document.getElementById('punkterContainer').style.display = 'none';
+      document.getElementById('grupperContainer').style.display = 'none';
       document.getElementById('hjaelpContainer').style.display = 'none';
       document.getElementById('gangeTabelContainer').style.display = 'none';
       saveUserData();
@@ -714,14 +685,14 @@
       
       if (currentDifficulty === "let") {
         knapContainer.innerHTML = `
-          <button onclick="visPunkter()" class="button" style="background: #4299e1; color: white; flex: 1; min-width: 150px;">
-            <i class="fas fa-th"></i> Vis med punkter
+          <button onclick="visGrupper()" class="button" style="background: #4299e1; color: white; flex: 1; min-width: 150px;">
+            <i class="fas fa-th-large"></i> Vis grupper
           </button>
           <button onclick="visGangeTabel()" class="button" style="background: #90cdf4; color: white; flex: 1; min-width: 150px;">
             <i class="fas fa-table"></i> Gange-tabel
           </button>
           <button onclick="visSimpelHjaelp()" class="button" style="background: #9ae6b4; color: white; flex: 1; min-width: 150px;">
-            <i class="fas fa-lightbulb"></i> Tæl op strategi
+            <i class="fas fa-lightbulb"></i> Brug tabellerne
           </button>
           <button onclick="visMatematiktutor()" class="tutor-btn" style="flex: 1; min-width: 150px;">
             <i class="fas fa-chalkboard-teacher"></i> Matematiktutor
@@ -730,14 +701,14 @@
         knapContainer.style.display = 'flex';
       } else if (currentDifficulty === "mellem") {
         knapContainer.innerHTML = `
-          <button onclick="visPunkter()" class="button" style="background: #4299e1; color: white; flex: 1; min-width: 150px;">
-            <i class="fas fa-th"></i> Vis med punkter
+          <button onclick="visGrupper()" class="button" style="background: #4299e1; color: white; flex: 1; min-width: 150px;">
+            <i class="fas fa-th-large"></i> Vis grupper
           </button>
           <button onclick="visGangeTabel()" class="button" style="background: #90cdf4; color: white; flex: 1; min-width: 150px;">
             <i class="fas fa-table"></i> Gange-tabel
           </button>
           <button onclick="visSimpelHjaelp()" class="button" style="background: #9ae6b4; color: white; flex: 1; min-width: 150px;">
-            <i class="fas fa-lightbulb"></i> Tæl op strategi
+            <i class="fas fa-lightbulb"></i> Brug tabellerne
           </button>
           <button onclick="visMatematiktutor()" class="tutor-btn" style="flex: 1; min-width: 150px;">
             <i class="fas fa-chalkboard-teacher"></i> Matematiktutor
@@ -747,10 +718,10 @@
       } else if (currentDifficulty === "svaer") {
         knapContainer.innerHTML = `
           <button onclick="visSimpelHjaelp()" class="button" style="background: #9ae6b4; color: white; flex: 1; min-width: 150px;">
-            <i class="fas fa-lightbulb"></i> Tæl op strategi
+            <i class="fas fa-lightbulb"></i> Brug tabellerne
           </button>
           <button onclick="visKolonneHjaelp()" class="button" style="background: #90cdf4; color: white; flex: 1; min-width: 150px;">
-            <i class="fas fa-calculator"></i> Kolonnehjælp
+            <i class="fas fa-calculator"></i> Gange i kolonner
           </button>
           <button onclick="visMatematiktutor()" class="tutor-btn" style="flex: 1; min-width: 150px;">
             <i class="fas fa-chalkboard-teacher"></i> Matematiktutor
@@ -760,7 +731,7 @@
       } else {
         knapContainer.innerHTML = `
           <button onclick="visKolonneHjaelp()" class="button" style="background: #90cdf4; color: white; flex: 1; min-width: 200px;">
-            <i class="fas fa-calculator"></i> Kolonnehjælp
+            <i class="fas fa-calculator"></i> Gange i kolonner
           </button>
           <button onclick="visMatematiktutor()" class="tutor-btn" style="flex: 1; min-width: 200px;">
             <i class="fas fa-chalkboard-teacher"></i> Matematiktutor
@@ -784,19 +755,19 @@
           currentTal2 = Math.floor(Math.random() * 10) + 1; // 1-10
           break;
         case "svaer": 
-          // Større tal, men stadig overskuelige
+          // Større tal
           currentTal1 = Math.floor(Math.random() * 11) + 10; // 10-20
-          currentTal2 = Math.floor(Math.random() * 5) + 1; // 1-5
+          currentTal2 = Math.floor(Math.random() * 10) + 1; // 1-10
           break;
         case "ekspert":
           // Tocifrede tal
           currentTal1 = Math.floor(Math.random() * 80) + 20; // 20-99
-          currentTal2 = Math.floor(Math.random() * 9) + 2; // 2-10
+          currentTal2 = Math.floor(Math.random() * 80) + 20; // 20-99
           break;
         case "mester":
           // Tricifrede tal
           currentTal1 = Math.floor(Math.random() * 900) + 100; // 100-999
-          currentTal2 = Math.floor(Math.random() * 9) + 2; // 2-10
+          currentTal2 = Math.floor(Math.random() * 900) + 100; // 100-999
           break;
         default: 
           currentTal1 = 2;
@@ -830,7 +801,7 @@
       
       document.getElementById('svarInput').value = '';
       document.getElementById('svarInput').focus();
-      document.getElementById('punkterContainer').style.display = 'none';
+      document.getElementById('grupperContainer').style.display = 'none';
       document.getElementById('hjaelpContainer').style.display = 'none';
       document.getElementById('gangeTabelContainer').style.display = 'none';
     }
@@ -840,7 +811,7 @@
       
       const hjælpHTML = `
         <div class="kolonne-title">
-          <i class="fas fa-lightbulb"></i> Tæl op strategi for ${currentTal1} × ${currentTal2}
+          <i class="fas fa-lightbulb"></i> Sådan regner du ${currentTal1} × ${currentTal2}
         </div>
         
         <div class="step-explanation">
@@ -853,50 +824,53 @@
         </div>
         
         <div class="step-explanation" style="background: #c6f6d5; border-left-color: #48bb78;">
-          <div class="step-title"><span class="step-number">2</span> Brug gentagen addition</div>
+          <div class="step-title"><span class="step-number">2</span> Brug tabellerne</div>
           <div class="step-content">
-            Du kan tælle op med ${currentTal1}'erne:<br>
-            ${Array.from({length: currentTal2}, (_, i) => currentTal1).join(' + ')}<br><br>
+            <strong>Metode: Start med det første tal og tæl i tabellerne</strong><br><br>
             
-            <strong>Eller med ${currentTal2}'erne:</strong><br>
-            ${Array.from({length: currentTal1}, (_, i) => currentTal2).join(' + ')}
+            For ${currentTal1} × ${currentTal2}:<br>
+            ${currentTal1} - ${currentTal1*2} - ${currentTal1*3} - ${currentTal1*4} - ${currentTal1*5} ...<br><br>
+            
+            Stop efter ${currentTal2} trin: <strong>${correctAnswer}</strong><br><br>
+            
+            <em>Eksempel: 5 × 3 → 5 - 10 - 15</em>
           </div>
         </div>
         
         <div class="step-explanation" style="background: #fed7d7; border-left-color: #f56565;">
-          <div class="step-title"><span class="step-number">3</span> Brug gangetabellen hvis muligt</div>
+          <div class="step-title"><span class="step-number">3</span> Smart tricks til gange</div>
           <div class="step-content">
-            ${currentDifficulty === "let" || currentDifficulty === "mellem" ? `
-            <strong>Huskeregler:</strong><br>
-            • ${currentTal1} × ${currentTal2} = ${currentTal2} × ${currentTal1} (det samme resultat)<br>
-            • ${currentTal1} × 10 = ${currentTal1}0<br>
-            • ${currentTal1} × 5 = halvdelen af ${currentTal1} × 10<br><br>
-            ` : ''}
+            <strong>Når du ganger med 10:</strong><br>
+            Kommer der et 0 på (5 × 10 = 50)<br><br>
             
-            <strong>Par som giver 10:</strong><br>
-            2 × 5 = 10<br>
-            4 × 25 = 100<br>
-            8 × 125 = 1000
+            <strong>Når du ganger med 5:</strong><br>
+            Svarer til at gange med 10 og tage halvdelen (6 × 5 = 30)<br><br>
+            
+            <strong>Når du ganger med 2:</strong><br>
+            Fordobler du tallet (7 × 2 = 14)<br><br>
+            
+            <strong>Når du ganger med 4:</strong><br>
+            Dobbelt-dobbel (gange med 2, og så med 2 igen)
           </div>
         </div>
         
         <div class="step-explanation" style="background: #fffaf0; border-left-color: #f6ad55;">
-          <div class="step-title"><span class="step-number">4</span> Kontroller dit svar</div>
+          <div class="step-title"><span class="step-number">4</span> Tjek om dit svar giver mening</div>
           <div class="step-content">
-            <strong>Sådan tjekker du om dit svar er rigtigt:</strong><br><br>
-            
-            ${currentTal2 <= 10 ? `
-            <div style="margin: 10px 0;">
-              <strong>Metode 1: Deling</strong><br>
-              Del dit svar med ${currentTal1}. Får du ${currentTal2}?<br>
-              Del dit svar med ${currentTal2}. Får du ${currentTal1}?
-            </div>
-            ` : ''}
+            <strong>Sådan tjekker du om dit svar er rimeligt:</strong><br><br>
             
             <div style="margin: 10px 0;">
-              <strong>Metode 2: Runde tal</strong><br>
+              <strong>Metode 1: Rund til nærmeste 10'ere</strong><br>
               Rund ${currentTal1} og ${currentTal2} til nærmeste 10'ere og gange:<br>
-              ${Math.round(currentTal1/10)*10} × ${Math.round(currentTal2/10)*10} ≈ ${Math.round(currentTal1/10)*10 * Math.round(currentTal2/10)*10}
+              ${Math.round(currentTal1/10)*10} × ${Math.round(currentTal2/10)*10} ≈ ${Math.round(currentTal1/10)*10 * Math.round(currentTal2/10)*10}<br>
+              Dit svar skal være tæt på dette tal!
+            </div>
+            
+            <div style="margin: 10px 0;">
+              <strong>Metode 2: Gange i hovedet</strong><br>
+              Prøv med lidt mindre tal først:<br>
+              ${Math.floor(currentTal1/10)*10} × ${Math.floor(currentTal2/10)*10} = ${Math.floor(currentTal1/10)*10 * Math.floor(currentTal2/10)*10}<br>
+              Så læg resten til
             </div>
           </div>
         </div>
@@ -915,200 +889,136 @@
 
     function visKolonneHjaelp() {
       const hjælpContainer = document.getElementById('hjaelpContainer');
-      const num1Str = currentTal1.toString();
-      const num2Str = currentTal2.toString();
       
-      let kolonneHTML = `
-        <div class="kolonne-title">
-          <i class="fas fa-calculator"></i> Kolonnehjælp for ${currentTal1} × ${currentTal2}
-        </div>
-      `;
-      
-      // For let og mellem niveauer - simplere forklaring
+      // For let og mellem - simpel gangemetode
       if (currentDifficulty === "let" || currentDifficulty === "mellem") {
-        kolonneHTML += `
+        hjælpContainer.innerHTML = `
+          <div class="kolonne-title">
+            <i class="fas fa-calculator"></i> Sådan ganger du ${currentTal1} × ${currentTal2}
+          </div>
+          
+          <div class="simplified-kolonne">
+            <div style="text-align: right;">${currentTal1}</div>
+            <div style="text-align: right;">× ${currentTal2}</div>
+            <div style="border-top: 2px solid #4a5568; margin: 5px 0;"></div>
+            <div style="text-align: right; color: #48bb78; font-weight: bold;">${correctAnswer}</div>
+          </div>
+          
           <div class="step-explanation">
-            <div class="step-title"><span class="step-number">1</span> Skriv tallene under hinanden</div>
+            <div class="step-title"><span class="step-number">1</span> Brug gangetabellen</div>
             <div class="step-content">
-              <div style="font-family: 'Courier New', monospace; font-size: 1.4rem; text-align: right; margin: 10px 0; padding: 10px; background: #f8fafc; border-radius: 5px;">
-                <div>${currentTal1}</div>
-                <div>× ${currentTal2.toString().padStart(currentTal1.toString().length, ' ')}</div>
-                <div style="border-top: 2px solid #4a5568; margin-top: 5px;"></div>
-              </div>
+              Husk gangetabellen for ${currentTal1}:<br>
+              ${Array.from({length: 10}, (_, i) => `${currentTal1} × ${i+1} = ${currentTal1*(i+1)}`).join('<br>')}
             </div>
           </div>
           
-          <div class="step-explanation" style="background: #c6f6d5; border-left-color: #48bb78;">
-            <div class="step-title"><span class="step-number">2</span> Gange enere først</div>
-            <div class="step-content">
-              <strong>${currentTal2}'ernes plads:</strong><br>
-              ${currentTal1} × ${currentTal2 % 10} = ${currentTal1 * (currentTal2 % 10)}
-            </div>
-          </div>
-          
-          <div class="step-explanation" style="background: #fffaf0; border-left-color: #f6ad55;">
-            <div class="step-title"><span class="step-number">3</span> Færdig!</div>
-            <div class="step-content">
-              Da ${currentTal2} kun har en plads, er vi færdige!<br>
-              Resultat: ${currentTal1} × ${currentTal2} = ${currentTal1 * currentTal2}
-            </div>
+          <div style="text-align: center; margin-top: 20px;">
+            <button onclick="skjulHjaelp()" class="close-hjaelp-btn">
+              <i class="fas fa-times"></i> Luk hjælp
+            </button>
           </div>
         `;
       } else {
-        // For svær, ekspert og mester - rigtig kolonnemetode
-        const digits2 = num2Str.split('').reverse().map(Number); // Start fra enere
+        // For svær, ekspert og mester - gange i kolonner
+        const num1Str = currentTal1.toString();
+        const num2Str = currentTal2.toString();
         
-        kolonneHTML += `
+        let hjælpHTML = `
+          <div class="kolonne-title">
+            <i class="fas fa-calculator"></i> Sådan ganger du ${currentTal1} × ${currentTal2} i kolonner
+          </div>
+          
+          <div class="simplified-kolonne">
+            <div style="text-align: right;">${currentTal1}</div>
+            <div style="text-align: right;">× ${currentTal2}</div>
+            <div style="border-top: 2px solid #4a5568; margin: 5px 0;"></div>
+            <div style="text-align: right; height: 20px;">&nbsp;</div>
+          </div>
+        `;
+        
+        // Forklar trin for trin
+        hjælpHTML += `
           <div class="step-explanation">
             <div class="step-title"><span class="step-number">1</span> Skriv tallene under hinanden</div>
             <div class="step-content">
-              <div style="font-family: 'Courier New', monospace; font-size: 1.4rem; text-align: right; margin: 10px 0; padding: 10px; background: #f8fafc; border-radius: 5px;">
-                <div>${currentTal1}</div>
-                <div>× ${currentTal2.toString().padStart(currentTal1.toString().length, ' ')}</div>
-                <div style="border-top: 2px solid #4a5568; margin-top: 5px;"></div>
-              </div>
+              Skriv det største tal øverst, og det mindste tal nederst. Så er det nemmest at regne.
             </div>
           </div>
-        `;
-        
-        // KOLONNE VISUAL
-        let kolonneVisual = '<div class="kolonne-visual">';
-        
-        // Første tal
-        kolonneVisual += `<div class="kolonne-row">`;
-        kolonneVisual += `<span style="color: #718096; margin-right: 10px; width: 45px;">&nbsp;</span>`;
-        for (let i = num1Str.length - 1; i >= 0; i--) {
-          kolonneVisual += `<div class="kolonne-digit">${num1Str[i]}</div>`;
-        }
-        kolonneVisual += `</div>`;
-        
-        // Andet tal med gange
-        kolonneVisual += `<div class="kolonne-row">`;
-        kolonneVisual += `<span class="kolonne-operator">×</span>`;
-        for (let i = num2Str.length - 1; i >= 0; i--) {
-          kolonneVisual += `<div class="kolonne-digit">${num2Str[i]}</div>`;
-        }
-        kolonneVisual += `</div>`;
-        
-        // Linje
-        kolonneVisual += `<div class="kolonne-line"></div>`;
-        
-        // Mellemregninger
-        for (let i = 0; i < digits2.length; i++) {
-          const multiplier = digits2[i];
-          const partialResult = currentTal1 * multiplier;
-          const partialStr = partialResult.toString().padEnd(num1Str.length + i, '0');
           
-          kolonneVisual += `<div class="kolonne-row">`;
-          kolonneVisual += `<span style="color: #718096; margin-right: 10px; width: 45px;">${multiplier}×:</span>`;
-          
-          for (let j = 0; j < num1Str.length + digits2.length; j++) {
-            const digit = partialStr.length > j ? partialStr[partialStr.length - 1 - j] : '';
-            if (digit !== '') {
-              kolonneVisual += `<div class="kolonne-digit ${i > 0 && j < i ? 'empty' : ''}">${digit}</div>`;
-            } else {
-              kolonneVisual += `<div class="kolonne-digit empty"></div>`;
-            }
-          }
-          kolonneVisual += `</div>`;
-        }
-        
-        // Endelig linje
-        kolonneVisual += `<div class="kolonne-line"></div>`;
-        
-        // Resultat (tomme kasser)
-        kolonneVisual += `<div class="kolonne-row">`;
-        kolonneVisual += `<span style="color: #718096; margin-right: 10px; width: 45px;">&nbsp;</span>`;
-        for (let i = 0; i < num1Str.length + num2Str.length; i++) {
-          kolonneVisual += `<div class="kolonne-digit empty"></div>`;
-        }
-        kolonneVisual += `</div>`;
-        
-        kolonneVisual += '</div>';
-        kolonneHTML += kolonneVisual;
-        
-        // Trin-for-trin forklaring
-        kolonneHTML += `
           <div class="step-explanation" style="background: #c6f6d5; border-left-color: #48bb78;">
-            <div class="step-title"><span class="step-number">2</span> Trin for trin - Start fra højre</div>
+            <div class="step-title"><span class="step-number">2</span> Gange med enerne først</div>
             <div class="step-content">
-              <strong>Start med ${currentTal2}'s enere og arbejd mod venstre:</strong><br><br>
-              
-              <div style="display: flex; align-items: flex-start; gap: 15px; flex-wrap: wrap;">
-                <!-- Trin 1 -->
-                <div style="flex: 1; min-width: 200px; background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px;">
-                  <div style="font-weight: bold; color: #4299e1; margin-bottom: 5px;">Trin 1: Enere</div>
-                  <div>${currentTal1} × ${digits2[0]}</div>
-                  <div style="color: #48bb78; font-size: 0.9rem;">→ ${currentTal1} × ${digits2[0]} = ${currentTal1 * digits2[0]}</div>
-                </div>
-                
-                <!-- Trin 2 -->
-                ${digits2.length > 1 ? `
-                <div style="flex: 1; min-width: 200px; background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px;">
-                  <div style="font-weight: bold; color: #4299e1; margin-bottom: 5px;">Trin 2: Tiere</div>
-                  <div>${currentTal1} × ${digits2[1]}0</div>
-                  <div style="color: #48bb78; font-size: 0.9rem;">→ ${currentTal1} × ${digits2[1]}0 = ${currentTal1 * digits2[1] * 10}</div>
-                </div>
-                ` : ''}
-                
-                <!-- Trin 3 -->
-                ${digits2.length > 2 ? `
-                <div style="flex: 1; min-width: 200px; background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px;">
-                  <div style="font-weight: bold; color: #4299e1; margin-bottom: 5px;">Trin 3: Hundreder</div>
-                  <div>${currentTal1} × ${digits2[2]}00</div>
-                  <div style="color: #48bb78; font-size: 0.9rem;">→ ${currentTal1} × ${digits2[2]}00 = ${currentTal1 * digits2[2] * 100}</div>
-                </div>
-                ` : ''}
-              </div>
-            </div>
-          </div>
-          
-          <div class="step-explanation" style="background: #fed7d7; border-left-color: #f56565;">
-            <div class="step-title"><span class="step-number">3</span> Læg delresultaterne sammen</div>
-            <div class="step-content">
-              <strong>Læg alle delresultaterne sammen:</strong><br><br>
-              
-              ${digits2.map((digit, index) => {
-                const partial = currentTal1 * digit * Math.pow(10, index);
-                return `${currentTal1} × ${digit}${'0'.repeat(index)} = ${partial}`;
-              }).join('<br>+ ')}<br>
-              <div style="border-top: 2px solid #4a5568; margin-top: 5px; padding-top: 5px; font-weight: bold;">
-                I ALT: ${correctAnswer}
-              </div>
-            </div>
-          </div>
-          
-          <div class="step-explanation" style="background: #fffaf0; border-left-color: #f6ad55;">
-            <div class="step-title"><span class="step-number">4</span> Kontroller dit svar</div>
-            <div class="step-content">
-              <strong>Sådan tjekker du om dit svar er rigtigt:</strong><br><br>
-              
-              <div style="margin: 10px 0;">
-                <strong>Metode 1: Deling</strong><br>
-                Del ${correctAnswer} med ${currentTal1}. Får du ${currentTal2}?<br>
-                Del ${correctAnswer} med ${currentTal2}. Får du ${currentTal1}?
-              </div>
-              
-              <div style="margin: 10px 0;">
-                <strong>Metode 2: Anslå</strong><br>
-                Rund til nærmeste 10'ere:<br>
-                ${Math.round(currentTal1/10)*10} × ${Math.round(currentTal2/10)*10} ≈ ${Math.round(currentTal1/10)*10 * Math.round(currentTal2/10)*10}<br>
-                Dit svar skal være tæt på dette!
-              </div>
+              <strong>Trin 1: Gange ${currentTal1} med ${num2Str[num2Str.length-1]} (enerne)</strong><br>
+              ${currentTal1} × ${num2Str[num2Str.length-1]} = ${currentTal1 * parseInt(num2Str[num2Str.length-1])}<br>
+              Skriv dette tal under stregen.
             </div>
           </div>
         `;
+        
+        if (num2Str.length > 1) {
+          hjælpHTML += `
+            <div class="step-explanation" style="background: #bee3f8; border-left-color: #4299e1;">
+              <div class="step-title"><span class="step-number">3</span> Gange med tierne</div>
+              <div class="step-content">
+                <strong>Trin 2: Gange ${currentTal1} med ${num2Str[num2Str.length-2]} (tierne)</strong><br>
+                ${currentTal1} × ${num2Str[num2Str.length-2]}0 = ${currentTal1 * parseInt(num2Str[num2Str.length-2]) * 10}<br>
+                Skriv dette tal under det første, men ryk en plads til venstre (fordi det er tierne).
+              </div>
+            </div>
+          `;
+        }
+        
+        if (num2Str.length > 2) {
+          hjælpHTML += `
+            <div class="step-explanation" style="background: #fed7d7; border-left-color: #f56565;">
+              <div class="step-title"><span class="step-number">4</span> Gange med hundrederne</div>
+              <div class="step-content">
+                <strong>Trin 3: Gange ${currentTal1} med ${num2Str[num2Str.length-3]} (hundrederne)</strong><br>
+                ${currentTal1} × ${num2Str[num2Str.length-3]}00 = ${currentTal1 * parseInt(num2Str[num2Str.length-3]) * 100}<br>
+                Skriv dette tal under de andre, men ryk to pladser til venstre (fordi det er hundreder).
+              </div>
+            </div>
+          `;
+        }
+        
+        hjælpHTML += `
+          <div class="step-explanation" style="background: #fffaf0; border-left-color: #f6ad55;">
+            <div class="step-title"><span class="step-number">${num2Str.length > 1 ? '5' : '3'}</span> Læg alle del-resultaterne sammen</div>
+            <div class="step-content">
+              <strong>Nu skal du plusse alle del-resultaterne sammen:</strong><br><br>
+              
+              ${Array.from({length: num2Str.length}, (_, i) => {
+                const digit = parseInt(num2Str[num2Str.length-1-i]);
+                const value = currentTal1 * digit * Math.pow(10, i);
+                return `${currentTal1} × ${digit}${'0'.repeat(i)} = ${value}`;
+              }).join('<br>+ ')}<br>
+              
+              <div style="border-top: 2px solid #4a5568; margin-top: 10px; padding-top: 10px; font-weight: bold; font-size: 1.2rem;">
+                I ALT: ${formatNumber(correctAnswer)}
+              </div>
+            </div>
+          </div>
+          
+          <div class="step-explanation">
+            <div class="step-title"><span class="step-number">${num2Str.length > 1 ? '6' : '4'}</span> Tjek om dit svar giver mening</div>
+            <div class="step-content">
+              <strong>Rund til nærmeste 10'ere og gange:</strong><br>
+              ${Math.round(currentTal1/10)*10} × ${Math.round(currentTal2/10)*10} ≈ ${Math.round(currentTal1/10)*10 * Math.round(currentTal2/10)*10}<br><br>
+              
+              Dit svar ${formatNumber(correctAnswer)} skal være tæt på dette tal!
+            </div>
+          </div>
+          
+          <div style="text-align: center; margin-top: 20px;">
+            <button onclick="skjulHjaelp()" class="close-hjaelp-btn">
+              <i class="fas fa-times"></i> Luk hjælp
+            </button>
+          </div>
+        `;
+        
+        hjælpContainer.innerHTML = hjælpHTML;
       }
       
-      kolonneHTML += `
-        <div style="text-align: center; margin-top: 20px;">
-          <button onclick="skjulHjaelp()" class="close-hjaelp-btn">
-            <i class="fas fa-times"></i> Luk hjælp
-          </button>
-        </div>
-      `;
-      
-      hjælpContainer.innerHTML = kolonneHTML;
       hjælpContainer.style.display = 'block';
       hjælpContainer.scrollIntoView({ behavior: 'smooth' });
     }
@@ -1117,77 +1027,91 @@
       document.getElementById('hjaelpContainer').style.display = 'none';
     }
 
-    function visPunkter() {
+    function visGrupper() {
       if (currentDifficulty !== "let" && currentDifficulty !== "mellem") {
-        showFeedback('Punktvisualisering er kun tilgængelig i Let og Mellem', false);
+        showFeedback('Gruppe-visualisering er kun tilgængelig i Let og Mellem', false);
         return;
       }
       
-      document.getElementById('punkterContainer').style.display = 'block';
-      tegnPunkter();
-      opdaterPunkterKnapper();
+      document.getElementById('grupperContainer').style.display = 'block';
+      tegnGrupper();
+      opdaterGrupperKnapper();
       skjulHjaelp();
     }
 
-    function tegnPunkter() {
-      const container = document.getElementById('punkterGrid');
-      const explanation = document.getElementById('punkterExplanation');
+    function tegnGrupper() {
+      const container = document.getElementById('grupperVisual');
+      const explanation = document.getElementById('grupperExplanation');
       
-      // Begræns antallet af punkter for ikke at overbelaste
-      const maxPunkter = currentDifficulty === "let" ? 50 : 100;
+      // Begræns antallet af grupper/punkter for klarhed
+      const maxPunkter = 50;
+      const maxGrupper = 6;
       
-      if (currentTal1 * currentTal2 > maxPunkter) {
+      if (currentTal1 * currentTal2 > maxPunkter || currentTal1 > maxGrupper || currentTal2 > maxGrupper) {
         container.innerHTML = `
-          <div style="text-align: center; padding: 40px; color: #718096;">
+          <div style="text-align: center; padding: 40px; color: #718096; width: 100%;">
             <i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 20px;"></i>
-            <h3>For mange punkter at vise!</h3>
-            <p>${currentTal1} × ${currentTal2} = ${currentTal1 * currentTal2} punkter vil være for mange at vise klart.</p>
-            <p>Prøv i stedet at bruge "Tæl op strategi" eller "Gange-tabel" hjælp.</p>
+            <h3>For mange at vise klart!</h3>
+            <p>${currentTal1} × ${currentTal2} = ${currentTal1 * currentTal2} ville være for mange punkter at vise.</p>
+            <p>Prøv i stedet at bruge "Brug tabellerne" eller "Gange-tabel" hjælp.</p>
           </div>
         `;
         explanation.innerHTML = `
-          ${currentTal1} rækker med ${currentTal2} punkter i hver = ${currentTal1 * currentTal2} punkter totalt
+          ${currentTal1} grupper med ${currentTal2} i hver = ${currentTal1 * currentTal2} totalt
         `;
         return;
       }
       
-      // Opret grid af punkter
-      const rows = Math.min(currentTal1, 10); // Max 10 rækker for klarhed
-      const cols = Math.min(currentTal2, 10); // Max 10 kolonner for klarhed
-      
-      container.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+      // Bestem hvilken vej der er nemmest at vise
+      const showRows = currentTal1;  // Antal grupper
+      const showCols = currentTal2;  // Antal punkter i hver gruppe
       
       let html = '';
-      let count = 0;
+      let totalPoints = 0;
       
-      for (let i = 0; i < rows; i++) {
-        for (let j = 0; j < cols; j++) {
-          count++;
-          html += `<div class="punkt">${count <= 99 ? count : ''}</div>`;
+      // Lav en boks for hver gruppe
+      for (let group = 0; group < showRows; group++) {
+        let groupHTML = '<div class="gruppe-grid" style="grid-template-columns: repeat(' + showCols + ', 1fr);">';
+        
+        for (let i = 0; i < showCols; i++) {
+          totalPoints++;
+          groupHTML += `<div class="punkt">${totalPoints}</div>`;
         }
+        
+        groupHTML += '</div>';
+        
+        html += `
+          <div class="gruppe-container">
+            <div class="gruppe-label">Gruppe ${group + 1}</div>
+            ${groupHTML}
+            <div style="margin-top: 5px; font-size: 0.9rem; color: #4a5568;">
+              ${showCols} punkter
+            </div>
+          </div>
+        `;
       }
       
       container.innerHTML = html;
       
       explanation.innerHTML = `
         <strong>${currentTal1} × ${currentTal2} = ${currentTal1 * currentTal2}</strong><br>
-        Viser ${rows} rækker med ${cols} punkter i hver. ${rows * cols} punkter totalt.<br>
-        ${currentTal1} grupper med ${currentTal2} i hver = ${currentTal1 * currentTal2} totalt
+        Der er ${currentTal1} grupper med ${currentTal2} punkter i hver.<br>
+        I alt: ${currentTal1} grupper × ${currentTal2} punkter = ${currentTal1 * currentTal2} punkter
       `;
     }
 
-    function opdaterPunkterKnapper() {
-      const knapContainer = document.querySelector('.punkter-knapper');
+    function opdaterGrupperKnapper() {
+      const knapContainer = document.querySelector('.grupper-knapper');
       
       knapContainer.innerHTML = `
-        <button onclick="skjulPunkter()" class="close-hjaelp-btn" style="min-width: 180px; padding: 12px 20px;">
-          <i class="fas fa-times"></i> Skjul punkter
+        <button onclick="skjulGrupper()" class="close-hjaelp-btn" style="min-width: 180px; padding: 12px 20px;">
+          <i class="fas fa-times"></i> Luk grupper
         </button>
       `;
     }
 
-    function skjulPunkter() {
-      document.getElementById('punkterContainer').style.display = 'none';
+    function skjulGrupper() {
+      document.getElementById('grupperContainer').style.display = 'none';
     }
 
     function visGangeTabel() {
@@ -1199,19 +1123,19 @@
       const container = document.getElementById('gangeTabelContainer');
       const tabel = document.getElementById('gangeTabel');
       
-      // Opret en 12x12 gangetabel
+      // Opret en 10x10 gangetabel (plus headers)
       let html = '';
       
       // Headers
-      html += `<div class="gange-celle header"></div>`; // Øverste venstre hjørne
-      for (let i = 1; i <= 12; i++) {
+      html += `<div class="gange-celle header">×</div>`; // Øverste venstre hjørne
+      for (let i = 1; i <= 10; i++) {
         html += `<div class="gange-celle header">${i}</div>`;
       }
       
       // Rækker
-      for (let i = 1; i <= 12; i++) {
+      for (let i = 1; i <= 10; i++) {
         html += `<div class="gange-celle header">${i}</div>`; // Venstre header
-        for (let j = 1; j <= 12; j++) {
+        for (let j = 1; j <= 10; j++) {
           const isActive = (i === currentTal1 && j === currentTal2) || (i === currentTal2 && j === currentTal1);
           const isResult = i * j === correctAnswer;
           
@@ -1219,7 +1143,13 @@
           if (isActive) className += ' active';
           if (isResult && isActive) className += ' result';
           
-          html += `<div class="${className}">${i * j}</div>`;
+          // Vis kun svaret direkte i Let niveau
+          if (currentDifficulty === "let" && isActive) {
+            html += `<div class="${className}">${i * j}</div>`;
+          } else {
+            // I Mellem niveau skal de lede efter svaret
+            html += `<div class="${className} ${isActive && currentDifficulty === "mellem" ? '' : ''}">${i * j}</div>`;
+          }
         }
       }
       
@@ -1233,16 +1163,29 @@
       
       const explanation = document.createElement('div');
       explanation.className = 'step-explanation tabel-explanation';
-      explanation.innerHTML = `
-        <div class="step-title"><i class="fas fa-info-circle"></i> Sådan bruger du gangetabellen</div>
-        <div class="step-content">
-          <strong>Find ${currentTal1} i venstre kolonne og ${currentTal2} i øverste række.</strong><br>
-          Celle hvor de mødes viser resultatet: ${currentTal1} × ${currentTal2} = ${correctAnswer}<br><br>
-          
-          <strong>Husk:</strong> ${currentTal2} × ${currentTal1} giver det samme resultat!<br>
-          Det kaldes den <em>kommutative egenskab</em>.
-        </div>
-      `;
+      
+      if (currentDifficulty === "let") {
+        explanation.innerHTML = `
+          <div class="step-title"><i class="fas fa-info-circle"></i> Sådan bruger du gangetabellen</div>
+          <div class="step-content">
+            <strong>Find ${currentTal1} i venstre kolonne og ${currentTal2} i øverste række.</strong><br>
+            Celle hvor de mødes viser svaret: <span style="color: #48bb78; font-weight: bold;">${currentTal1} × ${currentTal2} = ${correctAnswer}</span><br><br>
+            
+            <strong>Husk:</strong> ${currentTal2} × ${currentTal1} giver det samme resultat!
+          </div>
+        `;
+      } else {
+        explanation.innerHTML = `
+          <div class="step-title"><i class="fas fa-info-circle"></i> Sådan bruger du gangetabellen</div>
+          <div class="step-content">
+            <strong>Find ${currentTal1} i venstre kolonne og ${currentTal2} i øverste række.</strong><br>
+            Celle hvor de møtes viser svaret. Kan du finde den?<br><br>
+            
+            <strong>Husk:</strong> ${currentTal2} × ${currentTal1} giver det samme resultat!<br>
+            Prøv at lede begge veje.
+          </div>
+        `;
+      }
       
       container.appendChild(explanation);
     }
@@ -1294,7 +1237,6 @@
       genererOpgave();
       document.getElementById('feedback').textContent = '';
       document.getElementById('feedback').className = 'feedback';
-      animationActive = false;
       skjulHjaelp();
     }
 
