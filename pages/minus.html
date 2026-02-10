@@ -309,6 +309,15 @@
       border: 1px dashed #cbd5e0;
     }
     
+    .kolonne-digit.loan-box {
+      width: 40px;
+      height: 40px;
+      background: #ebf8ff;
+      border: 2px dashed #4299e1;
+      font-size: 1rem;
+      margin-bottom: 5px;
+    }
+    
     .kolonne-digit.highlight {
       background: #fed7d7;
       border-color: #f56565;
@@ -318,25 +327,6 @@
     .kolonne-digit.loan {
       background: #bee3f8;
       border-color: #4299e1;
-      font-weight: bold;
-    }
-    
-    .kolonne-digit.loaned {
-      position: relative;
-    }
-    
-    .kolonne-digit.loaned::before {
-      content: "↓";
-      position: absolute;
-      top: -25px;
-      color: #4299e1;
-      font-weight: bold;
-      font-size: 1.2rem;
-    }
-    
-    .kolonne-digit.changed {
-      background: #e9d8fd;
-      border-color: #9f7aea;
       font-weight: bold;
     }
     
@@ -375,7 +365,7 @@
     
     .hjaelp-container {
       max-height: 600px;
-      overflow-y: auto;
+      overflow-y auto;
       margin-top: 20px;
     }
     
@@ -453,6 +443,15 @@
       color: #4299e1;
       font-size: 1.2rem;
       margin: 0 5px;
+    }
+    
+    .negative-hint {
+      background: #fff5f5;
+      border-left: 4px solid #f56565;
+      padding: 10px;
+      border-radius: 5px;
+      margin-top: 10px;
+      font-size: 0.9rem;
     }
     
     @media (max-width: 768px) {
@@ -642,23 +641,26 @@
         name: "Svær", 
         range: "1-99",
         displayName: "Svær (1-99)",
-        description: "Introducerer låning over 10"
+        description: "Introducerer låning over 10 og negative tal"
       },
       ekspert: { 
         name: "Ekspert", 
         range: "100-999",
         displayName: "Ekspert (100-999)",
-        description: "Mester kolonnesubtraktion med låning"
+        description: "Mester kolonnesubtraktion med negative tal"
       },
       mester: { 
         name: "Mester", 
         range: "1000-999.999",
         displayName: "Mester (1000-999.999)",
-        description: "Ultimativ udfordring med kompleks låning"
+        description: "Ultimativ udfordring med kompleks låning og negative tal"
       }
     };
 
     function formatNumber(num) {
+      if (num < 0) {
+        return "-" + Math.abs(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+      }
       return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     }
 
@@ -787,7 +789,7 @@
             <i class="fas fa-lightbulb"></i> Simpel hjælp
           </button>
           <button onclick="visKolonneHjaelp()" class="button" style="background: #90cdf4; color: white; flex: 1; min-width: 150px;">
-            <i class="fas fa-calculator"></i> Kolonnehjælp med låning
+            <i class="fas fa-calculator"></i> Kolonnehjælp
           </button>
           <button onclick="visMatematiktutor()" class="tutor-btn" style="flex: 1; min-width: 150px;">
             <i class="fas fa-chalkboard-teacher"></i> Matematiktutor
@@ -797,7 +799,7 @@
       } else {
         knapContainer.innerHTML = `
           <button onclick="visKolonneHjaelp()" class="button" style="background: #90cdf4; color: white; flex: 1; min-width: 200px;">
-            <i class="fas fa-calculator"></i> Kolonnehjælp med låning
+            <i class="fas fa-calculator"></i> Kolonnehjælp
           </button>
           <button onclick="visMatematiktutor()" class="tutor-btn" style="flex: 1; min-width: 200px;">
             <i class="fas fa-chalkboard-teacher"></i> Matematiktutor
@@ -809,12 +811,12 @@
 
     function genererOpgave() {
       let minVal, maxVal;
+      let allowNegative = false;
       
       switch(currentDifficulty) {
         case "let": 
           minVal = 1;
           maxVal = 20;
-          // Sikrer at tal1 > tal2 for positivt resultat
           do {
             currentTal1 = Math.floor(Math.random() * maxVal) + minVal;
             currentTal2 = Math.floor(Math.random() * maxVal) + minVal;
@@ -831,26 +833,35 @@
         case "svaer": 
           minVal = 1;
           maxVal = 99;
-          do {
-            currentTal1 = Math.floor(Math.random() * maxVal) + minVal;
-            currentTal2 = Math.floor(Math.random() * maxVal) + minVal;
-          } while (currentTal1 <= currentTal2);
+          allowNegative = Math.random() < 0.3;
+          currentTal1 = Math.floor(Math.random() * maxVal) + minVal;
+          currentTal2 = Math.floor(Math.random() * maxVal) + minVal;
+          
+          if (!allowNegative && currentTal1 <= currentTal2) {
+            [currentTal1, currentTal2] = [currentTal2, currentTal1];
+          }
           break;
         case "ekspert":
           minVal = 100;
           maxVal = 999;
-          do {
-            currentTal1 = Math.floor(Math.random() * (maxVal - minVal + 1)) + minVal;
-            currentTal2 = Math.floor(Math.random() * (maxVal - minVal + 1)) + minVal;
-          } while (currentTal1 <= currentTal2);
+          allowNegative = Math.random() < 0.5;
+          currentTal1 = Math.floor(Math.random() * (maxVal - minVal + 1)) + minVal;
+          currentTal2 = Math.floor(Math.random() * (maxVal - minVal + 1)) + minVal;
+          
+          if (!allowNegative && currentTal1 <= currentTal2) {
+            [currentTal1, currentTal2] = [currentTal2, currentTal1];
+          }
           break;
         case "mester":
           minVal = 1000;
           maxVal = 999999;
-          do {
-            currentTal1 = Math.floor(Math.random() * (maxVal - minVal + 1)) + minVal;
-            currentTal2 = Math.floor(Math.random() * (maxVal - minVal + 1)) + minVal;
-          } while (currentTal1 <= currentTal2);
+          allowNegative = Math.random() < 0.5;
+          currentTal1 = Math.floor(Math.random() * (maxVal - minVal + 1)) + minVal;
+          currentTal2 = Math.floor(Math.random() * (maxVal - minVal + 1)) + minVal;
+          
+          if (!allowNegative && currentTal1 <= currentTal2) {
+            [currentTal1, currentTal2] = [currentTal2, currentTal1];
+          }
           break;
         default: 
           minVal = 1;
@@ -864,6 +875,16 @@
       correctAnswer = currentTal1 - currentTal2;
       
       const opgaveTekst = document.getElementById('opgaveTekst');
+      let negativeHint = '';
+      
+      if (correctAnswer < 0) {
+        negativeHint = `
+          <div class="negative-hint">
+            <i class="fas fa-exclamation-triangle"></i> OBS: Når det første tal er mindre end det andet, får vi et negativt resultat.
+          </div>
+        `;
+      }
+      
       opgaveTekst.innerHTML = `
         <div style="font-size: 1.4rem; margin-bottom: 10px;">
           Hvad er <span class="regnearter">${formatNumber(currentTal1)}</span> 
@@ -871,8 +892,9 @@
           <span class="regnearter">${formatNumber(currentTal2)}</span> 
           ?
         </div>
+        ${negativeHint}
         ${currentDifficulty === "svaer" || currentDifficulty === "ekspert" || currentDifficulty === "mester" ? 
-          '<div style="font-size: 0.9rem; color: #718096; background: #f7fafc; padding: 8px; border-radius: 5px; margin-top: 5px;">💡 Tip: For tal hvor cifrene er større nederst, skal du låne fra nabocifferet</div>' : ''}
+          '<div style="font-size: 0.9rem; color: #718096; background: #f7fafc; padding: 8px; border-radius: 5px; margin-top: 5px;">💡 Tip: Husk at negative tal er mulige. Brug kolonneaddition med låning når det er nødvendigt.</div>' : ''}
       `;
       
       document.getElementById('svarInput').value = '';
@@ -883,11 +905,55 @@
 
     function visSimpelHjaelp() {
       const hjælpContainer = document.getElementById('hjaelpContainer');
+      
+      let negativeHint = '';
+      if (correctAnswer < 0) {
+        negativeHint = `
+          <div class="step-explanation" style="background: #fff5f5; border-left-color: #f56565;">
+            <div class="step-title"><span class="step-number">!</span> Negativt resultat - Sådan tænker du</div>
+            <div class="step-content">
+              Da ${currentTal1} er mindre end ${currentTal2}, får vi et negativt resultat.<br>
+              Tænk: "Hvor meget mangler der fra ${currentTal1} til ${currentTal2}?"<br>
+              <em>Eksempel: 5 - 8 = -3 (fordi 5 + 3 = 8)</em>
+            </div>
+          </div>
+        `;
+      }
+      
+      let tjekMetode = '';
+      if (currentDifficulty === "let") {
+        tjekMetode = `
+          <div class="step-explanation" style="background: #f0fff4; border-left-color: #48bb78;">
+            <div class="step-title"><span class="step-number">${correctAnswer < 0 ? '2' : '4'}</span> Tjek dit svar</div>
+            <div class="step-content">
+              ${currentTal1} - ${currentTal2} = ${formatNumber(correctAnswer)}<br><br>
+              <strong>Kontroller:</strong> Læg ${currentTal2} til dit resultat. Får du ${currentTal1}?
+            </div>
+          </div>
+        `;
+      } else {
+        tjekMetode = `
+          <div class="step-explanation" style="background: #f0fff4; border-left-color: #48bb78;">
+            <div class="step-title"><span class="step-number">${correctAnswer < 0 ? '2' : '4'}</span> Sådan tjekker du dit svar</div>
+            <div class="step-content">
+              <strong>Kontroller din løsning:</strong><br><br>
+              1. Tag dit resultat<br>
+              2. Læg ${currentTal2} til<br>
+              3. Får du ${currentTal1}?<br><br>
+              <em>Eksempel: Hvis du tror svaret er X, så check: X + ${currentTal2} = ${currentTal1}?</em>
+            </div>
+          </div>
+        `;
+      }
+      
       const hjælpHTML = `
         <div class="kolonne-title">
-          <i class="fas fa-lightbulb"></i> Tæl ned strategi
+          <i class="fas fa-lightbulb"></i> ${correctAnswer < 0 ? 'Negativt resultat strategi' : 'Tæl ned strategi'}
         </div>
         
+        ${negativeHint}
+        
+        ${correctAnswer >= 0 ? `
         <div class="step-explanation">
           <div class="step-title"><span class="step-number">1</span> Start ved det største tal</div>
           <div class="step-content">
@@ -910,14 +976,9 @@
             ${currentTal2 <= 10 ? 'Du kan bruge fingrene til at tælle ned!' : 'For større tal, brug kolonneaddition med låning'}
           </div>
         </div>
+        ` : ''}
         
-        <div class="step-explanation" style="background: #f0fff4; border-left-color: #48bb78;">
-          <div class="step-title"><span class="step-number">4</span> Tjek dit svar</div>
-          <div class="step-content">
-            Husk at ${currentTal1} - ${currentTal2} = ${formatNumber(correctAnswer)}<br>
-            Du kan også tænke: "Hvad skal jeg lægge til ${currentTal2} for at få ${currentTal1}?"
-          </div>
-        </div>
+        ${tjekMetode}
         
         <div style="text-align: center; margin-top: 20px;">
           <button onclick="skjulHjaelp()" class="close-hjaelp-btn">
@@ -936,167 +997,201 @@
       const num1Str = currentTal1.toString();
       const num2Str = currentTal2.toString();
       
-      // Konverter til arrays (enere først)
-      const digits1 = num1Str.split('').map(Number).reverse();
-      const digits2 = num2Str.split('').map(Number).reverse();
-      
-      // Simuler kolonnesubtraktion med låning
-      const maxLength = Math.max(digits1.length, digits2.length);
-      let resultDigits = [];
-      let stepDetails = [];
-      let borrowed = false;
-      
-      for (let i = 0; i < maxLength; i++) {
-        let d1 = digits1[i] || 0;
-        const d2 = digits2[i] || 0;
-        let loanAmount = 0;
-        let loanFrom = -1;
-        
-        // Hvis vi lånte i forrige trin
-        if (borrowed) {
-          d1 -= 1;
-          borrowed = false;
-        }
-        
-        // Hvis d1 < d2, skal vi låne
-        if (d1 < d2) {
-          // Find næste ciffer at låne fra
-          for (let j = i + 1; j < maxLength; j++) {
-            if (digits1[j] > 0) {
-              loanFrom = j;
-              break;
-            }
-          }
-          
-          if (loanFrom !== -1) {
-            // Lån 1 fra loanFrom og giv 10 til i
-            d1 += 10;
-            loanAmount = 1;
-            borrowed = true;
-          }
-        }
-        
-        const resultDigit = d1 - d2;
-        resultDigits.unshift(resultDigit);
-        
-        stepDetails.push({
-          position: i,
-          digit1: digits1[i] || 0,
-          digit2: d2,
-          d1AfterBorrow: d1,
-          resultDigit: resultDigit,
-          borrowed: loanAmount > 0,
-          loanFrom: loanFrom
-        });
-      }
-      
-      // Byg den visuelle kolonne
-      const resultLength = Math.max(num1Str.length, num2Str.length, resultDigits.length);
-      const paddedNum1 = num1Str.padStart(resultLength, ' ');
-      const paddedNum2 = num2Str.padStart(resultLength, ' ');
-      
       let kolonneHTML = `
         <div class="kolonne-title">
-          <i class="fas fa-calculator"></i> Kolonnesubtraktion med låning - Trin for trin
-        </div>
-        
-        <div class="kolonne-visual">
-          <!-- Første tal -->
-          <div class="kolonne-row">
-            <span style="color: #718096; margin-right: 10px; width: 45px;">&nbsp;</span>
-            ${Array.from(paddedNum1).map((digit, i) => 
-              digit === ' ' 
-                ? `<div class="kolonne-digit" style="visibility: hidden;">0</div>`
-                : `<div class="kolonne-digit">${digit}</div>`
-            ).join('')}
-          </div>
-          
-          <!-- Andet tal med minus -->
-          <div class="kolonne-row">
-            <span class="kolonne-operator">-</span>
-            ${Array.from(paddedNum2).map((digit, i) => 
-              digit === ' ' 
-                ? `<div class="kolonne-digit" style="visibility: hidden;">0</div>`
-                : `<div class="kolonne-digit">${digit}</div>`
-            ).join('')}
-          </div>
-          
-          <!-- Linje -->
-          <div class="kolonne-line"></div>
-          
-          <!-- Tomme kasser til resultatet -->
-          <div class="kolonne-row">
-            <span style="color: #718096; margin-right: 10px; width: 45px;">&nbsp;</span>
-            ${Array.from({length: resultLength}, (_, i) => 
-              `<div class="kolonne-digit empty"></div>`
-            ).join('')}
-          </div>
+          <i class="fas fa-calculator"></i> Kolonnehjælp
         </div>
       `;
       
-      // Trin-for-trin forklaring
-      let stepsHTML = '<div style="margin-top: 25px;">';
-      stepsHTML += '<div class="step-title" style="font-size: 1.1rem; margin-bottom: 15px;">📝 Sådan gør du:</div>';
-      
-      stepDetails.reverse().forEach((step, index) => {
-        const actualIndex = stepDetails.length - 1 - index;
-        const placeName = getPlaceName(actualIndex);
+      if (correctAnswer < 0) {
+        kolonneHTML += `
+          <div class="step-explanation" style="background: #fff5f5; border-left-color: #f56565; margin-bottom: 20px;">
+            <div class="step-title">Negativt resultat - Sådan gør du</div>
+            <div class="step-content">
+              <strong>${currentTal1} - ${currentTal2}</strong><br><br>
+              <strong>Trin 1:</strong> Find det største tal → ${Math.max(currentTal1, currentTal2)}<br>
+              <strong>Trin 2:</strong> Find det mindste tal → ${Math.min(currentTal1, currentTal2)}<br>
+              <strong>Trin 3:</strong> Træk mindste fra største → ${Math.max(currentTal1, currentTal2)} - ${Math.min(currentTal1, currentTal2)}<br>
+              <strong>Trin 4:</strong> Sæt minustegn foran (fordi ${currentTal1} er mindst)<br><br>
+              <em>Kontroller: Dit resultat + ${currentTal2} skal give ${currentTal1}</em>
+            </div>
+          </div>
+        `;
+      } else {
+        const digits1 = num1Str.split('').map(Number);
+        const digits2 = num2Str.padStart(num1Str.length, '0').split('').map(Number);
+        const needBorrow = digits1.some((digit, index) => digit < digits2[index]);
         
-        if (step.borrowed) {
-          const borrowFromPlace = getPlaceName(step.loanFrom);
-          stepsHTML += `
-            <div class="step-explanation" style="background: #ebf8ff; border-left-color: #4299e1; margin-bottom: 10px;">
-              <div class="step-title"><span class="step-number">${index + 1}</span> ${placeName} - Lån nødvendigt</div>
+        kolonneHTML += `
+          <div class="step-explanation">
+            <div class="step-title"><span class="step-number">1</span> Skriv tallene under hinanden</div>
+            <div class="step-content">
+              <div style="font-family: 'Courier New', monospace; font-size: 1.4rem; text-align: right; margin: 10px 0; padding: 10px; background: #f8fafc; border-radius: 5px;">
+                <div>${currentTal1}</div>
+                <div>- ${currentTal2.toString().padStart(currentTal1.toString().length, ' ')}</div>
+                <div style="border-top: 2px solid #4a5568; margin-top: 5px;"></div>
+              </div>
+            </div>
+          </div>
+        `;
+        
+        // KOLONNE VISUAL MED LÅNEKASSER
+        const maxLength = Math.max(num1Str.length, num2Str.length);
+        let kolonneVisual = '<div class="kolonne-visual">';
+        
+        // Tomme kasser til låne-tal over hvert ciffer
+        kolonneVisual += `<div class="kolonne-row">`;
+        kolonneVisual += `<span style="color: #718096; margin-right: 10px; width: 45px;">Lån:</span>`;
+        for (let i = 0; i < maxLength; i++) {
+          kolonneVisual += `<div class="kolonne-digit loan-box empty"></div>`;
+        }
+        kolonneVisual += `</div>`;
+        
+        // Første tal
+        kolonneVisual += `<div class="kolonne-row">`;
+        kolonneVisual += `<span style="color: #718096; margin-right: 10px; width: 45px;">&nbsp;</span>`;
+        for (let i = 0; i < maxLength; i++) {
+          const digit = i < digits1.length ? digits1[digits1.length - maxLength + i] : 0;
+          kolonneVisual += `<div class="kolonne-digit">${digit}</div>`;
+        }
+        kolonneVisual += `</div>`;
+        
+        // Andet tal med minus
+        kolonneVisual += `<div class="kolonne-row">`;
+        kolonneVisual += `<span class="kolonne-operator">-</span>`;
+        for (let i = 0; i < maxLength; i++) {
+          const digit = i < digits2.length ? digits2[digits2.length - maxLength + i] : 0;
+          kolonneVisual += `<div class="kolonne-digit">${digit}</div>`;
+        }
+        kolonneVisual += `</div>`;
+        
+        // Linje
+        kolonneVisual += `<div class="kolonne-line"></div>`;
+        
+        // Resultat (tomme kasser)
+        kolonneVisual += `<div class="kolonne-row">`;
+        kolonneVisual += `<span style="color: #718096; margin-right: 10px; width: 45px;">&nbsp;</span>`;
+        for (let i = 0; i < maxLength; i++) {
+          kolonneVisual += `<div class="kolonne-digit empty"></div>`;
+        }
+        kolonneVisual += `</div>`;
+        
+        kolonneVisual += '</div>';
+        kolonneHTML += kolonneVisual;
+        
+        if (needBorrow) {
+          kolonneHTML += `
+            <div class="step-explanation" style="background: #ebf8ff; border-left-color: #4299e1;">
+              <div class="step-title"><span class="step-number">2</span> Lån fra nabocifferet</div>
               <div class="step-content">
-                ${step.digit1} er mindre end ${step.digit2}, så vi skal låne.<br>
-                → Lån 1 fra ${borrowFromPlace} (til venstre)<br>
-                → ${step.digit1} bliver til ${step.digit1 + 10} = ${step.d1AfterBorrow}<br>
-                → Nu: ${step.d1AfterBorrow} - ${step.digit2} = ${step.resultDigit}
+                <strong>Låne-tricket:</strong><br><br>
+                
+                <div style="display: flex; justify-content: center; align-items: center; gap: 20px; margin: 15px 0; flex-wrap: wrap;">
+                  <!-- FØR låning -->
+                  <div style="text-align: center;">
+                    <div style="font-weight: bold; color: #4299e1; margin-bottom: 5px;">FØR låning:</div>
+                    <div style="font-family: 'Courier New', monospace; font-size: 1.1rem; background: white; padding: 10px; border: 2px solid #cbd5e0; border-radius: 5px;">
+                      <div style="color: #718096;">Tiere | Enere</div>
+                      <div style="display: flex; gap: 10px; justify-content: center;">
+                        <div style="width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; border: 2px solid #cbd5e0; border-radius: 5px;">4</div>
+                        <div style="width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; border: 2px solid #cbd5e0; border-radius: 5px;">3</div>
+                      </div>
+                      <div style="font-size: 0.8rem; color: #718096;">(41 = 4 tiere + 1 ener)</div>
+                    </div>
+                  </div>
+                  
+                  <!-- PIL -->
+                  <div style="font-size: 2rem; color: #4299e1;">→</div>
+                  
+                  <!-- EFTER låning -->
+                  <div style="text-align: center;">
+                    <div style="font-weight: bold; color: #48bb78; margin-bottom: 5px;">EFTER låning:</div>
+                    <div style="font-family: 'Courier New', monospace; font-size: 1.1rem; background: white; padding: 10px; border: 2px solid #48bb78; border-radius: 5px;">
+                      <div style="color: #718096;">Tiere | Enere</div>
+                      <div style="display: flex; gap: 10px; justify-content: center;">
+                        <div style="width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; border: 2px solid #cbd5e0; border-radius: 5px; background: #fed7d7;">3</div>
+                        <div style="width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; border: 2px solid #48bb78; border-radius: 5px; background: #c6f6d5; font-weight: bold;">11</div>
+                      </div>
+                      <div style="font-size: 0.8rem; color: #718096;">(41 = 3 tiere + 11 enere)</div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div style="margin-top: 15px; padding: 10px; background: #f0fff4; border-radius: 5px; border-left: 3px solid #48bb78;">
+                  <strong>Huskeregel:</strong><br>
+                  "Lån 1 fra TIEREN → Giv 10 til ENEREN"<br>
+                  <span style="font-size: 0.9rem; color: #718096;">Tieren bliver 1 mindre, eneren bliver 10 større</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="step-explanation" style="background: #fffaf0; border-left-color: #f6ad55;">
+              <div class="step-title"><span class="step-number">3</span> Trin for trin - Start fra højre</div>
+              <div class="step-content">
+                <strong>Start med ENERNE og arbejd mod venstre:</strong><br><br>
+                
+                <div style="display: flex; align-items: flex-start; gap: 15px; flex-wrap: wrap;">
+                  <!-- Trin 1 -->
+                  <div style="flex: 1; min-width: 200px; background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px;">
+                    <div style="font-weight: bold; color: #4299e1; margin-bottom: 5px;">Enere</div>
+                    <div>${digits1[digits1.length-1] || 0} - ${digits2[digits2.length-1] || 0}</div>
+                    ${digits1[digits1.length-1] < digits2[digits2.length-1] ? 
+                      '<div style="color: #f56565; font-size: 0.9rem;">→ Lån fra tierne!</div>' : 
+                      '<div style="color: #48bb78; font-size: 0.9rem;">→ Træk fra</div>'}
+                  </div>
+                  
+                  <!-- Trin 2 -->
+                  <div style="flex: 1; min-width: 200px; background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px;">
+                    <div style="font-weight: bold; color: #4299e1; margin-bottom: 5px;">Tiere</div>
+                    <div>${digits1.length > 1 ? digits1[digits1.length-2] : 0} - ${digits2.length > 1 ? digits2[digits2.length-2] : 0}</div>
+                    <div style="color: #718096; font-size: 0.9rem;">→ Husk evt. låning</div>
+                  </div>
+                  
+                  <!-- Trin 3 -->
+                  <div style="flex: 1; min-width: 200px; background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px;">
+                    <div style="font-weight: bold; color: #4299e1; margin-bottom: 5px;">Hundreder</div>
+                    <div>${digits1.length > 2 ? digits1[digits1.length-3] : 0} - ${digits2.length > 2 ? digits2[digits2.length-3] : 0}</div>
+                    <div style="color: #718096; font-size: 0.9rem;">→ Fortsæt mod venstre</div>
+                  </div>
+                </div>
               </div>
             </div>
           `;
         } else {
-          stepsHTML += `
-            <div class="step-explanation" style="margin-bottom: 10px;">
-              <div class="step-title"><span class="step-number">${index + 1}</span> ${placeName}</div>
+          kolonneHTML += `
+            <div class="step-explanation" style="background: #f0fff4; border-left-color: #48bb78;">
+              <div class="step-title"><span class="step-number">2</span> Ingen låning nødvendig</div>
               <div class="step-content">
-                ${step.d1AfterBorrow} - ${step.digit2} = ${step.resultDigit}<br>
-                → Skriv ${step.resultDigit} i resultatet
+                Godt nyt! Du behøver ikke at låne, fordi hvert ciffer i øverste tal er større end det tilsvarende ciffer i nederste tal.<br>
+                Du kan bare trække hvert ciffer fra hinanden.
+              </div>
+            </div>
+            
+            <div class="step-explanation">
+              <div class="step-title"><span class="step-number">3</span> Trin for trin</div>
+              <div class="step-content">
+                <strong>Start fra HØJRE (enerne) og gå mod VENSTRE:</strong><br><br>
+                Træk hvert ciffer fra hinanden og skriv resultatet under stregen.
               </div>
             </div>
           `;
         }
-      });
-      
-      stepsHTML += '</div>';
-      
-      // Visuel demonstration af låning
-      const visualBorrowHTML = `
-        <div class="step-explanation" style="background: #f0fff4; border-left-color: #48bb78; margin-top: 20px;">
-          <div class="step-title">🎯 Låne-tricket</div>
-          <div class="step-content">
-            <div style="text-align: center; margin: 15px 0;">
-              <div class="loan-visual">
-                <div class="loan-box">4</div>
-                <div class="loan-arrow">→</div>
-                <div class="loan-box">3</div>
-                <div class="loan-arrow">+10</div>
-                <div class="loan-box" style="background: #bee3f8;">13</div>
-              </div>
-              <p style="margin-top: 10px; font-size: 0.9rem;">
-                Når vi låner: 1 fra "4" (tiere) bliver til 10 i "3" (enere)<br>
-                Resultat: 3 bliver til 13, og 4 bliver til 3
-              </p>
+        
+        kolonneHTML += `
+          <div class="step-explanation" style="background: #fffaf0; border-left-color: #f6ad55;">
+            <div class="step-title"><span class="step-number">${needBorrow ? '4' : '4'}</span> Kontroller dit svar</div>
+            <div class="step-content">
+              <strong>Sådan tjekker du om dit svar er rigtigt:</strong><br><br>
+              1. Tag dit resultat<br>
+              2. Læg ${currentTal2} til<br>
+              3. Får du ${currentTal1}?<br><br>
+              <em>Hvis ja, er dit svar korrekt!</em>
             </div>
           </div>
-        </div>
-      `;
+        `;
+      }
       
-      const hjælpHTML = `
-        ${kolonneHTML}
-        ${stepsHTML}
-        ${visualBorrowHTML}
-        
+      kolonneHTML += `
         <div style="text-align: center; margin-top: 20px;">
           <button onclick="skjulHjaelp()" class="close-hjaelp-btn">
             <i class="fas fa-times"></i> Luk hjælp
@@ -1104,7 +1199,7 @@
         </div>
       `;
       
-      hjælpContainer.innerHTML = hjælpHTML;
+      hjælpContainer.innerHTML = kolonneHTML;
       hjælpContainer.style.display = 'block';
       hjælpContainer.scrollIntoView({ behavior: 'smooth' });
     }
@@ -1239,21 +1334,14 @@
       const startTal = currentTal1;
       const slutTal = correctAnswer;
       
-      let start, slut;
-      
-      if (currentDifficulty === "let") {
-        start = Math.max(0, slutTal - 2);
-        slut = startTal + 2;
-      } else {
-        start = Math.max(0, slutTal - 2);
-        slut = startTal + 2;
-      }
+      const minTal = Math.max(0, slutTal - 3);
+      const maxTal = startTal + 3;
       
       let html = '';
       html += `<div class="tallelinje-linje"></div>`;
       
-      for (let i = start; i <= slut; i++) {
-        const position = ((i - start) / (slut - start)) * 100;
+      for (let i = minTal; i <= maxTal; i++) {
+        const position = ((i - minTal) / (maxTal - minTal)) * 100;
         
         html += `
           <div class="tallelinje-markering" style="left: ${position}%; top: 60px;">
@@ -1269,8 +1357,8 @@
       }
       
       if (currentDifficulty === "let") {
-        const startPosition = ((startTal - start) / (slut - start)) * 100;
-        const slutPosition = ((slutTal - start) / (slut - start)) * 100;
+        const startPosition = ((startTal - minTal) / (maxTal - minTal)) * 100;
+        const slutPosition = ((slutTal - minTal) / (maxTal - minTal)) * 100;
         
         html += `
           <div class="tallelinje-start" style="left: ${startPosition}%; top: 60px;">
@@ -1301,18 +1389,16 @@
       const container = document.getElementById('tallelinje');
       const startTal = currentTal1;
       const antalSkridt = currentTal2;
-      const slutTal = correctAnswer;
       
-      const start = Math.max(0, slutTal - 2);
-      const slut = startTal + 2;
+      const minTal = Math.max(0, correctAnswer - 3);
+      const maxTal = startTal + 3;
       
       const positions = {};
-      for (let i = start; i <= slut; i++) {
-        positions[i] = ((i - start) / (slut - start)) * 100;
+      for (let i = minTal; i <= maxTal; i++) {
+        positions[i] = ((i - minTal) / (maxTal - minTal)) * 100;
       }
       
       const startPosition = positions[startTal];
-      const slutPosition = positions[slutTal];
       
       const oldPrik = document.querySelector('.animation-prik');
       if (oldPrik) oldPrik.remove();
