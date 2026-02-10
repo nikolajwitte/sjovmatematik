@@ -145,12 +145,12 @@
       flex-wrap: wrap;
     }
     
-    .grupper-visual-container {
+    .tabel-visual-container {
       margin-top: 30px;
       display: none;
     }
     
-    .grupper-wrapper {
+    .tabel-wrapper {
       background: white;
       border: 2px solid #4299e1;
       border-radius: 10px;
@@ -159,33 +159,16 @@
       box-shadow: 0 10px 20px rgba(0,0,0,0.05);
     }
     
-    .grupper-visual {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
+    .tabel-grid {
+      display: grid;
+      gap: 2px;
       margin: 20px auto;
       justify-content: center;
-      max-width: 800px;
     }
     
-    .gruppe-container {
-      border: 2px solid #4299e1;
-      border-radius: 10px;
-      padding: 15px;
-      background: #ebf8ff;
-      text-align: center;
-    }
-    
-    .gruppe-grid {
-      display: grid;
-      gap: 5px;
-      margin: 10px 0;
-      justify-content: center;
-    }
-    
-    .punkt {
-      width: 25px;
-      height: 25px;
+    .cirkel {
+      width: 30px;
+      height: 30px;
       background: #4299e1;
       border-radius: 50%;
       display: flex;
@@ -196,24 +179,14 @@
       font-weight: bold;
     }
     
-    .gruppe-label {
-      font-weight: bold;
-      color: #2d3748;
-      margin-top: 10px;
-      font-size: 1.1rem;
-    }
-    
-    .grupper-explanation {
+    .tabel-explanation {
       text-align: center;
       margin-top: 15px;
       font-size: 1.1rem;
       color: #4a5568;
-      background: #f7fafc;
-      padding: 15px;
-      border-radius: 8px;
     }
     
-    .grupper-knapper {
+    .tabel-knapper {
       display: flex;
       gap: 15px;
       justify-content: center;
@@ -221,7 +194,7 @@
       flex-wrap: wrap;
     }
     
-    .grupper-knapper button {
+    .tabel-knapper button {
       min-width: 180px;
       padding: 12px 20px;
     }
@@ -331,14 +304,14 @@
     .gange-tabel-visual {
       display: grid;
       grid-template-columns: repeat(11, 1fr);
-      gap: 3px;
+      gap: 1px;
       margin: 20px auto;
-      max-width: 500px;
+      max-width: 400px;
     }
     
     .gange-celle {
-      width: 35px;
-      height: 35px;
+      width: 32px;
+      height: 32px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -346,7 +319,7 @@
       background: white;
       font-weight: bold;
       position: relative;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
     }
     
     .gange-celle.header {
@@ -359,14 +332,7 @@
       background: #c6f6d5;
       border-color: #48bb78;
       font-weight: bold;
-      transform: scale(1.05);
       z-index: 2;
-    }
-    
-    .gange-celle.result {
-      background: #fed7d7;
-      border-color: #f56565;
-      font-weight: bold;
     }
     
     .gange-celle.hidden {
@@ -375,26 +341,22 @@
     }
     
     @media (max-width: 768px) {
-      .grupper-visual {
-        gap: 10px;
+      .tabel-grid {
+        gap: 2px;
       }
       
-      .punkt {
-        width: 20px;
-        height: 20px;
+      .cirkel {
+        width: 25px;
+        height: 25px;
         font-size: 10px;
       }
       
-      .gruppe-container {
-        padding: 10px;
-      }
-      
-      .grupper-knapper {
+      .tabel-knapper {
         flex-direction: column;
         align-items: center;
       }
       
-      .grupper-knapper button {
+      .tabel-knapper button {
         width: 90%;
         margin-bottom: 10px;
       }
@@ -461,7 +423,7 @@
       
       .gange-tabel-visual {
         grid-template-columns: repeat(11, 1fr);
-        max-width: 350px;
+        max-width: 330px;
       }
       
       .gange-celle {
@@ -508,12 +470,12 @@
         <div id="hjaelpeKnapper" style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;"></div>
       </div>
       
-      <div id="grupperContainer" class="grupper-visual-container">
-        <h3>Grupper - Se hvad gangestykket betyder:</h3>
-        <div class="grupper-wrapper">
-          <div id="grupperVisual" class="grupper-visual"></div>
-          <div id="grupperExplanation" class="grupper-explanation"></div>
-          <div class="grupper-knapper"></div>
+      <div id="tabelContainer" class="tabel-visual-container">
+        <h3>Cirkeltabel - Se hvad gangestykket betyder:</h3>
+        <div class="tabel-wrapper">
+          <div id="tabelGrid" class="tabel-grid"></div>
+          <div id="tabelExplanation" class="tabel-explanation"></div>
+          <div class="tabel-knapper"></div>
         </div>
       </div>
       
@@ -674,7 +636,7 @@
       updateStatsDisplay();
       genererOpgave();
       opdaterHjaelpeKnapper();
-      document.getElementById('grupperContainer').style.display = 'none';
+      document.getElementById('tabelContainer').style.display = 'none';
       document.getElementById('hjaelpContainer').style.display = 'none';
       document.getElementById('gangeTabelContainer').style.display = 'none';
       saveUserData();
@@ -685,8 +647,8 @@
       
       if (currentDifficulty === "let") {
         knapContainer.innerHTML = `
-          <button onclick="visGrupper()" class="button" style="background: #4299e1; color: white; flex: 1; min-width: 150px;">
-            <i class="fas fa-th-large"></i> Vis grupper
+          <button onclick="visCirkelTabel()" class="button" style="background: #4299e1; color: white; flex: 1; min-width: 150px;">
+            <i class="fas fa-circle"></i> Vis cirkeltabel
           </button>
           <button onclick="visGangeTabel()" class="button" style="background: #90cdf4; color: white; flex: 1; min-width: 150px;">
             <i class="fas fa-table"></i> Gange-tabel
@@ -701,8 +663,8 @@
         knapContainer.style.display = 'flex';
       } else if (currentDifficulty === "mellem") {
         knapContainer.innerHTML = `
-          <button onclick="visGrupper()" class="button" style="background: #4299e1; color: white; flex: 1; min-width: 150px;">
-            <i class="fas fa-th-large"></i> Vis grupper
+          <button onclick="visCirkelTabel()" class="button" style="background: #4299e1; color: white; flex: 1; min-width: 150px;">
+            <i class="fas fa-circle"></i> Vis cirkeltabel
           </button>
           <button onclick="visGangeTabel()" class="button" style="background: #90cdf4; color: white; flex: 1; min-width: 150px;">
             <i class="fas fa-table"></i> Gange-tabel
@@ -801,7 +763,7 @@
       
       document.getElementById('svarInput').value = '';
       document.getElementById('svarInput').focus();
-      document.getElementById('grupperContainer').style.display = 'none';
+      document.getElementById('tabelContainer').style.display = 'none';
       document.getElementById('hjaelpContainer').style.display = 'none';
       document.getElementById('gangeTabelContainer').style.display = 'none';
     }
@@ -829,11 +791,9 @@
             <strong>Metode: Start med det første tal og tæl i tabellerne</strong><br><br>
             
             For ${currentTal1} × ${currentTal2}:<br>
-            ${currentTal1} - ${currentTal1*2} - ${currentTal1*3} - ${currentTal1*4} - ${currentTal1*5} ...<br><br>
+            Tag tallet ${currentTal1} og tæl i ${currentTal1}'er tabellen ${currentTal2} trin frem<br><br>
             
-            Stop efter ${currentTal2} trin: <strong>${correctAnswer}</strong><br><br>
-            
-            <em>Eksempel: 5 × 3 → 5 - 10 - 15</em>
+            <em>Eksempel: 5 × 3 → tæl 5, 10, 15</em>
           </div>
         </div>
         
@@ -860,18 +820,16 @@
             <strong>Sådan tjekker du om dit svar er rimeligt:</strong><br><br>
             
             <div style="margin: 10px 0;">
-              <strong>Metode 1: Rund til nærmeste 10'ere</strong><br>
-              Rund ${currentTal1} og ${currentTal2} til nærmeste 10'ere og gange:<br>
-              ${Math.round(currentTal1/10)*10} × ${Math.round(currentTal2/10)*10} ≈ ${Math.round(currentTal1/10)*10 * Math.round(currentTal2/10)*10}<br>
-              Dit svar skal være tæt på dette tal!
+              <strong>Rund af og gange i hovedet:</strong><br>
+              ${getRoundedExample()}
             </div>
             
+            ${currentDifficulty === "let" || currentDifficulty === "mellem" ? `
             <div style="margin: 10px 0;">
-              <strong>Metode 2: Gange i hovedet</strong><br>
-              Prøv med lidt mindre tal først:<br>
-              ${Math.floor(currentTal1/10)*10} × ${Math.floor(currentTal2/10)*10} = ${Math.floor(currentTal1/10)*10 * Math.floor(currentTal2/10)*10}<br>
-              Så læg resten til
+              <strong>Brug gangetabellen:</strong><br>
+              Kan du finde ${currentTal1} × ${currentTal2} i gangetabellen?
             </div>
+            ` : ''}
           </div>
         </div>
         
@@ -887,8 +845,36 @@
       hjælpContainer.scrollIntoView({ behavior: 'smooth' });
     }
 
+    function getRoundedExample() {
+      let rounded1, rounded2, explanation;
+      
+      if (currentTal1 < 10 && currentTal2 < 10) {
+        // For små tal - ikke rund af til 10
+        return "For små tal til at runde af. Prøv at tælle i tabellerne i stedet.";
+      } else if (currentTal1 < 100 && currentTal2 < 100) {
+        // For mellemstore tal - rund af til nærmeste 10
+        rounded1 = Math.round(currentTal1/10)*10;
+        rounded2 = Math.round(currentTal2/10)*10;
+        explanation = `Rund ${currentTal1} til ${rounded1} og ${currentTal2} til ${rounded2}<br>${rounded1} × ${rounded2} ≈ ${rounded1 * rounded2}`;
+      } else if (currentTal1 < 1000 && currentTal2 < 1000) {
+        // For større tal - rund af til nærmeste 100
+        rounded1 = Math.round(currentTal1/100)*100;
+        rounded2 = Math.round(currentTal2/100)*100;
+        explanation = `Rund ${currentTal1} til ${rounded1} og ${currentTal2} til ${rounded2}<br>${rounded1} × ${rounded2} ≈ ${rounded1 * rounded2}`;
+      } else {
+        // For meget store tal - rund af til nærmeste 1000
+        rounded1 = Math.round(currentTal1/1000)*1000;
+        rounded2 = Math.round(currentTal2/1000)*1000;
+        explanation = `Rund ${currentTal1} til ${rounded1} og ${currentTal2} til ${rounded2}<br>${rounded1} × ${rounded2} ≈ ${rounded1 * rounded2}`;
+      }
+      
+      return explanation;
+    }
+
     function visKolonneHjaelp() {
       const hjælpContainer = document.getElementById('hjaelpContainer');
+      const num1Str = currentTal1.toString();
+      const num2Str = currentTal2.toString();
       
       // For let og mellem - simpel gangemetode
       if (currentDifficulty === "let" || currentDifficulty === "mellem") {
@@ -901,7 +887,9 @@
             <div style="text-align: right;">${currentTal1}</div>
             <div style="text-align: right;">× ${currentTal2}</div>
             <div style="border-top: 2px solid #4a5568; margin: 5px 0;"></div>
-            <div style="text-align: right; color: #48bb78; font-weight: bold;">${correctAnswer}</div>
+            ${currentDifficulty === "let" ? 
+              `<div style="text-align: right; color: #48bb78; font-weight: bold;">${correctAnswer}</div>` : 
+              `<div style="text-align: right; height: 20px;">&nbsp;</div>`}
           </div>
           
           <div class="step-explanation">
@@ -944,68 +932,96 @@
               Skriv det største tal øverst, og det mindste tal nederst. Så er det nemmest at regne.
             </div>
           </div>
-          
-          <div class="step-explanation" style="background: #c6f6d5; border-left-color: #48bb78;">
-            <div class="step-title"><span class="step-number">2</span> Gange med enerne først</div>
-            <div class="step-content">
-              <strong>Trin 1: Gange ${currentTal1} med ${num2Str[num2Str.length-1]} (enerne)</strong><br>
-              ${currentTal1} × ${num2Str[num2Str.length-1]} = ${currentTal1 * parseInt(num2Str[num2Str.length-1])}<br>
-              Skriv dette tal under stregen.
-            </div>
-          </div>
         `;
         
-        if (num2Str.length > 1) {
+        // Hvis det andet tal kun har et ciffer
+        if (num2Str.length === 1) {
           hjælpHTML += `
+            <div class="step-explanation" style="background: #c6f6d5; border-left-color: #48bb78;">
+              <div class="step-title"><span class="step-number">2</span> Gange hele tallet med enerne</div>
+              <div class="step-content">
+                ${currentTal1} × ${currentTal2} = ${correctAnswer}<br><br>
+                
+                ${num1Str.length > 1 ? `
+                <strong>Hvordan regner man det?</strong><br>
+                • ${num1Str[num1Str.length-1]} × ${currentTal2} = ${parseInt(num1Str[num1Str.length-1]) * currentTal2} (skriv ${parseInt(num1Str[num1Str.length-1]) * currentTal2 % 10}, husk ${Math.floor((parseInt(num1Str[num1Str.length-1]) * currentTal2) / 10)} i mente)<br>
+                • ${num1Str.length > 1 ? num1Str[num1Str.length-2] : ''} × ${currentTal2} = ${num1Str.length > 1 ? parseInt(num1Str[num1Str.length-2]) * currentTal2 : 0} ${num1Str.length > 1 ? `plus ${Math.floor((parseInt(num1Str[num1Str.length-1]) * currentTal2) / 10)} fra før = ${num1Str.length > 1 ? parseInt(num1Str[num1Str.length-2]) * currentTal2 + Math.floor((parseInt(num1Str[num1Str.length-1]) * currentTal2) / 10) : 0}` : ''}<br>
+                ` : ''}
+              </div>
+            </div>
+          `;
+        } else {
+          // Hvis det andet tal har flere cifre
+          hjælpHTML += `
+            <div class="step-explanation" style="background: #c6f6d5; border-left-color: #48bb78;">
+              <div class="step-title"><span class="step-number">2</span> Gange med enerne først</div>
+              <div class="step-content">
+                <strong>Gange ${currentTal1} med ${num2Str[num2Str.length-1]} (enerne):</strong><br>
+                ${currentTal1} × ${num2Str[num2Str.length-1]}<br><br>
+                
+                <strong>Sådan gør du:</strong><br>
+                • Gange hvert ciffer i ${currentTal1} med ${num2Str[num2Str.length-1]}<br>
+                • Skriv resultatet under stregen<br>
+                • Husk at lægge tal i mente hvis resultatet er over 9
+              </div>
+            </div>
+            
             <div class="step-explanation" style="background: #bee3f8; border-left-color: #4299e1;">
               <div class="step-title"><span class="step-number">3</span> Gange med tierne</div>
               <div class="step-content">
-                <strong>Trin 2: Gange ${currentTal1} med ${num2Str[num2Str.length-2]} (tierne)</strong><br>
-                ${currentTal1} × ${num2Str[num2Str.length-2]}0 = ${currentTal1 * parseInt(num2Str[num2Str.length-2]) * 10}<br>
-                Skriv dette tal under det første, men ryk en plads til venstre (fordi det er tierne).
+                <strong>Gange ${currentTal1} med ${num2Str[num2Str.length-2]} (tierne):</strong><br>
+                ${currentTal1} × ${num2Str[num2Str.length-2]} (og så sæt et 0 efter, fordi det er tierne)<br><br>
+                
+                <strong>Sådan gør du:</strong><br>
+                • Gange hvert ciffer i ${currentTal1} med ${num2Str[num2Str.length-2]}<br>
+                • Skriv resultatet under det første, men ryk en plads til venstre<br>
+                • Husk: Når du ganger med tierne, kommer der altid et 0 på resultatet
               </div>
             </div>
           `;
-        }
-        
-        if (num2Str.length > 2) {
-          hjælpHTML += `
-            <div class="step-explanation" style="background: #fed7d7; border-left-color: #f56565;">
-              <div class="step-title"><span class="step-number">4</span> Gange med hundrederne</div>
-              <div class="step-content">
-                <strong>Trin 3: Gange ${currentTal1} med ${num2Str[num2Str.length-3]} (hundrederne)</strong><br>
-                ${currentTal1} × ${num2Str[num2Str.length-3]}00 = ${currentTal1 * parseInt(num2Str[num2Str.length-3]) * 100}<br>
-                Skriv dette tal under de andre, men ryk to pladser til venstre (fordi det er hundreder).
-              </div>
-            </div>
-          `;
-        }
-        
-        hjælpHTML += `
-          <div class="step-explanation" style="background: #fffaf0; border-left-color: #f6ad55;">
-            <div class="step-title"><span class="step-number">${num2Str.length > 1 ? '5' : '3'}</span> Læg alle del-resultaterne sammen</div>
-            <div class="step-content">
-              <strong>Nu skal du plusse alle del-resultaterne sammen:</strong><br><br>
-              
-              ${Array.from({length: num2Str.length}, (_, i) => {
-                const digit = parseInt(num2Str[num2Str.length-1-i]);
-                const value = currentTal1 * digit * Math.pow(10, i);
-                return `${currentTal1} × ${digit}${'0'.repeat(i)} = ${value}`;
-              }).join('<br>+ ')}<br>
-              
-              <div style="border-top: 2px solid #4a5568; margin-top: 10px; padding-top: 10px; font-weight: bold; font-size: 1.2rem;">
-                I ALT: ${formatNumber(correctAnswer)}
-              </div>
-            </div>
-          </div>
           
+          if (num2Str.length > 2) {
+            hjælpHTML += `
+              <div class="step-explanation" style="background: #fed7d7; border-left-color: #f56565;">
+                <div class="step-title"><span class="step-number">4</span> Gange med hundrederne</div>
+                <div class="step-content">
+                  <strong>Gange ${currentTal1} med ${num2Str[num2Str.length-3]} (hundrederne):</strong><br>
+                  ${currentTal1} × ${num2Str[num2Str.length-3]} (og så sæt to 0'er efter, fordi det er hundreder)<br><br>
+                  
+                  <strong>Sådan gør du:</strong><br>
+                  • Gange hvert ciffer i ${currentTal1} med ${num2Str[num2Str.length-3]}<br>
+                  • Skriv resultatet under de andre, men ryk to pladser til venstre<br>
+                  • Husk: Når du ganger med hundreder, kommer der altid to 0'er på resultatet
+                </div>
+              </div>
+            `;
+          }
+          
+          hjælpHTML += `
+            <div class="step-explanation" style="background: #fffaf0; border-left-color: #f6ad55;">
+              <div class="step-title"><span class="step-number">${num2Str.length > 2 ? '5' : '4'}</span> Læg alle del-resultaterne sammen</div>
+              <div class="step-content">
+                <strong>Nu skal du plusse alle del-resultaterne sammen:</strong><br><br>
+                
+                ${Array.from({length: num2Str.length}, (_, i) => {
+                  const digit = parseInt(num2Str[num2Str.length-1-i]);
+                  const value = currentTal1 * digit * Math.pow(10, i);
+                  return `${currentTal1} × ${digit}${'0'.repeat(i)}`;
+                }).join('<br>+ ')}<br>
+              </div>
+            </div>
+          `;
+        }
+        
+        // Tilføj tjek-metode uden at vise svaret
+        hjælpHTML += `
           <div class="step-explanation">
-            <div class="step-title"><span class="step-number">${num2Str.length > 1 ? '6' : '4'}</span> Tjek om dit svar giver mening</div>
+            <div class="step-title"><span class="step-number">${num2Str.length === 1 ? '3' : (num2Str.length > 2 ? '6' : '5')}</span> Tjek om dit svar giver mening</div>
             <div class="step-content">
-              <strong>Rund til nærmeste 10'ere og gange:</strong><br>
-              ${Math.round(currentTal1/10)*10} × ${Math.round(currentTal2/10)*10} ≈ ${Math.round(currentTal1/10)*10 * Math.round(currentTal2/10)*10}<br><br>
+              <strong>Rund af og gange i hovedet:</strong><br>
+              ${getRoundedExampleForCheck()}<br><br>
               
-              Dit svar ${formatNumber(correctAnswer)} skal være tæt på dette tal!
+              Dit svar skal være tæt på dette tal!
             </div>
           </div>
           
@@ -1023,95 +1039,119 @@
       hjælpContainer.scrollIntoView({ behavior: 'smooth' });
     }
 
+    function getRoundedExampleForCheck() {
+      let rounded1, rounded2;
+      
+      if (currentTal1 < 100 && currentTal2 < 100) {
+        // Rund af til nærmeste 10, men ikke til 0 for små tal
+        rounded1 = Math.round(currentTal1/10)*10;
+        rounded2 = Math.round(currentTal2/10)*10;
+        
+        // Hvis det bliver 0, brug et andet tal
+        if (rounded1 === 0) rounded1 = Math.max(10, Math.floor(currentTal1/10)*10);
+        if (rounded2 === 0) rounded2 = Math.max(10, Math.floor(currentTal2/10)*10);
+        
+        return `Rund ${currentTal1} til ${rounded1} og ${currentTal2} til ${rounded2}<br>${rounded1} × ${rounded2} ≈ ${rounded1 * rounded2}`;
+      } else if (currentTal1 < 1000 && currentTal2 < 1000) {
+        // Rund af til nærmeste 100
+        rounded1 = Math.round(currentTal1/100)*100;
+        rounded2 = Math.round(currentTal2/100)*100;
+        
+        // Hvis det bliver 0, brug et andet tal
+        if (rounded1 === 0) rounded1 = Math.max(100, Math.floor(currentTal1/100)*100);
+        if (rounded2 === 0) rounded2 = Math.max(100, Math.floor(currentTal2/100)*100);
+        
+        return `Rund ${currentTal1} til ${rounded1} og ${currentTal2} til ${rounded2}<br>${rounded1} × ${rounded2} ≈ ${rounded1 * rounded2}`;
+      } else {
+        // Rund af til nærmeste 1000
+        rounded1 = Math.round(currentTal1/1000)*1000;
+        rounded2 = Math.round(currentTal2/1000)*1000;
+        
+        // Hvis det bliver 0, brug et andet tal
+        if (rounded1 === 0) rounded1 = Math.max(1000, Math.floor(currentTal1/1000)*1000);
+        if (rounded2 === 0) rounded2 = Math.max(1000, Math.floor(currentTal2/1000)*1000);
+        
+        return `Rund ${currentTal1} til ${rounded1} og ${currentTal2} til ${rounded2}<br>${rounded1} × ${rounded2} ≈ ${rounded1 * rounded2}`;
+      }
+    }
+
     function skjulHjaelp() {
       document.getElementById('hjaelpContainer').style.display = 'none';
     }
 
-    function visGrupper() {
+    function visCirkelTabel() {
       if (currentDifficulty !== "let" && currentDifficulty !== "mellem") {
-        showFeedback('Gruppe-visualisering er kun tilgængelig i Let og Mellem', false);
+        showFeedback('Cirkeltabel er kun tilgængelig i Let og Mellem', false);
         return;
       }
       
-      document.getElementById('grupperContainer').style.display = 'block';
-      tegnGrupper();
-      opdaterGrupperKnapper();
+      document.getElementById('tabelContainer').style.display = 'block';
+      tegnCirkelTabel();
+      opdaterTabelKnapper();
       skjulHjaelp();
     }
 
-    function tegnGrupper() {
-      const container = document.getElementById('grupperVisual');
-      const explanation = document.getElementById('grupperExplanation');
+    function tegnCirkelTabel() {
+      const container = document.getElementById('tabelGrid');
+      const explanation = document.getElementById('tabelExplanation');
       
-      // Begræns antallet af grupper/punkter for klarhed
-      const maxPunkter = 50;
-      const maxGrupper = 6;
+      // Begræns størrelsen for klarhed
+      const maxRows = 8;
+      const maxCols = 8;
       
-      if (currentTal1 * currentTal2 > maxPunkter || currentTal1 > maxGrupper || currentTal2 > maxGrupper) {
+      const rows = Math.min(currentTal1, maxRows);
+      const cols = Math.min(currentTal2, maxCols);
+      
+      if (currentTal1 * currentTal2 > 64) { // 8x8 = 64
         container.innerHTML = `
           <div style="text-align: center; padding: 40px; color: #718096; width: 100%;">
             <i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 20px;"></i>
-            <h3>For mange at vise klart!</h3>
-            <p>${currentTal1} × ${currentTal2} = ${currentTal1 * currentTal2} ville være for mange punkter at vise.</p>
+            <h3>For mange cirkler at vise!</h3>
+            <p>${currentTal1} × ${currentTal2} = ${currentTal1 * currentTal2} ville være for mange cirkler at vise klart.</p>
             <p>Prøv i stedet at bruge "Brug tabellerne" eller "Gange-tabel" hjælp.</p>
           </div>
         `;
         explanation.innerHTML = `
-          ${currentTal1} grupper med ${currentTal2} i hver = ${currentTal1 * currentTal2} totalt
+          ${currentTal1} rækker med ${currentTal2} cirkler i hver = ${currentTal1 * currentTal2} cirkler totalt
         `;
         return;
       }
       
-      // Bestem hvilken vej der er nemmest at vise
-      const showRows = currentTal1;  // Antal grupper
-      const showCols = currentTal2;  // Antal punkter i hver gruppe
+      // Opret tabel med cirkler
+      container.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+      container.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
       
       let html = '';
-      let totalPoints = 0;
+      let count = 0;
       
-      // Lav en boks for hver gruppe
-      for (let group = 0; group < showRows; group++) {
-        let groupHTML = '<div class="gruppe-grid" style="grid-template-columns: repeat(' + showCols + ', 1fr);">';
-        
-        for (let i = 0; i < showCols; i++) {
-          totalPoints++;
-          groupHTML += `<div class="punkt">${totalPoints}</div>`;
+      for (let i = 0; i < rows; i++) {
+        for (let j = 0; j < cols; j++) {
+          count++;
+          html += `<div class="cirkel">${count <= 99 ? count : ''}</div>`;
         }
-        
-        groupHTML += '</div>';
-        
-        html += `
-          <div class="gruppe-container">
-            <div class="gruppe-label">Gruppe ${group + 1}</div>
-            ${groupHTML}
-            <div style="margin-top: 5px; font-size: 0.9rem; color: #4a5568;">
-              ${showCols} punkter
-            </div>
-          </div>
-        `;
       }
       
       container.innerHTML = html;
       
       explanation.innerHTML = `
         <strong>${currentTal1} × ${currentTal2} = ${currentTal1 * currentTal2}</strong><br>
-        Der er ${currentTal1} grupper med ${currentTal2} punkter i hver.<br>
-        I alt: ${currentTal1} grupper × ${currentTal2} punkter = ${currentTal1 * currentTal2} punkter
+        Der er ${rows} rækker med ${cols} cirkler i hver.<br>
+        I alt: ${rows} rækker × ${cols} cirkler = ${currentTal1 * currentTal2} cirkler
       `;
     }
 
-    function opdaterGrupperKnapper() {
-      const knapContainer = document.querySelector('.grupper-knapper');
+    function opdaterTabelKnapper() {
+      const knapContainer = document.querySelector('.tabel-knapper');
       
       knapContainer.innerHTML = `
-        <button onclick="skjulGrupper()" class="close-hjaelp-btn" style="min-width: 180px; padding: 12px 20px;">
-          <i class="fas fa-times"></i> Luk grupper
+        <button onclick="skjulCirkelTabel()" class="close-hjaelp-btn" style="min-width: 180px; padding: 12px 20px;">
+          <i class="fas fa-times"></i> Luk cirkeltabel
         </button>
       `;
     }
 
-    function skjulGrupper() {
-      document.getElementById('grupperContainer').style.display = 'none';
+    function skjulCirkelTabel() {
+      document.getElementById('tabelContainer').style.display = 'none';
     }
 
     function visGangeTabel() {
@@ -1137,18 +1177,16 @@
         html += `<div class="gange-celle header">${i}</div>`; // Venstre header
         for (let j = 1; j <= 10; j++) {
           const isActive = (i === currentTal1 && j === currentTal2) || (i === currentTal2 && j === currentTal1);
-          const isResult = i * j === correctAnswer;
           
           let className = 'gange-celle';
-          if (isActive) className += ' active';
-          if (isResult && isActive) className += ' result';
+          if (isActive && currentDifficulty === "let") className += ' active';
           
-          // Vis kun svaret direkte i Let niveau
-          if (currentDifficulty === "let" && isActive) {
+          // I Let niveau vises svaret, i Mellem ikke
+          if (currentDifficulty === "let") {
             html += `<div class="${className}">${i * j}</div>`;
           } else {
-            // I Mellem niveau skal de lede efter svaret
-            html += `<div class="${className} ${isActive && currentDifficulty === "mellem" ? '' : ''}">${i * j}</div>`;
+            // I Mellem niveau - bare en normal tabel
+            html += `<div class="${className}">${i * j}</div>`;
           }
         }
       }
