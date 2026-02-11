@@ -297,18 +297,18 @@
     .gange-tabel-visual {
       display: grid;
       grid-template-columns: repeat(11, 1fr);
-      gap: 1px;
-      margin: 20px auto;
-      max-width: 400px;
+      gap: 2px;
+      margin: 15px auto;
+      max-width: 380px;
       background: #f7fafc;
-      padding: 10px;
+      padding: 8px;
       border-radius: 12px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
     
     .gange-celle {
-      width: 32px;
-      height: 32px;
+      width: 30px;
+      height: 30px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -326,6 +326,10 @@
       border-radius: 6px;
     }
     
+    .gange-celle.header.top {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
     .gange-celle.active {
       background: linear-gradient(135deg, #f6e05e 0%, #fbbf24 100%);
       border: 2px solid #f59e0b;
@@ -333,6 +337,14 @@
       transform: scale(1.05);
       z-index: 2;
       box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+    }
+    
+    .tabel-forklaring {
+      margin-top: 15px;
+      padding: 15px;
+      background: #fffaf0;
+      border-left: 4px solid #ed8936;
+      border-radius: 8px;
     }
     
     @media (max-width: 768px) {
@@ -417,15 +429,15 @@
       
       .gange-tabel-visual {
         grid-template-columns: repeat(11, 1fr);
-        max-width: 330px;
+        max-width: 300px;
         gap: 1px;
-        padding: 8px;
+        padding: 5px;
       }
       
       .gange-celle {
-        width: 26px;
-        height: 26px;
-        font-size: 0.75rem;
+        width: 24px;
+        height: 24px;
+        font-size: 0.7rem;
       }
     }
     
@@ -543,8 +555,20 @@
       }
     };
 
+    // Prioriteret rækkefølge for tabeller (nemmest først)
+    const tablePriority = [1, 10, 2, 5, 3, 4, 9, 6, 7, 8];
+
     function formatNumber(num) {
       return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+
+    function getBestTable(a, b) {
+      // Vælg den tabel der er nemmest
+      if (tablePriority.indexOf(a) < tablePriority.indexOf(b)) {
+        return a;
+      } else {
+        return b;
+      }
     }
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -755,14 +779,18 @@
     function visSimpelHjaelp() {
       const hjælpContainer = document.getElementById('hjaelpContainer');
       
-      // Lav tælle-frem-visning med de rigtige tal
+      // Find den bedste tabel at bruge
+      const bestTable = getBestTable(currentTal1, currentTal2);
+      const otherNumber = bestTable === currentTal1 ? currentTal2 : currentTal1;
+      
+      // Lav tælle-frem-visning med den bedste tabel
       let tælFrem = '';
-      for (let i = 1; i <= currentTal2; i++) {
-        tælFrem += currentTal1 * i;
-        if (i < currentTal2) tælFrem += ' → ';
+      for (let i = 1; i <= otherNumber; i++) {
+        tælFrem += bestTable * i;
+        if (i < otherNumber) tælFrem += ' → ';
       }
       
-      const hjælpHTML = `
+      let hjælpHTML = `
         <div class="kolonne-title">
           <i class="fas fa-lightbulb"></i> Sådan regner du ${currentTal1} × ${currentTal2}
         </div>
@@ -771,46 +799,55 @@
           <div class="step-title"><span class="step-number">1</span> Forstå hvad gangestykket betyder</div>
           <div class="step-content">
             ${currentTal1} × ${currentTal2} betyder:<br>
-            <strong>"${currentTal1} lagt sammen med sig selv ${currentTal2} gange"</strong><br><br>
-            Eller omvendt: "${currentTal2} lagt sammen med sig selv ${currentTal1} gange"
+            <strong>"${currentTal1} lagt sammen med sig selv ${currentTal2} gange"</strong><br>
+            <strong>"${currentTal2} lagt sammen med sig selv ${currentTal1} gange"</strong>
           </div>
         </div>
         
         <div class="step-explanation" style="background: #c6f6d5; border-left-color: #48bb78;">
-          <div class="step-title"><span class="step-number">2</span> Brug tabellerne</div>
+          <div class="step-title"><span class="step-number">2</span> Brug den nemmeste tabel</div>
           <div class="step-content">
-            <strong>Sådan gør du med tabeller:</strong><br><br>
+            <strong>Du kan bruge både ${currentTal1}-tabellen og ${currentTal2}-tabellen.</strong><br>
+            <strong>Den nemmeste her er ${bestTable}-tabellen:</strong><br><br>
             
-            For ${currentTal1} × ${currentTal2}:<br>
-            Tag tallet ${currentTal1} og tæl i ${currentTal1}'er tabellen ${currentTal2} trin frem<br><br>
-            
+            ${bestTable} × ${otherNumber}:<br>
             <span style="font-size: 1.2rem; color: #2d3748; font-weight: bold;">
               ${tælFrem}
             </span><br><br>
             
-            <em>Svaret er det tal du når frem til: ${correctAnswer}</em>
+            ${currentDifficulty === "let" ? 
+              `<em>Svaret er det tal du når frem til: ${correctAnswer}</em>` : 
+              `<em>Svaret er det tal du når frem til, når du har talt ${otherNumber} trin.</em>`}
           </div>
         </div>
-        
-        <div class="step-explanation" style="background: #fed7d7; border-left-color: #f56565;">
-          <div class="step-title"><span class="step-number">3</span> Smart tricks til gange</div>
-          <div class="step-content">
-            <strong>Når du ganger med 10:</strong><br>
-            Kommer der et 0 på (7 × 10 = 70, 39 × 10 = 390)<br><br>
-            
-            <strong>Når du ganger med 5:</strong><br>
-            Svarer til at gange med 10 og tage halvdelen (6 × 5 = 30, 8 × 5 = 40)<br><br>
-            
-            <strong>Når du ganger med 2:</strong><br>
-            Fordobler du tallet (7 × 2 = 14, 23 × 2 = 46)<br><br>
-            
-            <strong>Når du ganger med 4:</strong><br>
-            Dobbelt-dobbel (gange med 2, og så med 2 igen)
+      `;
+      
+      // Kun vis smart tricks i Let og Mellem
+      if (currentDifficulty === "let" || currentDifficulty === "mellem") {
+        hjælpHTML += `
+          <div class="step-explanation" style="background: #fed7d7; border-left-color: #f56565;">
+            <div class="step-title"><span class="step-number">3</span> Smart tricks til gange</div>
+            <div class="step-content">
+              <strong>Når du ganger med 10:</strong><br>
+              Kommer der et 0 på (7 × 10 = 70, 39 × 10 = 390)<br><br>
+              
+              <strong>Når du ganger med 5:</strong><br>
+              Svarer til at gange med 10 og tage halvdelen (6 × 5 = 30, 8 × 5 = 40)<br><br>
+              
+              <strong>Når du ganger med 2:</strong><br>
+              Fordobler du tallet (7 × 2 = 14, 23 × 2 = 46)<br><br>
+              
+              <strong>Når du ganger med 4:</strong><br>
+              Dobbelt-dobbel (gange med 2, og så med 2 igen)
+            </div>
           </div>
-        </div>
-        
+        `;
+      }
+      
+      // Tjek dit svar - uden at give svaret i Mellem
+      hjælpHTML += `
         <div class="step-explanation" style="background: #fffaf0; border-left-color: #f6ad55;">
-          <div class="step-title"><span class="step-number">4</span> Tjek om dit svar giver mening</div>
+          <div class="step-title"><span class="step-number">${currentDifficulty === "let" || currentDifficulty === "mellem" ? '4' : '3'}</span> Tjek om dit svar giver mening</div>
           <div class="step-content">
             <strong>Sådan tjekker du dit svar:</strong><br><br>
             
@@ -818,10 +855,16 @@
             Find ${currentTal1} × ${currentTal2} i gangetabellen - passer det med dit svar?<br><br>
             
             <strong>Tjek med omvendt rækkefølge:</strong><br>
-            ${currentTal2} × ${currentTal1} skal give det samme: ${currentTal2} × ${currentTal1} = ${currentTal2 * currentTal1}<br><br>
+            ${currentTal2} × ${currentTal1} skal give det samme som ${currentTal1} × ${currentTal2}<br><br>
             
-            <strong>Tjek med at lægge sammen:</strong><br>
-            ${currentTal1} + ${currentTal1} + ... (${currentTal2} gange) = ${correctAnswer}
+            ${currentDifficulty === "let" ? 
+              `<strong>Tjek med at lægge sammen:</strong><br>
+              ${Array.from({length: currentTal2}, () => currentTal1).join(' + ')} = ${correctAnswer}` : 
+              currentDifficulty === "mellem" ?
+              `<strong>Tjek med at lægge sammen:</strong><br>
+              Prøv at lægge ${currentTal1} sammen ${currentTal2} gange` :
+              `<strong>Tjek med afrunding:</strong><br>
+              Prøv at runde tallene og gange i hovedet`}
           </div>
         </div>
         
@@ -956,7 +999,7 @@
           
           hjælpHTML += `
             <div class="step-explanation" style="background: #fffaf0; border-left-color: #f6ad55;">
-              <div class="step-title"><span class="step-number">${num2Str.length > 2 ? '5' : '4'}</span> Plus alle del-resultaterne sammen</div>
+              <div class="step-title"><span class="step-number">${num2Str.length > 2 ? '5' : '4'}</span> Læg alle del-resultaterne sammen</div>
               <div class="step-content">
                 <strong>Nu skal du lægge alle del-resultaterne sammen:</strong><br><br>
                 
@@ -964,16 +1007,21 @@
                   const digit = parseInt(num2Str[num2Str.length-1-i]);
                   return `${currentTal1} × ${digit}${'0'.repeat(i)} = ${currentTal1 * digit * Math.pow(10, i)}`;
                 }).join('<br>')}<br>
-                
-                <div style="border-top: 2px solid #4a5568; margin-top: 10px; padding-top: 10px; font-size: 1.2rem; font-weight: bold;">
-                  I ALT: ${correctAnswer}
-                </div>
               </div>
             </div>
           `;
         }
         
+        // Tjek dit svar - uden at vise det rigtige svar
         hjælpHTML += `
+          <div class="step-explanation">
+            <div class="step-title"><span class="step-number">${num2Str.length === 1 ? '2' : (num2Str.length > 2 ? '6' : '5')}</span> Tjek om dit svar giver mening</div>
+            <div class="step-content">
+              <strong>Rund af og gang i hovedet:</strong><br>
+              Prøv at runde tallene og gange cirka - dit svar skal være tæt på det tal.
+            </div>
+          </div>
+          
           <div style="text-align: center; margin-top: 20px;">
             <button onclick="skjulHjaelp()" class="close-hjaelp-btn">
               <i class="fas fa-times"></i> Luk hjælp
@@ -1011,7 +1059,7 @@
           Husk at det er 100'ere, så resultatet bliver ${hundreds * multiplier}00<br><br>
           
           <strong>Læg alle resultaterne sammen:</strong><br>
-          ${ones * multiplier} + ${tens * multiplier}0 + ${hundreds * multiplier}00 = ${correctAnswer}
+          ${ones * multiplier} + ${tens * multiplier}0 + ${hundreds * multiplier}00 = ${currentTal1 * multiplier}
         `;
       } else if (num1Str.length === 2) {
         const tens = parseInt(num1Str[0]);
@@ -1026,7 +1074,7 @@
           Husk at det er 10'ere, så resultatet bliver ${tens * multiplier}0<br><br>
           
           <strong>Læg alle resultaterne sammen:</strong><br>
-          ${ones * multiplier} + ${tens * multiplier}0 = ${correctAnswer}
+          ${ones * multiplier} + ${tens * multiplier}0 = ${currentTal1 * multiplier}
         `;
       }
       
@@ -1104,7 +1152,7 @@
       
       // Opret tabel med cirkler (kun prikker - ingen tal)
       container.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
-      container.style.gap = '1px';
+      container.style.gap = '2px';
       
       let html = '';
       
@@ -1148,13 +1196,7 @@
       // Opret en 10x10 gangetabel med regnbuefarver
       let html = '';
       
-      // Headers
-      html += `<div class="gange-celle header">×</div>`;
-      for (let i = 1; i <= 10; i++) {
-        html += `<div class="gange-celle header">${i}</div>`;
-      }
-      
-      // Rækker med regnbuefarver
+      // Regnbuefarver til overskrifter
       const rainbowColors = [
         'linear-gradient(135deg, #FF6B6B 0%, #FF8E8E 100%)', // rød
         'linear-gradient(135deg, #FFB347 0%, #FFA07A 100%)', // orange
@@ -1168,6 +1210,13 @@
         'linear-gradient(135deg, #2E8B57 0%, #228B22 100%)'  // mørkegrøn
       ];
       
+      // Headers - øverste række
+      html += `<div class="gange-celle header top" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">×</div>`;
+      for (let i = 1; i <= 10; i++) {
+        html += `<div class="gange-celle header top" style="background: ${rainbowColors[(i-1) % rainbowColors.length]};">${i}</div>`;
+      }
+      
+      // Rækker med farver på venstre side
       for (let i = 1; i <= 10; i++) {
         html += `<div class="gange-celle header" style="background: ${rainbowColors[(i-1) % rainbowColors.length]};">${i}</div>`;
         for (let j = 1; j <= 10; j++) {
@@ -1184,33 +1233,28 @@
       container.style.display = 'block';
       container.scrollIntoView({ behavior: 'smooth' });
       
-      // Tilføj forklaring
-      const existingExplanation = container.querySelector('.tabel-explanation');
+      // Fjern tidligere forklaring hvis den findes
+      const existingExplanation = container.querySelector('.tabel-forklaring');
       if (existingExplanation) existingExplanation.remove();
       
+      // Tilføj ny forklaring
       const explanation = document.createElement('div');
-      explanation.className = 'step-explanation tabel-explanation';
+      explanation.className = 'tabel-forklaring';
       
       if (currentDifficulty === "let") {
         explanation.innerHTML = `
-          <div class="step-title"><i class="fas fa-info-circle"></i> Sådan bruger du gangetabellen</div>
-          <div class="step-content">
-            <strong>Find ${currentTal1} i venstre kolonne og ${currentTal2} i øverste række.</strong><br>
-            Celle hvor de mødes viser svaret: <span style="color: #48bb78; font-weight: bold;">${currentTal1} × ${currentTal2} = ${correctAnswer}</span><br><br>
-            
-            <strong>Husk:</strong> ${currentTal2} × ${currentTal1} giver det samme resultat!
-          </div>
+          <strong><i class="fas fa-info-circle"></i> Sådan bruger du gangetabellen</strong><br><br>
+          <strong>Find ${currentTal1} i venstre kolonne og ${currentTal2} i øverste række.</strong><br>
+          Celle hvor de mødes viser svaret: <span style="color: #48bb78; font-weight: bold;">${currentTal1} × ${currentTal2} = ${correctAnswer}</span><br><br>
+          <strong>Husk:</strong> ${currentTal2} × ${currentTal1} giver det samme resultat!
         `;
       } else {
         explanation.innerHTML = `
-          <div class="step-title"><i class="fas fa-info-circle"></i> Sådan bruger du gangetabellen</div>
-          <div class="step-content">
-            <strong>Find ${currentTal1} i venstre kolonne og ${currentTal2} i øverste række.</strong><br>
-            Celle hvor de møtes viser svaret. Kan du finde den?<br><br>
-            
-            <strong>Husk:</strong> ${currentTal2} × ${currentTal1} giver det samme resultat!<br>
-            Prøv at lede begge veje.
-          </div>
+          <strong><i class="fas fa-info-circle"></i> Sådan bruger du gangetabellen</strong><br><br>
+          <strong>Find ${currentTal1} i venstre kolonne og ${currentTal2} i øverste række.</strong><br>
+          Celle hvor de mødes viser svaret. Kan du finde den?<br><br>
+          <strong>Husk:</strong> ${currentTal2} × ${currentTal1} giver det samme resultat!<br>
+          Prøv at lede begge veje.
         `;
       }
       
