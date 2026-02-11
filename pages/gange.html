@@ -145,12 +145,12 @@
       flex-wrap: wrap;
     }
     
-    .tabel-visual-container {
+    .cirkel-container {
       margin-top: 30px;
       display: none;
     }
     
-    .tabel-wrapper {
+    .cirkel-wrapper {
       background: white;
       border: 2px solid #4299e1;
       border-radius: 10px;
@@ -159,34 +159,37 @@
       box-shadow: 0 10px 20px rgba(0,0,0,0.05);
     }
     
-    .tabel-grid {
+    .cirkel-grid {
       display: grid;
-      gap: 2px;
+      gap: 1px;
       margin: 20px auto;
       justify-content: center;
     }
     
     .cirkel {
-      width: 30px;
-      height: 30px;
+      width: 25px;
+      height: 25px;
       background: #4299e1;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
+    }
+    
+    .cirkel-label {
+      font-size: 10px;
       color: white;
-      font-size: 12px;
       font-weight: bold;
     }
     
-    .tabel-explanation {
+    .cirkel-explanation {
       text-align: center;
       margin-top: 15px;
       font-size: 1.1rem;
       color: #4a5568;
     }
     
-    .tabel-knapper {
+    .cirkel-knapper {
       display: flex;
       gap: 15px;
       justify-content: center;
@@ -194,7 +197,7 @@
       flex-wrap: wrap;
     }
     
-    .tabel-knapper button {
+    .cirkel-knapper button {
       min-width: 180px;
       padding: 12px 20px;
     }
@@ -216,11 +219,10 @@
       font-weight: bold;
     }
     
-    .simplified-kolonne {
+    .kolonne-visual {
       font-family: 'Courier New', monospace;
       font-size: 1.3rem;
       margin: 20px auto;
-      max-width: 300px;
       padding: 20px;
       background: #f8fafc;
       border-radius: 8px;
@@ -341,22 +343,25 @@
     }
     
     @media (max-width: 768px) {
-      .tabel-grid {
-        gap: 2px;
+      .cirkel-grid {
+        gap: 1px;
       }
       
       .cirkel {
-        width: 25px;
-        height: 25px;
-        font-size: 10px;
+        width: 20px;
+        height: 20px;
       }
       
-      .tabel-knapper {
+      .cirkel-label {
+        font-size: 8px;
+      }
+      
+      .cirkel-knapper {
         flex-direction: column;
         align-items: center;
       }
       
-      .tabel-knapper button {
+      .cirkel-knapper button {
         width: 90%;
         margin-bottom: 10px;
       }
@@ -373,7 +378,7 @@
         margin-bottom: 10px;
       }
       
-      .simplified-kolonne {
+      .kolonne-visual {
         font-size: 1.1rem;
         max-width: 90%;
         padding: 15px;
@@ -470,12 +475,12 @@
         <div id="hjaelpeKnapper" style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;"></div>
       </div>
       
-      <div id="tabelContainer" class="tabel-visual-container">
+      <div id="cirkelContainer" class="cirkel-container">
         <h3>Cirkeltabel - Se hvad gangestykket betyder:</h3>
-        <div class="tabel-wrapper">
-          <div id="tabelGrid" class="tabel-grid"></div>
-          <div id="tabelExplanation" class="tabel-explanation"></div>
-          <div class="tabel-knapper"></div>
+        <div class="cirkel-wrapper">
+          <div id="cirkelGrid" class="cirkel-grid"></div>
+          <div id="cirkelExplanation" class="cirkel-explanation"></div>
+          <div class="cirkel-knapper"></div>
         </div>
       </div>
       
@@ -636,7 +641,7 @@
       updateStatsDisplay();
       genererOpgave();
       opdaterHjaelpeKnapper();
-      document.getElementById('tabelContainer').style.display = 'none';
+      document.getElementById('cirkelContainer').style.display = 'none';
       document.getElementById('hjaelpContainer').style.display = 'none';
       document.getElementById('gangeTabelContainer').style.display = 'none';
       saveUserData();
@@ -763,7 +768,7 @@
       
       document.getElementById('svarInput').value = '';
       document.getElementById('svarInput').focus();
-      document.getElementById('tabelContainer').style.display = 'none';
+      document.getElementById('cirkelContainer').style.display = 'none';
       document.getElementById('hjaelpContainer').style.display = 'none';
       document.getElementById('gangeTabelContainer').style.display = 'none';
     }
@@ -819,17 +824,7 @@
           <div class="step-content">
             <strong>Sådan tjekker du om dit svar er rimeligt:</strong><br><br>
             
-            <div style="margin: 10px 0;">
-              <strong>Rund af og gange i hovedet:</strong><br>
-              ${getRoundedExample()}
-            </div>
-            
-            ${currentDifficulty === "let" || currentDifficulty === "mellem" ? `
-            <div style="margin: 10px 0;">
-              <strong>Brug gangetabellen:</strong><br>
-              Kan du finde ${currentTal1} × ${currentTal2} i gangetabellen?
-            </div>
-            ` : ''}
+            ${getCheckMethod()}
           </div>
         </div>
         
@@ -845,30 +840,40 @@
       hjælpContainer.scrollIntoView({ behavior: 'smooth' });
     }
 
-    function getRoundedExample() {
-      let rounded1, rounded2, explanation;
-      
-      if (currentTal1 < 10 && currentTal2 < 10) {
-        // For små tal - ikke rund af til 10
-        return "For små tal til at runde af. Prøv at tælle i tabellerne i stedet.";
-      } else if (currentTal1 < 100 && currentTal2 < 100) {
-        // For mellemstore tal - rund af til nærmeste 10
-        rounded1 = Math.round(currentTal1/10)*10;
-        rounded2 = Math.round(currentTal2/10)*10;
-        explanation = `Rund ${currentTal1} til ${rounded1} og ${currentTal2} til ${rounded2}<br>${rounded1} × ${rounded2} ≈ ${rounded1 * rounded2}`;
-      } else if (currentTal1 < 1000 && currentTal2 < 1000) {
-        // For større tal - rund af til nærmeste 100
-        rounded1 = Math.round(currentTal1/100)*100;
-        rounded2 = Math.round(currentTal2/100)*100;
-        explanation = `Rund ${currentTal1} til ${rounded1} og ${currentTal2} til ${rounded2}<br>${rounded1} × ${rounded2} ≈ ${rounded1 * rounded2}`;
-      } else {
-        // For meget store tal - rund af til nærmeste 1000
-        rounded1 = Math.round(currentTal1/1000)*1000;
-        rounded2 = Math.round(currentTal2/1000)*1000;
-        explanation = `Rund ${currentTal1} til ${rounded1} og ${currentTal2} til ${rounded2}<br>${rounded1} × ${rounded2} ≈ ${rounded1 * rounded2}`;
+    function getCheckMethod() {
+      if (currentDifficulty === "let" || currentDifficulty === "mellem") {
+        return `
+          <strong>Brug gangetabellen:</strong><br>
+          Kan du finde ${currentTal1} × ${currentTal2} i gangetabellen?<br><br>
+          
+          <strong>Gange i hovedet:</strong><br>
+          Prøv med lidt mindre tal først, og så plus resten til
+        `;
       }
       
-      return explanation;
+      // For større tal - brug afrunding
+      let method = `<strong>Rund af og gange i hovedet:</strong><br>`;
+      
+      if (currentTal1 < 100 && currentTal2 < 100) {
+        // For tocifrede tal - rund til nærmeste 10 (men ikke 0)
+        const rounded1 = Math.round(currentTal1/10)*10 || 10;
+        const rounded2 = Math.round(currentTal2/10)*10 || 10;
+        method += `Rund ${currentTal1} til ${rounded1} og ${currentTal2} til ${rounded2}<br>${rounded1} × ${rounded2} ≈ ${rounded1 * rounded2}`;
+      } else if (currentTal1 < 1000 && currentTal2 < 1000) {
+        // For trecifrede tal - rund til nærmeste 100
+        const rounded1 = Math.round(currentTal1/100)*100 || 100;
+        const rounded2 = Math.round(currentTal2/100)*100 || 100;
+        method += `Rund ${currentTal1} til ${rounded1} og ${currentTal2} til ${rounded2}<br>${rounded1} × ${rounded2} ≈ ${rounded1 * rounded2}`;
+      } else {
+        // For meget store tal - brug det første ciffer
+        const firstDigit1 = Math.floor(currentTal1 / Math.pow(10, currentTal1.toString().length - 1));
+        const firstDigit2 = Math.floor(currentTal2 / Math.pow(10, currentTal2.toString().length - 1));
+        const power1 = Math.pow(10, currentTal1.toString().length - 1);
+        const power2 = Math.pow(10, currentTal2.toString().length - 1);
+        method += `Brug de første cifre:<br>${firstDigit1}0... × ${firstDigit2}0... ≈ ${(firstDigit1 * 10) * (firstDigit2 * 10) * (power1/10) * (power2/10)}`;
+      }
+      
+      return method;
     }
 
     function visKolonneHjaelp() {
@@ -883,7 +888,7 @@
             <i class="fas fa-calculator"></i> Sådan ganger du ${currentTal1} × ${currentTal2}
           </div>
           
-          <div class="simplified-kolonne">
+          <div class="kolonne-visual">
             <div style="text-align: right;">${currentTal1}</div>
             <div style="text-align: right;">× ${currentTal2}</div>
             <div style="border-top: 2px solid #4a5568; margin: 5px 0;"></div>
@@ -908,15 +913,12 @@
         `;
       } else {
         // For svær, ekspert og mester - gange i kolonner
-        const num1Str = currentTal1.toString();
-        const num2Str = currentTal2.toString();
-        
         let hjælpHTML = `
           <div class="kolonne-title">
             <i class="fas fa-calculator"></i> Sådan ganger du ${currentTal1} × ${currentTal2} i kolonner
           </div>
           
-          <div class="simplified-kolonne">
+          <div class="kolonne-visual">
             <div style="text-align: right;">${currentTal1}</div>
             <div style="text-align: right;">× ${currentTal2}</div>
             <div style="border-top: 2px solid #4a5568; margin: 5px 0;"></div>
@@ -924,58 +926,45 @@
           </div>
         `;
         
-        // Forklar trin for trin
-        hjælpHTML += `
-          <div class="step-explanation">
-            <div class="step-title"><span class="step-number">1</span> Skriv tallene under hinanden</div>
-            <div class="step-content">
-              Skriv det største tal øverst, og det mindste tal nederst. Så er det nemmest at regne.
-            </div>
-          </div>
-        `;
-        
-        // Hvis det andet tal kun har et ciffer
         if (num2Str.length === 1) {
+          // Et-cifret tal som andet tal
           hjælpHTML += `
-            <div class="step-explanation" style="background: #c6f6d5; border-left-color: #48bb78;">
-              <div class="step-title"><span class="step-number">2</span> Gange hele tallet med enerne</div>
+            <div class="step-explanation">
+              <div class="step-title"><span class="step-number">1</span> Gange med enerne</div>
               <div class="step-content">
-                ${currentTal1} × ${currentTal2} = ${correctAnswer}<br><br>
+                <strong>Sådan ganger du ${currentTal1} × ${currentTal2}:</strong><br><br>
                 
-                ${num1Str.length > 1 ? `
-                <strong>Hvordan regner man det?</strong><br>
-                • ${num1Str[num1Str.length-1]} × ${currentTal2} = ${parseInt(num1Str[num1Str.length-1]) * currentTal2} (skriv ${parseInt(num1Str[num1Str.length-1]) * currentTal2 % 10}, husk ${Math.floor((parseInt(num1Str[num1Str.length-1]) * currentTal2) / 10)} i mente)<br>
-                • ${num1Str.length > 1 ? num1Str[num1Str.length-2] : ''} × ${currentTal2} = ${num1Str.length > 1 ? parseInt(num1Str[num1Str.length-2]) * currentTal2 : 0} ${num1Str.length > 1 ? `plus ${Math.floor((parseInt(num1Str[num1Str.length-1]) * currentTal2) / 10)} fra før = ${num1Str.length > 1 ? parseInt(num1Str[num1Str.length-2]) * currentTal2 + Math.floor((parseInt(num1Str[num1Str.length-1]) * currentTal2) / 10) : 0}` : ''}<br>
-                ` : ''}
+                ${getSingleDigitMultiplicationSteps()}
               </div>
             </div>
           `;
         } else {
-          // Hvis det andet tal har flere cifre
+          // Flere cifre i andet tal
           hjælpHTML += `
-            <div class="step-explanation" style="background: #c6f6d5; border-left-color: #48bb78;">
-              <div class="step-title"><span class="step-number">2</span> Gange med enerne først</div>
+            <div class="step-explanation">
+              <div class="step-title"><span class="step-number">1</span> Skriv tallene under hinanden</div>
               <div class="step-content">
-                <strong>Gange ${currentTal1} med ${num2Str[num2Str.length-1]} (enerne):</strong><br>
-                ${currentTal1} × ${num2Str[num2Str.length-1]}<br><br>
+                Skriv det største tal øverst, og det mindste tal nederst.
+              </div>
+            </div>
+            
+            <div class="step-explanation" style="background: #c6f6d5; border-left-color: #48bb78;">
+              <div class="step-title"><span class="step-number">2</span> Først gange med 1'erne i nederste tal</div>
+              <div class="step-content">
+                <strong>Trin 1: Tag 1'erne i ${currentTal2} (det er ${num2Str[num2Str.length-1]})</strong><br><br>
                 
-                <strong>Sådan gør du:</strong><br>
-                • Gange hvert ciffer i ${currentTal1} med ${num2Str[num2Str.length-1]}<br>
-                • Skriv resultatet under stregen<br>
-                • Husk at lægge tal i mente hvis resultatet er over 9
+                ${getMultiplicationStep(parseInt(num2Str[num2Str.length-1]), "1'ere")}
               </div>
             </div>
             
             <div class="step-explanation" style="background: #bee3f8; border-left-color: #4299e1;">
-              <div class="step-title"><span class="step-number">3</span> Gange med tierne</div>
+              <div class="step-title"><span class="step-number">3</span> Så gange med 10'erne i nederste tal</div>
               <div class="step-content">
-                <strong>Gange ${currentTal1} med ${num2Str[num2Str.length-2]} (tierne):</strong><br>
-                ${currentTal1} × ${num2Str[num2Str.length-2]} (og så sæt et 0 efter, fordi det er tierne)<br><br>
+                <strong>Trin 2: Tag 10'erne i ${currentTal2} (det er ${num2Str[num2Str.length-2]})</strong><br><br>
                 
-                <strong>Sådan gør du:</strong><br>
-                • Gange hvert ciffer i ${currentTal1} med ${num2Str[num2Str.length-2]}<br>
-                • Skriv resultatet under det første, men ryk en plads til venstre<br>
-                • Husk: Når du ganger med tierne, kommer der altid et 0 på resultatet
+                ${getMultiplicationStep(parseInt(num2Str[num2Str.length-2]), "10'ere")}
+                <br><br>
+                <em>Husk: Når du ganger med 10'ere, skal du rykke resultatet en plads til venstre (sæt et 0 efter).</em>
               </div>
             </div>
           `;
@@ -983,15 +972,13 @@
           if (num2Str.length > 2) {
             hjælpHTML += `
               <div class="step-explanation" style="background: #fed7d7; border-left-color: #f56565;">
-                <div class="step-title"><span class="step-number">4</span> Gange med hundrederne</div>
+                <div class="step-title"><span class="step-number">4</span> Så gange med 100'erne i nederste tal</div>
                 <div class="step-content">
-                  <strong>Gange ${currentTal1} med ${num2Str[num2Str.length-3]} (hundrederne):</strong><br>
-                  ${currentTal1} × ${num2Str[num2Str.length-3]} (og så sæt to 0'er efter, fordi det er hundreder)<br><br>
+                  <strong>Trin 3: Tag 100'erne i ${currentTal2} (det er ${num2Str[num2Str.length-3]})</strong><br><br>
                   
-                  <strong>Sådan gør du:</strong><br>
-                  • Gange hvert ciffer i ${currentTal1} med ${num2Str[num2Str.length-3]}<br>
-                  • Skriv resultatet under de andre, men ryk to pladser til venstre<br>
-                  • Husk: Når du ganger med hundreder, kommer der altid to 0'er på resultatet
+                  ${getMultiplicationStep(parseInt(num2Str[num2Str.length-3]), "100'ere")}
+                  <br><br>
+                  <em>Husk: Når du ganger med 100'ere, skal du rykke resultatet to pladser til venstre (sæt to 0'er efter).</em>
                 </div>
               </div>
             `;
@@ -999,15 +986,16 @@
           
           hjælpHTML += `
             <div class="step-explanation" style="background: #fffaf0; border-left-color: #f6ad55;">
-              <div class="step-title"><span class="step-number">${num2Str.length > 2 ? '5' : '4'}</span> Læg alle del-resultaterne sammen</div>
+              <div class="step-title"><span class="step-number">${num2Str.length > 2 ? '5' : '4'}</span> Plus alle del-resultaterne sammen</div>
               <div class="step-content">
                 <strong>Nu skal du plusse alle del-resultaterne sammen:</strong><br><br>
                 
                 ${Array.from({length: num2Str.length}, (_, i) => {
                   const digit = parseInt(num2Str[num2Str.length-1-i]);
-                  const value = currentTal1 * digit * Math.pow(10, i);
-                  return `${currentTal1} × ${digit}${'0'.repeat(i)}`;
-                }).join('<br>+ ')}<br>
+                  return `(${currentTal1} × ${digit}${'0'.repeat(i)})`;
+                }).join(' + ')}<br><br>
+                
+                <em>Start fra højre og arbejd mod venstre.</em>
               </div>
             </div>
           `;
@@ -1016,12 +1004,9 @@
         // Tilføj tjek-metode uden at vise svaret
         hjælpHTML += `
           <div class="step-explanation">
-            <div class="step-title"><span class="step-number">${num2Str.length === 1 ? '3' : (num2Str.length > 2 ? '6' : '5')}</span> Tjek om dit svar giver mening</div>
+            <div class="step-title"><span class="step-number">${num2Str.length === 1 ? '2' : (num2Str.length > 2 ? '6' : '5')}</span> Tjek om dit svar giver mening</div>
             <div class="step-content">
-              <strong>Rund af og gange i hovedet:</strong><br>
-              ${getRoundedExampleForCheck()}<br><br>
-              
-              Dit svar skal være tæt på dette tal!
+              ${getCheckMethod()}
             </div>
           </div>
           
@@ -1039,40 +1024,112 @@
       hjælpContainer.scrollIntoView({ behavior: 'smooth' });
     }
 
-    function getRoundedExampleForCheck() {
-      let rounded1, rounded2;
+    function getSingleDigitMultiplicationSteps() {
+      const num1Str = currentTal1.toString();
+      const multiplier = currentTal2;
+      let steps = "";
+      let carry = 0;
       
-      if (currentTal1 < 100 && currentTal2 < 100) {
-        // Rund af til nærmeste 10, men ikke til 0 for små tal
-        rounded1 = Math.round(currentTal1/10)*10;
-        rounded2 = Math.round(currentTal2/10)*10;
+      // Start fra højre (1'ere)
+      for (let i = num1Str.length - 1; i >= 0; i--) {
+        const digit = parseInt(num1Str[i]);
+        const product = digit * multiplier + carry;
+        const ones = product % 10;
+        carry = Math.floor(product / 10);
         
-        // Hvis det bliver 0, brug et andet tal
-        if (rounded1 === 0) rounded1 = Math.max(10, Math.floor(currentTal1/10)*10);
-        if (rounded2 === 0) rounded2 = Math.max(10, Math.floor(currentTal2/10)*10);
-        
-        return `Rund ${currentTal1} til ${rounded1} og ${currentTal2} til ${rounded2}<br>${rounded1} × ${rounded2} ≈ ${rounded1 * rounded2}`;
-      } else if (currentTal1 < 1000 && currentTal2 < 1000) {
-        // Rund af til nærmeste 100
-        rounded1 = Math.round(currentTal1/100)*100;
-        rounded2 = Math.round(currentTal2/100)*100;
-        
-        // Hvis det bliver 0, brug et andet tal
-        if (rounded1 === 0) rounded1 = Math.max(100, Math.floor(currentTal1/100)*100);
-        if (rounded2 === 0) rounded2 = Math.max(100, Math.floor(currentTal2/100)*100);
-        
-        return `Rund ${currentTal1} til ${rounded1} og ${currentTal2} til ${rounded2}<br>${rounded1} × ${rounded2} ≈ ${rounded1 * rounded2}`;
-      } else {
-        // Rund af til nærmeste 1000
-        rounded1 = Math.round(currentTal1/1000)*1000;
-        rounded2 = Math.round(currentTal2/1000)*1000;
-        
-        // Hvis det bliver 0, brug et andet tal
-        if (rounded1 === 0) rounded1 = Math.max(1000, Math.floor(currentTal1/1000)*1000);
-        if (rounded2 === 0) rounded2 = Math.max(1000, Math.floor(currentTal2/1000)*1000);
-        
-        return `Rund ${currentTal1} til ${rounded1} og ${currentTal2} til ${rounded2}<br>${rounded1} × ${rounded2} ≈ ${rounded1 * rounded2}`;
+        if (i === num1Str.length - 1) {
+          steps += `• ${digit} × ${multiplier} = ${product}`;
+          if (product >= 10) {
+            steps += ` (skriv ${ones}, husk ${carry} i mente)<br>`;
+          } else {
+            steps += `<br>`;
+          }
+        } else {
+          steps += `• ${digit} × ${multiplier} = ${digit * multiplier}`;
+          if (carry > 0) {
+            steps += ` plus ${carry} fra før = ${product}`;
+          }
+          steps += `<br>`;
+        }
       }
+      
+      if (carry > 0) {
+        steps += `• Skriv ${carry} foran<br>`;
+      }
+      
+      steps += `<br><strong>Eksempel med ${currentTal1} × ${multiplier}:</strong><br>`;
+      
+      // Vis et konkret eksempel
+      if (num1Str.length === 3) {
+        const hundreds = parseInt(num1Str[0]);
+        const tens = parseInt(num1Str[1]);
+        const ones = parseInt(num1Str[2]);
+        
+        steps += `
+          ${ones} × ${multiplier} = ${ones * multiplier}<br>
+          ${tens} × ${multiplier} = ${tens * multiplier}0 (fordi det er 10'ere)<br>
+          ${hundreds} × ${multiplier} = ${hundreds * multiplier}00 (fordi det er 100'ere)<br>
+          Plus det hele sammen: ${ones * multiplier} + ${tens * multiplier}0 + ${hundreds * multiplier}00
+        `;
+      } else if (num1Str.length === 2) {
+        const tens = parseInt(num1Str[0]);
+        const ones = parseInt(num1Str[1]);
+        
+        steps += `
+          ${ones} × ${multiplier} = ${ones * multiplier}<br>
+          ${tens} × ${multiplier} = ${tens * multiplier}0 (fordi det er 10'ere)<br>
+          Plus det hele sammen: ${ones * multiplier} + ${tens * multiplier}0
+        `;
+      }
+      
+      return steps;
+    }
+
+    function getMultiplicationStep(digit, place) {
+      const num1Str = currentTal1.toString();
+      let steps = "";
+      
+      if (place === "1'ere") {
+        steps = `${currentTal1} × ${digit}<br><br>`;
+        steps += getSingleDigitMultiplicationStepsForDigit(digit);
+      } else if (place === "10'ere") {
+        steps = `${currentTal1} × ${digit}0 (fordi det er 10'ere)<br><br>`;
+        steps += getSingleDigitMultiplicationStepsForDigit(digit);
+        steps += `<br>Husk at sætte et 0 efter resultatet, fordi du ganger med 10'ere.`;
+      } else if (place === "100'ere") {
+        steps = `${currentTal1} × ${digit}00 (fordi det er 100'ere)<br><br>`;
+        steps += getSingleDigitMultiplicationStepsForDigit(digit);
+        steps += `<br>Husk at sætte to 0'er efter resultatet, fordi du ganger med 100'ere.`;
+      }
+      
+      return steps;
+    }
+
+    function getSingleDigitMultiplicationStepsForDigit(digit) {
+      const num1Str = currentTal1.toString();
+      let steps = "";
+      
+      if (num1Str.length === 3) {
+        const hundreds = parseInt(num1Str[0]);
+        const tens = parseInt(num1Str[1]);
+        const ones = parseInt(num1Str[2]);
+        
+        steps += `
+          ${ones} × ${digit} = ${ones * digit}<br>
+          ${tens} × ${digit} = ${tens * digit} (husk at det er 10'ere, så det giver ${tens * digit}0)<br>
+          ${hundreds} × ${digit} = ${hundreds * digit} (husk at det er 100'ere, så det giver ${hundreds * digit}00)<br>
+        `;
+      } else if (num1Str.length === 2) {
+        const tens = parseInt(num1Str[0]);
+        const ones = parseInt(num1Str[1]);
+        
+        steps += `
+          ${ones} × ${digit} = ${ones * digit}<br>
+          ${tens} × ${digit} = ${tens * digit} (husk at det er 10'ere, så det giver ${tens * digit}0)<br>
+        `;
+      }
+      
+      return steps;
     }
 
     function skjulHjaelp() {
@@ -1085,24 +1142,22 @@
         return;
       }
       
-      document.getElementById('tabelContainer').style.display = 'block';
+      document.getElementById('cirkelContainer').style.display = 'block';
       tegnCirkelTabel();
-      opdaterTabelKnapper();
+      opdaterCirkelKnapper();
       skjulHjaelp();
     }
 
     function tegnCirkelTabel() {
-      const container = document.getElementById('tabelGrid');
-      const explanation = document.getElementById('tabelExplanation');
+      const container = document.getElementById('cirkelGrid');
+      const explanation = document.getElementById('cirkelExplanation');
       
-      // Begræns størrelsen for klarhed
-      const maxRows = 8;
-      const maxCols = 8;
+      // Brug de rigtige tal
+      const rows = currentTal1;
+      const cols = currentTal2;
       
-      const rows = Math.min(currentTal1, maxRows);
-      const cols = Math.min(currentTal2, maxCols);
-      
-      if (currentTal1 * currentTal2 > 64) { // 8x8 = 64
+      // Vis kun hvis det er overskueligt (max 8x8)
+      if (rows > 8 || cols > 8) {
         container.innerHTML = `
           <div style="text-align: center; padding: 40px; color: #718096; width: 100%;">
             <i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 20px;"></i>
@@ -1117,17 +1172,15 @@
         return;
       }
       
-      // Opret tabel med cirkler
+      // Opret tabel med cirkler (uden tal i dem - kun prikker)
       container.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
       container.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
       
       let html = '';
-      let count = 0;
       
       for (let i = 0; i < rows; i++) {
         for (let j = 0; j < cols; j++) {
-          count++;
-          html += `<div class="cirkel">${count <= 99 ? count : ''}</div>`;
+          html += `<div class="cirkel"></div>`;
         }
       }
       
@@ -1136,12 +1189,13 @@
       explanation.innerHTML = `
         <strong>${currentTal1} × ${currentTal2} = ${currentTal1 * currentTal2}</strong><br>
         Der er ${rows} rækker med ${cols} cirkler i hver.<br>
-        I alt: ${rows} rækker × ${cols} cirkler = ${currentTal1 * currentTal2} cirkler
+        I alt: ${rows} rækker × ${cols} cirkler = ${currentTal1 * currentTal2} cirkler<br><br>
+        <em>Prøv at tælle alle cirklerne for at se om du får ${currentTal1 * currentTal2}</em>
       `;
     }
 
-    function opdaterTabelKnapper() {
-      const knapContainer = document.querySelector('.tabel-knapper');
+    function opdaterCirkelKnapper() {
+      const knapContainer = document.querySelector('.cirkel-knapper');
       
       knapContainer.innerHTML = `
         <button onclick="skjulCirkelTabel()" class="close-hjaelp-btn" style="min-width: 180px; padding: 12px 20px;">
@@ -1151,7 +1205,7 @@
     }
 
     function skjulCirkelTabel() {
-      document.getElementById('tabelContainer').style.display = 'none';
+      document.getElementById('cirkelContainer').style.display = 'none';
     }
 
     function visGangeTabel() {
@@ -1182,12 +1236,7 @@
           if (isActive && currentDifficulty === "let") className += ' active';
           
           // I Let niveau vises svaret, i Mellem ikke
-          if (currentDifficulty === "let") {
-            html += `<div class="${className}">${i * j}</div>`;
-          } else {
-            // I Mellem niveau - bare en normal tabel
-            html += `<div class="${className}">${i * j}</div>`;
-          }
+          html += `<div class="${className}">${i * j}</div>`;
         }
       }
       
