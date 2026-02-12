@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+    /* Basis styles - beholdt fra din version */
     .stats-grid {
       display: flex;
       flex-wrap: wrap;
@@ -35,37 +36,10 @@
     }
     
     .stat-box.active {
-      border-color: #4299e1;
-      background: #ebf8ff;
+      border-color: #9f7aea;
+      background: #f3e8ff;
       transform: translateY(-2px);
-      box-shadow: 0 6px 12px rgba(66, 153, 225, 0.2);
-    }
-    
-    .stat-box-label {
-      font-size: 1rem;
-      color: #718096;
-      margin-bottom: 8px;
-      font-weight: 700;
-    }
-    
-    .stat-box-value {
-      font-size: 1.8rem;
-      font-weight: bold;
-      color: #2d3748;
-      line-height: 1.2;
-    }
-    
-    .stat-box-sub {
-      font-size: 0.85rem;
-      color: #a0aec0;
-      margin-top: 3px;
-    }
-    
-    .stat-box-total {
-      font-size: 0.9rem;
-      color: #718096;
-      margin-top: 2px;
-      font-weight: 600;
+      box-shadow: 0 6px 12px rgba(159, 122, 234, 0.2);
     }
     
     .mester-stat-box {
@@ -78,73 +52,12 @@
       color: white;
       padding: 0 20px;
       border-radius: 12px;
-      position: relative;
-      overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
     
-    .mester-stat-box::before {
-      content: "🏆 MASTER LEVEL";
-      position: absolute;
-      top: 0;
-      right: 0;
-      background: rgba(0,0,0,0.2);
-      padding: 4px 10px;
-      font-size: 0.7rem;
-      font-weight: bold;
-      border-bottom-left-radius: 8px;
-    }
-    
-    .mester-stat-box:hover {
-      background: linear-gradient(135deg, #805ad5 0%, #6b46c1 50%, #553c9a 100%);
-      transform: translateY(-3px);
-      box-shadow: 0 8px 16px rgba(128, 90, 213, 0.3);
-    }
-    
-    .mester-stat-box.active {
-      border-color: #f6e05e;
-      background: linear-gradient(135deg, #9f7aea 0%, #f6e05e 50%, #6b46c1 100%);
-      box-shadow: 0 8px 20px rgba(246, 224, 94, 0.4);
-    }
-    
-    .mester-stat-box .stat-box-label {
-      color: rgba(255, 255, 255, 0.95);
-      font-size: 1.2rem;
-      font-weight: 800;
-      margin-bottom: 0;
-      display: inline;
-    }
-    
-    .mester-stat-box .stat-box-value {
-      color: white;
-      font-size: 1.8rem;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-      display: inline;
-      margin: 0 5px;
-    }
-    
-    .mester-stat-box .stat-box-sub {
-      color: rgba(255, 255, 255, 0.85);
-      display: inline;
-      margin-left: 10px;
-    }
-    
-    .mester-stat-box .stat-box-total {
-      color: rgba(255, 255, 255, 0.9);
-      font-weight: 700;
-      display: inline;
-      margin-left: 5px;
-    }
-    
-    .mester-stat-box-content {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    
+    /* Grupper (cirkler) - NY FORBEDRET VERSION */
     .cirkel-container {
       margin-top: 30px;
       display: none;
@@ -153,338 +66,200 @@
     .cirkel-wrapper {
       background: white;
       border: 2px solid #9f7aea;
-      border-radius: 10px;
+      border-radius: 15px;
       padding: 25px;
       overflow-x: auto;
       box-shadow: 0 10px 20px rgba(0,0,0,0.05);
     }
     
-    .cirkel-grid {
-      display: grid;
-      gap: 2px;
-      margin: 20px auto;
-      justify-content: center;
-    }
-    
-    .cirkel {
-      width: 20px;
-      height: 20px;
-      background: #9f7aea;
-      border-radius: 50%;
-    }
-    
-    .cirkel-explanation {
-      text-align: center;
-      margin-top: 15px;
-      font-size: 1.1rem;
-      color: #4a5568;
-    }
-    
-    .cirkel-knapper {
+    .grupper-container {
       display: flex;
-      gap: 15px;
-      justify-content: center;
-      margin-top: 20px;
       flex-wrap: wrap;
-    }
-    
-    .cirkel-knapper button {
-      min-width: 180px;
-      padding: 12px 20px;
-    }
-    
-    .kolonne-help-container {
-      background: white;
-      border: 2px solid #e2e8f0;
-      border-radius: 15px;
-      padding: 25px;
+      gap: 20px;
+      justify-content: center;
       margin: 20px 0;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
     }
     
-    .kolonne-title {
-      color: #2d3748;
-      font-size: 1.3rem;
-      margin-bottom: 20px;
-      text-align: center;
-      font-weight: bold;
-    }
-    
-    .kolonne-visual {
-      font-family: 'Courier New', monospace;
-      font-size: 1.3rem;
-      margin: 20px auto;
-      padding: 20px;
+    .gruppe {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       background: #f8fafc;
-      border-radius: 8px;
-      border: 2px solid #cbd5e0;
-    }
-    
-    .step-explanation {
-      background: #ebf8ff;
       padding: 15px;
-      border-radius: 8px;
-      margin-top: 10px;
-      border-left: 4px solid #9f7aea;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
     
-    .step-title {
-      color: #2d3748;
-      font-weight: bold;
+    .gruppe-cirkler {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
       margin-bottom: 8px;
     }
     
-    .step-content {
-      color: #4a5568;
-      line-height: 1.5;
+    .cirkel {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
     }
     
-    .hjaelp-container {
-      max-height: 600px;
-      overflow-y: auto;
-      margin-top: 20px;
-    }
+    .cirkel.farve1 { background: #F87171; } /* Rød */
+    .cirkel.farve2 { background: #60A5FA; } /* Blå */
+    .cirkel.farve3 { background: #34D399; } /* Grøn */
+    .cirkel.farve4 { background: #FBBF24; } /* Gul */
+    .cirkel.farve5 { background: #A78BFA; } /* Lilla */
     
-    .close-hjaelp-btn {
-      background: #f56565;
-      color: white;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 5px;
-      cursor: pointer;
+    .rest-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
       margin-top: 15px;
-      font-weight: bold;
+      padding: 15px;
+      background: #fff3cd;
+      border-radius: 8px;
+      justify-content: center;
     }
     
-    .close-hjaelp-btn:hover {
-      background: #e53e3e;
+    /* Gangetabel-hjælp til division */
+    .tabel-hjaelp {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px;
+      border-radius: 15px;
+      margin: 20px 0;
+    }
+    
+    .tabel-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      max-width: 500px;
+      margin: 15px auto;
+    }
+    
+    .tabel-celle {
+      background: white;
+      color: #2d3748;
+      padding: 12px;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+    
+    .tabel-celle.fremhaev {
+      background: #FBBF24;
+      color: black;
+      transform: scale(1.1);
+      box-shadow: 0 4px 12px rgba(251, 191, 36, 0.5);
+    }
+    
+    /* Slikkepind-metoden (Bælge-metoden) */
+    .baelge-container {
+      background: white;
+      border: 3px solid #F59E0B;
+      border-radius: 20px;
+      padding: 25px;
+      margin: 20px 0;
+    }
+    
+    .baelge-title {
+      color: #F59E0B;
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    
+    .baelge-visual {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+      align-items: flex-end;
+    }
+    
+    .baelge {
+      display: flex;
+      gap: 5px;
+      align-items: flex-end;
+    }
+    
+    .baelge-tal {
+      background: #F59E0B;
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+    
+    /* Svar med rest - to bokse */
+    .svar-med-rest {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 15px 0;
+    }
+    
+    .rest-input-gruppe {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .rest-input {
+      width: 80px;
+      padding: 12px;
+      border: 2px solid #FBBF24;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+    
+    .rest-label {
+      font-weight: bold;
+      color: #F59E0B;
     }
     
     .step-number {
       display: inline-block;
       background: #9f7aea;
       color: white;
-      width: 24px;
-      height: 24px;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
       text-align: center;
-      line-height: 24px;
-      margin-right: 8px;
+      line-height: 28px;
+      margin-right: 10px;
       font-weight: bold;
     }
     
-    .tutor-btn {
-      background: #9f7aea;
-      color: white;
-      border: none;
-      padding: 12px 20px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition: all 0.3s;
-      min-width: 150px;
-    }
-    
-    .tutor-btn:hover {
-      background: #805ad5;
-      transform: translateY(-2px);
-    }
-    
-    .division-tabel-visual {
-      display: grid;
-      grid-template-columns: repeat(11, 1fr);
-      gap: 2px;
-      margin: 15px auto;
-      max-width: 380px;
-      background: #f7fafc;
-      padding: 8px;
+    .step-explanation {
+      background: #f8fafc;
+      padding: 20px;
       border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-    
-    .division-celle {
-      width: 30px;
-      height: 30px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: white;
-      font-weight: bold;
-      position: relative;
-      font-size: 0.85rem;
-      border-radius: 6px;
-    }
-    
-    .division-celle.header {
-      background: linear-gradient(135deg, #9f7aea 0%, #805ad5 100%);
-      color: white;
-      font-weight: bold;
-      border-radius: 6px;
-    }
-    
-    .division-celle.header.top {
-      background: linear-gradient(135deg, #9f7aea 0%, #805ad5 100%);
-    }
-    
-    .division-celle.active {
-      background: linear-gradient(135deg, #f6e05e 0%, #fbbf24 100%);
-      border: 2px solid #f59e0b;
-      font-weight: bold;
-      transform: scale(1.05);
-      z-index: 2;
-      box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
-    }
-    
-    .tabel-forklaring {
-      margin-top: 15px;
-      padding: 15px;
-      background: #fffaf0;
-      border-left: 4px solid #ed8936;
-      border-radius: 8px;
-    }
-    
-    .rest-visual {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 5px;
       margin: 15px 0;
-      align-items: center;
-    }
-    
-    .rest-cirkel {
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-    }
-    
-    .rest-cirkel.gruppe {
-      background: #9f7aea;
-      color: white;
-    }
-    
-    .rest-cirkel.rest {
-      background: #fbbf24;
-      color: white;
-    }
-    
-    .decimal-line {
-      display: flex;
-      align-items: baseline;
-      justify-content: center;
-      gap: 10px;
-      margin: 15px 0;
-      font-size: 1.2rem;
+      border-left: 6px solid #9f7aea;
     }
     
     @media (max-width: 768px) {
-      .cirkel-grid {
-        gap: 1px;
+      .gruppe-cirkler {
+        grid-template-columns: repeat(2, 1fr);
       }
       
       .cirkel {
-        width: 16px;
-        height: 16px;
+        width: 25px;
+        height: 25px;
       }
       
-      .cirkel-knapper {
-        flex-direction: column;
-        align-items: center;
-      }
-      
-      .cirkel-knapper button {
-        width: 90%;
-        margin-bottom: 10px;
-      }
-      
-      .input-group {
-        flex-direction: column;
-        align-items: center;
-      }
-      
-      .input-group input,
-      .input-group button {
-        width: 90%;
-        max-width: 250px;
-        margin-bottom: 10px;
-      }
-      
-      .kolonne-visual {
-        font-size: 1.1rem;
-        max-width: 90%;
-        padding: 15px;
-      }
-      
-      #hjaelpeKnapper {
-        flex-direction: column;
-        align-items: center;
-      }
-      
-      #hjaelpeKnapper button {
-        width: 100%;
-        max-width: 250px;
-      }
-      
-      .stats-grid {
-        flex-direction: column;
-        align-items: center;
-      }
-      
-      .stat-box {
-        width: 100%;
-        max-width: 300px;
-      }
-      
-      .mester-stat-box {
-        max-width: 300px;
-        height: auto;
-        padding: 15px;
-        flex-direction: column;
-        gap: 5px;
-      }
-      
-      .mester-stat-box-content {
-        flex-direction: column;
-        gap: 5px;
-        text-align: center;
-      }
-      
-      .mester-stat-box .stat-box-label,
-      .mester-stat-box .stat-box-sub,
-      .mester-stat-box .stat-box-value,
-      .mester-stat-box .stat-box-total {
-        display: block;
-        margin: 2px 0;
-      }
-      
-      .division-tabel-visual {
-        grid-template-columns: repeat(11, 1fr);
-        max-width: 300px;
-        gap: 1px;
-        padding: 5px;
-      }
-      
-      .division-celle {
-        width: 24px;
-        height: 24px;
-        font-size: 0.7rem;
-      }
-    }
-    
-    @media (min-width: 769px) and (max-width: 1024px) {
-      .stats-grid {
-        flex-wrap: wrap;
-      }
-      
-      .stat-box {
-        min-width: 120px;
+      .tabel-grid {
+        grid-template-columns: repeat(3, 1fr);
       }
     }
   </style>
@@ -502,33 +277,51 @@
       <div class="opgave-container">
         <div class="opgave-tekst" id="opgaveTekst"></div>
         
-        <div class="input-group">
-          <input type="text" id="svarInput" class="answer-input" placeholder="Dit svar" autofocus>
-          <button onclick="tjekSvar()" class="button primary-btn">
-            <i class="fas fa-check"></i> Tjek svar
-          </button>
-          <button onclick="nyOpgave()" class="button secondary-btn">
-            <i class="fas fa-redo"></i> Ny opgave
-          </button>
-        </div>
+        <!-- Dynamisk input - skifter mellem én boks og to bokse -->
+        <div id="inputContainer"></div>
         
         <div id="hjaelpeKnapper" style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;"></div>
       </div>
       
+      <!-- GRUPPER - FORBEDRET VERSION MED FARVEKODER -->
       <div id="cirkelContainer" class="cirkel-container">
-        <h3>Gruppér cirklerne - Se hvad division betyder:</h3>
+        <h3><i class="fas fa-circle"></i> Grupper - Se hvad division betyder:</h3>
         <div class="cirkel-wrapper">
-          <div id="cirkelGrid" class="cirkel-grid"></div>
+          <div id="grupperVisual" class="grupper-container"></div>
           <div id="cirkelExplanation" class="cirkel-explanation"></div>
-          <div class="cirkel-knapper"></div>
+          <div class="cirkel-knapper" style="margin-top: 20px; text-align: center;">
+            <button onclick="skjulGrupper()" class="close-hjaelp-btn">
+              <i class="fas fa-times"></i> Luk grupper
+            </button>
+          </div>
         </div>
       </div>
       
-      <div id="divisionTabelContainer" class="kolonne-help-container" style="display: none;">
-        <h3>Divisionstabel hjælp:</h3>
-        <div id="divisionTabel" class="division-tabel-visual"></div>
+      <!-- GANGETABEL-HJÆLP -->
+      <div id="tabelHjaelpContainer" class="kolonne-help-container" style="display: none;">
+        <h3><i class="fas fa-table"></i> Brug gangetabellen som hjælp:</h3>
+        <div id="tabelHjaelpIndhold"></div>
+        <div style="text-align: center; margin-top: 20px;">
+          <button onclick="skjulTabelHjaelp()" class="close-hjaelp-btn">
+            <i class="fas fa-times"></i> Luk hjælp
+          </button>
+        </div>
       </div>
       
+      <!-- SLIKKEPIND-METODEN (BÆLGE) -->
+      <div id="baelgeContainer" class="baelge-container" style="display: none;">
+        <div class="baelge-title">
+          <i class="fas fa-chart-line"></i> Slikkepind-metoden / Bælge-metoden
+        </div>
+        <div id="baelgeIndhold"></div>
+        <div style="text-align: center; margin-top: 20px;">
+          <button onclick="skjulBaelge()" class="close-hjaelp-btn">
+            <i class="fas fa-times"></i> Luk hjælp
+          </button>
+        </div>
+      </div>
+      
+      <!-- GENEREL HJÆLP -->
       <div id="hjaelpContainer" class="kolonne-help-container" style="display: none;"></div>
       
       <div id="feedback" class="feedback"></div>
@@ -550,6 +343,9 @@
     let currentDifficulty = "let";
     let currentDividend, currentDivisor, correctAnswer, correctRest;
     let attempts = [];
+
+    // Farver til grupper - 5 forskellige farver
+    const gruppeFarver = ['farve1', 'farve2', 'farve3', 'farve4', 'farve5'];
 
     let difficultyData = {
       let: { correctCount: 0, totalAttempts: 0 },
@@ -574,26 +370,25 @@
       },
       svaer: { 
         name: "Svær", 
-        range: "rest",
+        range: "med rest",
         displayName: "Svær (med rest)",
-        description: "Division med rest"
+        description: "Division med rest - lær at håndtere rest"
       },
       ekspert: { 
         name: "Ekspert", 
         range: "decimal",
         displayName: "Ekspert (decimalresultat)",
-        description: "Resultatet bliver et decimaltal"
+        description: "Fra rest til decimal - forlæng divisionen"
       },
       mester: { 
         name: "Mester", 
         range: "store decimal",
         displayName: "Mester (store tal med decimal)",
-        description: "Store tal med decimalresultat"
+        description: "Division med store tal og decimaler"
       }
     };
 
     function formatNumber(num) {
-      if (num === undefined || num === null) return '';
       return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     }
 
@@ -606,15 +401,11 @@
       updateStatsDisplay();
       genererOpgave();
       opdaterHjaelpeKnapper();
-      
-      document.getElementById('svarInput').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') tjekSvar();
-      });
     });
 
     function loadUserData() {
       try {
-        const savedData = localStorage.getItem('divisionData');
+        const savedData = localStorage.getItem('divisionDataKorrekt');
         if (savedData) {
           const data = JSON.parse(savedData);
           difficultyData = data.difficultyData || difficultyData;
@@ -632,7 +423,7 @@
         currentDifficulty: currentDifficulty,
         attempts: attempts.slice(0, 10)
       };
-      localStorage.setItem('divisionData', JSON.stringify(data));
+      localStorage.setItem('divisionDataKorrekt', JSON.stringify(data));
     }
 
     function updateStatsDisplay() {
@@ -686,97 +477,104 @@
       updateStatsDisplay();
       genererOpgave();
       opdaterHjaelpeKnapper();
+      
+      // Skjul alle hjælpe-containere
       document.getElementById('cirkelContainer').style.display = 'none';
       document.getElementById('hjaelpContainer').style.display = 'none';
-      document.getElementById('divisionTabelContainer').style.display = 'none';
+      document.getElementById('tabelHjaelpContainer').style.display = 'none';
+      document.getElementById('baelgeContainer').style.display = 'none';
+      
       saveUserData();
     }
 
     function opdaterHjaelpeKnapper() {
       const knapContainer = document.getElementById('hjaelpeKnapper');
       
-      if (currentDifficulty === "let") {
-        knapContainer.innerHTML = `
-          <button onclick="visCirkelTabel()" class="button" style="background: #9f7aea; color: white; flex: 1; min-width: 150px;">
-            <i class="fas fa-circle"></i> Vis grupper
-          </button>
-          <button onclick="visDivisionTabel()" class="button" style="background: #b794f4; color: white; flex: 1; min-width: 150px;">
-            <i class="fas fa-table"></i> Divisionstabel
-          </button>
-          <button onclick="visSimpelHjaelp()" class="button" style="background: #9ae6b4; color: white; flex: 1; min-width: 150px;">
-            <i class="fas fa-lightbulb"></i> Hjælp mig!
-          </button>
-          <button onclick="visMatematiktutor()" class="tutor-btn" style="flex: 1; min-width: 150px;">
-            <i class="fas fa-chalkboard-teacher"></i> Matematiktutor
-          </button>
-        `;
-        knapContainer.style.display = 'flex';
-      } else if (currentDifficulty === "mellem") {
-        knapContainer.innerHTML = `
-          <button onclick="visCirkelTabel()" class="button" style="background: #9f7aea; color: white; flex: 1; min-width: 150px;">
-            <i class="fas fa-circle"></i> Vis grupper
-          </button>
-          <button onclick="visSimpelHjaelp()" class="button" style="background: #9ae6b4; color: white; flex: 1; min-width: 150px;">
-            <i class="fas fa-lightbulb"></i> Hjælp mig!
-          </button>
-          <button onclick="visMatematiktutor()" class="tutor-btn" style="flex: 1; min-width: 150px;">
-            <i class="fas fa-chalkboard-teacher"></i> Matematiktutor
-          </button>
-        `;
-        knapContainer.style.display = 'flex';
-      } else if (currentDifficulty === "svaer") {
-        knapContainer.innerHTML = `
-          <button onclick="visRestHjaelp()" class="button" style="background: #fbbf24; color: white; flex: 1; min-width: 150px;">
-            <i class="fas fa-cubes"></i> Hjælp med rest
-          </button>
-          <button onclick="visMatematiktutor()" class="tutor-btn" style="flex: 1; min-width: 150px;">
-            <i class="fas fa-chalkboard-teacher"></i> Matematiktutor
-          </button>
-        `;
-        knapContainer.style.display = 'flex';
-      } else if (currentDifficulty === "ekspert") {
-        knapContainer.innerHTML = `
-          <button onclick="visDecimalHjaelp()" class="button" style="background: #48bb78; color: white; flex: 1; min-width: 150px;">
-            <i class="fas fa-divide"></i> Hjælp med decimal
-          </button>
-          <button onclick="visMatematiktutor()" class="tutor-btn" style="flex: 1; min-width: 150px;">
-            <i class="fas fa-chalkboard-teacher"></i> Matematiktutor
-          </button>
-        `;
-        knapContainer.style.display = 'flex';
-      } else {
-        knapContainer.innerHTML = `
-          <button onclick="visDecimalHjaelp()" class="button" style="background: #48bb78; color: white; flex: 1; min-width: 200px;">
-            <i class="fas fa-divide"></i> Hjælp med decimal
-          </button>
-          <button onclick="visMatematiktutor()" class="tutor-btn" style="flex: 1; min-width: 200px;">
-            <i class="fas fa-chalkboard-teacher"></i> Matematiktutor
-          </button>
-        `;
-        knapContainer.style.display = 'flex';
+      switch(currentDifficulty) {
+        case "let":
+          knapContainer.innerHTML = `
+            <button onclick="visGrupper()" class="button" style="background: #F87171; color: white; flex: 1;">
+              <i class="fas fa-circle"></i> Vis grupper
+            </button>
+            <button onclick="visGangetabelHjaelp()" class="button" style="background: #60A5FA; color: white; flex: 1;">
+              <i class="fas fa-table"></i> Brug gangetabellen
+            </button>
+            <button onclick="visBaelgeMetode()" class="button" style="background: #F59E0B; color: white; flex: 1;">
+              <i class="fas fa-chart-line"></i> Slikkepind-metoden
+            </button>
+            <button onclick="visSimpelHjaelp()" class="button" style="background: #34D399; color: white; flex: 1;">
+              <i class="fas fa-lightbulb"></i> Hjælp mig!
+            </button>
+          `;
+          break;
+          
+        case "mellem":
+          knapContainer.innerHTML = `
+            <button onclick="visGrupper()" class="button" style="background: #F87171; color: white; flex: 1;">
+              <i class="fas fa-circle"></i> Vis grupper
+            </button>
+            <button onclick="visGangetabelHjaelp()" class="button" style="background: #60A5FA; color: white; flex: 1;">
+              <i class="fas fa-table"></i> Brug gangetabellen
+            </button>
+            <button onclick="visBaelgeMetode()" class="button" style="background: #F59E0B; color: white; flex: 1;">
+              <i class="fas fa-chart-line"></i> Slikkepind-metoden
+            </button>
+            <button onclick="visSimpelHjaelp()" class="button" style="background: #34D399; color: white; flex: 1;">
+              <i class="fas fa-lightbulb"></i> Hjælp mig!
+            </button>
+          `;
+          break;
+          
+        case "svaer":
+          knapContainer.innerHTML = `
+            <button onclick="visBaelgeMetode()" class="button" style="background: #F59E0B; color: white; flex: 1;">
+              <i class="fas fa-chart-line"></i> Slikkepind-metoden
+            </button>
+            <button onclick="visRestHjaelp()" class="button" style="background: #FBBF24; color: white; flex: 1;">
+              <i class="fas fa-cubes"></i> Hjælp med rest
+            </button>
+          `;
+          break;
+          
+        case "ekspert":
+        case "mester":
+          knapContainer.innerHTML = `
+            <button onclick="visBaelgeMetode()" class="button" style="background: #F59E0B; color: white; flex: 1;">
+              <i class="fas fa-chart-line"></i> Slikkepind-metoden
+            </button>
+            <button onclick="visDecimalHjaelp()" class="button" style="background: #34D399; color: white; flex: 1;">
+              <i class="fas fa-divide"></i> Hjælp med decimaler
+            </button>
+          `;
+          break;
       }
     }
 
     function genererOpgave() {
+      // SIKRER at alle regnestykker kan vises som grupper i Let og Mellem
       switch(currentDifficulty) {
         case "let": 
-          // Divisorer: 2,3,4,5. Altid går op.
+          // Divisorer: 2,3,4,5. Altid går op. MAX 30 cirkler så det kan vises
           const letDivisorer = [2, 3, 4, 5];
           currentDivisor = letDivisorer[Math.floor(Math.random() * letDivisorer.length)];
-          // Vælg en tilfældig multiplum af divisoren (1-5 gange)
-          const multiplum = Math.floor(Math.random() * 5) + 1;
+          // Maks 30 cirkler så det kan vises pænt
+          const maxMultiplum = Math.min(6, Math.floor(30 / currentDivisor));
+          const multiplum = Math.floor(Math.random() * maxMultiplum) + 1;
           currentDividend = currentDivisor * multiplum;
           correctAnswer = multiplum;
           correctRest = 0;
           break;
+          
         case "mellem": 
-          // Divisorer 1-10. Går op.
-          currentDivisor = Math.floor(Math.random() * 10) + 1;
-          const mellemMultiplum = Math.floor(Math.random() * 10) + 1;
+          // Divisorer 1-10. Går op. MAKS 30 cirkler
+          currentDivisor = Math.floor(Math.random() * 9) + 2; // 2-10, undgå 1 (for let)
+          const maxMellemMultiplum = Math.min(6, Math.floor(30 / currentDivisor));
+          const mellemMultiplum = Math.floor(Math.random() * maxMellemMultiplum) + 1;
           currentDividend = currentDivisor * mellemMultiplum;
           correctAnswer = mellemMultiplum;
           correctRest = 0;
           break;
+          
         case "svaer": 
           // Divisor 2-9, dividend 10-99. Går IKKE op (med rest)
           currentDivisor = Math.floor(Math.random() * 8) + 2; // 2-9
@@ -788,17 +586,19 @@
           correctAnswer = Math.floor(currentDividend / currentDivisor);
           correctRest = currentDividend % currentDivisor;
           break;
+          
         case "ekspert":
-          // Divisor 2-9, dividend 10-99. Resultat med decimal (1 decimal)
+          // Divisor 2-9, dividend 10-99. Lær at forlænge med 0'er for decimaler
           currentDivisor = Math.floor(Math.random() * 8) + 2; // 2-9
           currentDividend = Math.floor(Math.random() * 90) + 10; // 10-99
-          // Vi vil have decimalresultat, så det skal IKKE gå op
+          // Vi vil have en rest, så det IKKE går op
           while (currentDividend % currentDivisor === 0) {
             currentDividend = Math.floor(Math.random() * 90) + 10;
           }
           correctAnswer = currentDividend / currentDivisor;
-          correctRest = null;
+          correctRest = null; // Bruges ikke i decimal-beregning
           break;
+          
         case "mester":
           // Store tal med decimalresultat
           currentDivisor = Math.floor(Math.random() * 90) + 10; // 10-99
@@ -810,107 +610,389 @@
           correctAnswer = currentDividend / currentDivisor;
           correctRest = null;
           break;
-        default: 
-          currentDividend = 6;
-          currentDivisor = 2;
-          correctAnswer = 3;
       }
       
+      // Opdater opgave-tekst
       const opgaveTekst = document.getElementById('opgaveTekst');
-      
-      let svarType = "";
-      if (currentDifficulty === "svaer") {
-        svarType = `<div style="font-size: 0.9rem; color: #718096;">Skriv svaret som: heltal, rest (f.eks. 3, rest 2)</div>`;
-      } else if (currentDifficulty === "ekspert" || currentDifficulty === "mester") {
-        svarType = `<div style="font-size: 0.9rem; color: #718096;">Skriv svaret med komma (f.eks. 3,5)</div>`;
-      }
-      
       opgaveTekst.innerHTML = `
-        <div style="font-size: 1.4rem; margin-bottom: 10px;">
-          Hvad er <span class="regnearter">${formatNumber(currentDividend)}</span> 
-          <span style="color: #9f7aea; font-weight: bold; margin: 0 10px;">:</span> 
-          <span class="regnearter">${formatNumber(currentDivisor)}</span> 
-          ?
+        <div style="font-size: 1.6rem; margin-bottom: 15px;">
+          <span style="color: #2d3748;">${formatNumber(currentDividend)}</span> 
+          <span style="color: #9f7aea; font-weight: bold; margin: 0 15px;">:</span> 
+          <span style="color: #2d3748;">${formatNumber(currentDivisor)}</span> 
+          = ?
         </div>
-        ${svarType}
       `;
       
-      document.getElementById('svarInput').value = '';
-      document.getElementById('svarInput').focus();
+      // Opret input-felter baseret på niveau
+      opdaterInputFelter();
+      
+      // Skjul hjælp
       document.getElementById('cirkelContainer').style.display = 'none';
       document.getElementById('hjaelpContainer').style.display = 'none';
-      document.getElementById('divisionTabelContainer').style.display = 'none';
+      document.getElementById('tabelHjaelpContainer').style.display = 'none';
+      document.getElementById('baelgeContainer').style.display = 'none';
     }
 
-    function visSimpelHjaelp() {
-      const hjælpContainer = document.getElementById('hjaelpContainer');
+    function opdaterInputFelter() {
+      const container = document.getElementById('inputContainer');
       
-      let hjælpHTML = `
-        <div class="kolonne-title">
-          <i class="fas fa-lightbulb"></i> Sådan regner du ${currentDividend} : ${currentDivisor}
-        </div>
-        
-        <div class="step-explanation">
-          <div class="step-title"><span class="step-number">1</span> Forstå hvad division betyder</div>
-          <div class="step-content">
-            <strong>${currentDividend} : ${currentDivisor}</strong> betyder:<br>
-            "Hvor mange gange kan ${currentDivisor} være i ${currentDividend}?"<br>
-            "Del ${currentDividend} i ${currentDivisor} lige store grupper."
+      if (currentDifficulty === "svaer") {
+        // TO bokse: svar og rest
+        container.innerHTML = `
+          <div class="svar-med-rest">
+            <div class="rest-input-gruppe">
+              <input type="number" id="svarInput" class="answer-input" placeholder="Heltal" style="width: 100px;" autofocus>
+              <span style="font-size: 1.2rem; margin: 0 5px;">,</span>
+              <span class="rest-label">rest</span>
+              <input type="number" id="restInput" class="rest-input" placeholder="Rest">
+            </div>
+            <button onclick="tjekSvar()" class="button primary-btn">
+              <i class="fas fa-check"></i> Tjek svar
+            </button>
+            <button onclick="nyOpgave()" class="button secondary-btn">
+              <i class="fas fa-redo"></i> Ny opgave
+            </button>
           </div>
-        </div>
-        
-        <div class="step-explanation" style="background: #c6f6d5; border-left-color: #48bb78;">
-          <div class="step-title"><span class="step-number">2</span> Tænk på gangetabellen baglæns</div>
-          <div class="step-content">
-            <strong>Hvilket tal gange ${currentDivisor} giver ${currentDividend}?</strong><br><br>
-            ${currentDivisor} × ? = ${currentDividend}<br><br>
-      `;
-      
-      // Find det tal der gange divisor giver dividend (kun i Let)
-      if (currentDifficulty === "let") {
-        const faktor = currentDividend / currentDivisor;
-        hjælpHTML += `
-          <span style="font-size: 1.2rem; color: #2d3748; font-weight: bold;">
-            ${currentDivisor} × ${faktor} = ${currentDividend}
-          </span><br><br>
-          <strong><span style="color: #48bb78;">Derfor er svaret: ${faktor}</span></strong>
         `;
-      } else if (currentDifficulty === "mellem") {
-        hjælpHTML += `<em>Prøv at tænke: Hvad skal jeg gange ${currentDivisor} med for at få ${currentDividend}?</em>`;
+      } else {
+        // Én boks til heltal eller decimal
+        container.innerHTML = `
+          <div class="input-group">
+            <input type="text" id="svarInput" class="answer-input" placeholder="Dit svar" autofocus>
+            <button onclick="tjekSvar()" class="button primary-btn">
+              <i class="fas fa-check"></i> Tjek svar
+            </button>
+            <button onclick="nyOpgave()" class="button secondary-btn">
+              <i class="fas fa-redo"></i> Ny opgave
+            </button>
+          </div>
+        `;
       }
       
-      hjælpHTML += `
+      // Tilføj enter-key event
+      const svarInput = document.getElementById('svarInput');
+      if (svarInput) {
+        svarInput.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') tjekSvar();
+        });
+      }
+      
+      const restInput = document.getElementById('restInput');
+      if (restInput) {
+        restInput.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') tjekSvar();
+        });
+      }
+    }
+
+    // ==================== GRUPPER - FORBEDRET VERSION ====================
+    function visGrupper() {
+      if (currentDifficulty !== "let" && currentDifficulty !== "mellem") {
+        showFeedback('Grupper er kun tilgængelig i Let og Mellem', false);
+        return;
+      }
+      
+      // Tjek at det kan vises (bør altid kunne vises nu)
+      if (currentDividend > 50) {
+        showFeedback('For mange cirkler at vise! Prøv en ny opgave.', false);
+        genererOpgave(); // Generer en ny opgave med færre cirkler
+        return;
+      }
+      
+      document.getElementById('cirkelContainer').style.display = 'block';
+      tegnGrupper();
+    }
+
+    function tegnGrupper() {
+      const container = document.getElementById('grupperVisual');
+      const explanation = document.getElementById('cirkelExplanation');
+      
+      const antalGrupper = currentDivisor;
+      const antalPerGruppe = Math.floor(currentDividend / currentDivisor);
+      const rest = currentDividend % currentDivisor;
+      
+      let html = '';
+      
+      // Vis grupper med forskellige farver
+      for (let g = 0; g < antalGrupper; g++) {
+        const farveIndex = g % gruppeFarver.length;
+        
+        html += `<div class="gruppe">`;
+        html += `<div class="gruppe-cirkler">`;
+        
+        // Vis cirkler i denne gruppe (2 pr. række)
+        for (let i = 0; i < antalPerGruppe; i++) {
+          html += `<div class="cirkel ${gruppeFarver[farveIndex]}"></div>`;
+        }
+        
+        html += `</div>`; // luk gruppe-cirkler
+        html += `<div style="font-weight: bold; margin-top: 5px; color: #4a5568;">Gruppe ${g+1}</div>`;
+        html += `</div>`; // luk gruppe
+      }
+      
+      // Vis rest hvis der er nogen
+      if (rest > 0) {
+        html += `<div class="rest-container">`;
+        html += `<div style="font-weight: bold; margin-right: 10px;">Rest (ikke i gruppe):</div>`;
+        
+        for (let i = 0; i < rest; i++) {
+          const farveIndex = (antalGrupper + i) % gruppeFarver.length;
+          html += `<div class="cirkel ${gruppeFarver[farveIndex]}"></div>`;
+        }
+        
+        html += `</div>`;
+      }
+      
+      container.innerHTML = html;
+      
+      // Forklaring
+      let forklaring = `<strong style="font-size: 1.2rem;">${currentDividend} : ${currentDivisor} = ?</strong><br><br>`;
+      forklaring += `Vi har ${currentDividend} cirkler.<br>`;
+      forklaring += `Vi deler dem i <strong>${currentDivisor} lige store grupper</strong>.<br><br>`;
+      
+      if (rest === 0) {
+        forklaring += `Hver gruppe har <strong style="color: #48bb78;">${antalPerGruppe} cirkler</strong>.<br>`;
+        if (currentDifficulty === "let") {
+          forklaring += `<br><span style="font-size: 1.3rem; color: #48bb78;">✅ Svaret er: ${antalPerGruppe}</span>`;
+        } else {
+          forklaring += `<br><span style="font-size: 1.1rem;">Tæl cirklerne i én gruppe - det er dit svar!</span>`;
+        }
+      } else {
+        forklaring += `Hver gruppe får <strong>${antalPerGruppe} cirkler</strong>.<br>`;
+        forklaring += `Der er <strong style="color: #F59E0B;">${rest} cirkel(ler) til rest</strong>.<br>`;
+        forklaring += `<br><span style="font-size: 1.1rem;">Svaret er: ${antalPerGruppe}, rest ${rest}</span>`;
+      }
+      
+      explanation.innerHTML = forklaring;
+    }
+
+    function skjulGrupper() {
+      document.getElementById('cirkelContainer').style.display = 'none';
+    }
+
+    // ==================== GANGETABEL-HJÆLP TIL DIVISION ====================
+    function visGangetabelHjaelp() {
+      if (currentDifficulty !== "let" && currentDifficulty !== "mellem") {
+        showFeedback('Gangetabel-hjælp er kun tilgængelig i Let og Mellem', false);
+        return;
+      }
+      
+      const container = document.getElementById('tabelHjaelpIndhold');
+      const wrapper = document.getElementById('tabelHjaelpContainer');
+      
+      // Vi bruger divisor-tabellen (fx 3-tabellen til 6:3)
+      const tabelTal = currentDivisor;
+      const maalTal = currentDividend;
+      const svar = currentDividend / currentDivisor;
+      
+      let html = `
+        <div class="tabel-hjaelp">
+          <div style="text-align: center; margin-bottom: 20px;">
+            <span style="font-size: 1.4rem;">${currentDividend} : ${currentDivisor} = ?</span>
           </div>
-        </div>
+          
+          <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+            <strong style="font-size: 1.2rem;">🔍 Brug ${currentDivisor}-tabellen:</strong><br><br>
+            <span>Når du dividerer, tænker du baglæns i gangetabellen:</span>
+          </div>
+          
+          <div class="tabel-grid">
       `;
       
-      // Kun vis cirkel/gruppe-hjælp i Let og Mellem
+      // Vis tabellen fra 1 til 10 (eller til vi når målet)
+      for (let i = 1; i <= 10; i++) {
+        const produkt = tabelTal * i;
+        const erMaal = (produkt === maalTal);
+        const erStoerEndMaal = (produkt > maalTal && maalTal > 0);
+        
+        let celleClass = 'tabel-celle';
+        if (erMaal) celleClass += ' fremhaev';
+        
+        html += `<div class="${celleClass}">`;
+        html += `${tabelTal} × ${i} = ${produkt}`;
+        
+        if (erMaal && currentDifficulty === "let") {
+          html += `<br><span style="color: #48bb78; font-size: 0.9rem;">👈 SVARET!</span>`;
+        }
+        
+        html += `</div>`;
+      }
+      
+      html += `</div>`;
+      
+      // Forklaring
+      html += `
+        <div style="background: white; color: #2d3748; padding: 20px; border-radius: 10px; margin-top: 20px;">
+          <strong>📘 Sådan gør du:</strong><br><br>
+          
+          1️⃣ Start med at kigge i ${currentDivisor}-tabellen.<br>
+          2️⃣ Find det tal, der er lig med ${currentDividend}.<br>
+      `;
+      
+      if (currentDifficulty === "let") {
+        html += `3️⃣ Tallet du har ganget med (${svar}) er svaret på divisionen!<br><br>`;
+        html += `<span style="color: #48bb78; font-size: 1.2rem;">✅ ${currentDivisor} × ${svar} = ${currentDividend}  →  ${currentDividend} : ${currentDivisor} = ${svar}</span>`;
+      } else {
+        html += `3️⃣ Tallet du har ganget med er svaret på divisionen. Kan du finde det?`;
+      }
+      
+      html += `</div>`;
+      
+      container.innerHTML = html;
+      wrapper.style.display = 'block';
+      wrapper.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function skjulTabelHjaelp() {
+      document.getElementById('tabelHjaelpContainer').style.display = 'none';
+    }
+
+    // ==================== SLIKKEPIND-METODEN (BÆLGE) ====================
+    function visBaelgeMetode() {
+      const container = document.getElementById('baelgeIndhold');
+      const wrapper = document.getElementById('baelgeContainer');
+      
+      let html = '';
+      
       if (currentDifficulty === "let" || currentDifficulty === "mellem") {
-        hjælpHTML += `
-          <div class="step-explanation" style="background: #fed7d7; border-left-color: #f56565;">
-            <div class="step-title"><span class="step-number">3</span> Se det som grupper</div>
-            <div class="step-content">
-              <strong>Du har ${currentDividend} ting, og du deler dem i ${currentDivisor} lige store grupper.</strong><br><br>
-              Hvor mange er der i hver gruppe?<br>
-              Klik på "Vis grupper" knappen for at se det!
+        // Simpel division - går op
+        const svar = currentDividend / currentDivisor;
+        
+        html = `
+          <div style="text-align: center; margin-bottom: 25px;">
+            <span style="font-size: 1.6rem;">${currentDividend} : ${currentDivisor} = ${svar}</span>
+          </div>
+          
+          <div style="display: flex; justify-content: center; margin-bottom: 30px;">
+            <div style="background: #F59E0B; color: white; padding: 20px; border-radius: 15px; max-width: 600px;">
+              <strong>Slikkepind-metoden (bælge-metoden)</strong><br><br>
+              Vi tæller, hvor mange gange ${currentDivisor} "bølger" (passer) ind i ${currentDividend}:
+            </div>
+          </div>
+          
+          <div class="baelge-visual">
+        `;
+        
+        // Visualiser bølgerne
+        for (let i = 0; i < svar; i++) {
+          html += `<div class="baelge">`;
+          html += `<div class="baelge-tal">${currentDivisor}</div>`;
+          if (i < svar - 1) html += `<span style="font-size: 1.5rem; margin: 0 5px;">+</span>`;
+          html += `</div>`;
+        }
+        
+        html += `</div>`;
+        
+        html += `
+          <div style="text-align: center; margin-top: 25px;">
+            <strong>${currentDivisor} + ${currentDivisor} + ... (${svar} gange) = ${currentDividend}</strong><br><br>
+            <span style="color: #F59E0B; font-size: 1.2rem;">✅ ${currentDivisor} går op ${svar} gange i ${currentDividend}</span>
+          </div>
+        `;
+        
+      } else if (currentDifficulty === "svaer") {
+        // Division med rest
+        const heltal = Math.floor(currentDividend / currentDivisor);
+        const rest = currentDividend % currentDivisor;
+        
+        html = `
+          <div style="text-align: center; margin-bottom: 25px;">
+            <span style="font-size: 1.6rem;">${currentDividend} : ${currentDivisor} = ${heltal}, rest ${rest}</span>
+          </div>
+          
+          <div style="display: flex; justify-content: center; margin-bottom: 30px;">
+            <div style="background: #F59E0B; color: white; padding: 20px; border-radius: 15px; max-width: 600px;">
+              <strong>Slikkepind-metoden med rest</strong><br><br>
+              Vi tæller, hvor mange hele gange ${currentDivisor} passer i ${currentDividend},<br>
+              og hvad der er tilbage:
+            </div>
+          </div>
+          
+          <div class="baelge-visual">
+        `;
+        
+        // Visualiser hele bølger
+        for (let i = 0; i < heltal; i++) {
+          html += `<div class="baelge">`;
+          html += `<div class="baelge-tal">${currentDivisor}</div>`;
+          if (i < heltal - 1) html += `<span style="font-size: 1.5rem; margin: 0 5px;">+</span>`;
+          html += `</div>`;
+        }
+        
+        html += `</div>`;
+        
+        // Vis rest
+        if (rest > 0) {
+          html += `
+            <div style="text-align: center; margin-top: 25px;">
+              <div style="background: #fff3cd; padding: 15px; border-radius: 10px; display: inline-block;">
+                <strong>➕ Til sidst er der ${rest} til rest</strong><br>
+                <span style="color: #856404;">${currentDividend} - (${currentDivisor} × ${heltal}) = ${rest}</span>
+              </div>
+            </div>
+          `;
+        }
+        
+        html += `
+          <div style="text-align: center; margin-top: 25px;">
+            <span style="color: #F59E0B; font-size: 1.2rem;">✅ ${currentDivisor} går op ${heltal} gange, og der er ${rest} til rest</span>
+          </div>
+        `;
+        
+      } else if (currentDifficulty === "ekspert" || currentDifficulty === "mester") {
+        // Division med decimaler - KORREKT BEREGNING
+        const heltal = Math.floor(currentDividend / currentDivisor);
+        const rest = currentDividend % currentDivisor;
+        
+        // Forlæng med decimaler - vis 1 decimal
+        const restDecimal = Math.round((rest / currentDivisor) * 10) / 10;
+        const decimalResultat = heltal + restDecimal;
+        
+        html = `
+          <div style="text-align: center; margin-bottom: 25px;">
+            <span style="font-size: 1.6rem;">${currentDividend} : ${currentDivisor} = ${decimalResultat.toFixed(1).replace('.', ',')}</span>
+          </div>
+          
+          <div style="display: flex; justify-content: center; margin-bottom: 30px;">
+            <div style="background: #F59E0B; color: white; padding: 20px; border-radius: 15px; max-width: 600px;">
+              <strong>Slikkepind-metoden med decimaler</strong><br><br>
+              Når vi ikke vil have rest, forlænger vi divisionen med 0'er:
+            </div>
+          </div>
+          
+          <div style="background: white; padding: 25px; border-radius: 12px; margin-top: 20px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+              <div style="border-right: 2px solid #e2e8f0; padding-right: 20px;">
+                <strong>1️⃣ Først finder vi det hele tal</strong><br><br>
+                ${currentDivisor} × ${heltal} = ${currentDivisor * heltal}<br>
+                Der er <strong>${rest}</strong> til rest.
+              </div>
+              
+              <div>
+                <strong>2️⃣ Resten bliver til decimaler</strong><br><br>
+                Vi sætter et komma og et 0-tal:<br>
+                ${rest}0 : ${currentDivisor} = ${Math.floor(rest * 10 / currentDivisor)}<br>
+                <span style="color: #48bb78;">Det giver ${restDecimal} (${rest}/${currentDivisor})</span>
+              </div>
+            </div>
+            
+            <div style="margin-top: 25px; padding-top: 20px; border-top: 2px solid #e2e8f0; text-align: center;">
+              <strong style="font-size: 1.2rem;">✅ Resultat: ${heltal} + ${restDecimal.toFixed(1).replace('.', ',')} = ${decimalResultat.toFixed(1).replace('.', ',')}</strong>
             </div>
           </div>
         `;
       }
       
-      hjælpHTML += `
-        <div style="text-align: center; margin-top: 20px;">
-          <button onclick="skjulHjaelp()" class="close-hjaelp-btn">
-            <i class="fas fa-times"></i> Luk hjælp
-          </button>
-        </div>
-      `;
-      
-      hjælpContainer.innerHTML = hjælpHTML;
-      hjælpContainer.style.display = 'block';
-      hjælpContainer.scrollIntoView({ behavior: 'smooth' });
+      container.innerHTML = html;
+      wrapper.style.display = 'block';
+      wrapper.scrollIntoView({ behavior: 'smooth' });
     }
 
+    function skjulBaelge() {
+      document.getElementById('baelgeContainer').style.display = 'none';
+    }
+
+    // ==================== HJÆLP TIL REST ====================
     function visRestHjaelp() {
       const hjælpContainer = document.getElementById('hjaelpContainer');
       
@@ -919,21 +1001,30 @@
       
       let hjælpHTML = `
         <div class="kolonne-title">
-          <i class="fas fa-cubes"></i> Sådan regner du med rest
+          <i class="fas fa-cubes"></i> Hjælp: ${currentDividend} : ${currentDivisor}
         </div>
         
         <div class="step-explanation">
-          <div class="step-title"><span class="step-number">1</span> Find ud af, hvad der går op</div>
+          <div class="step-title"><span class="step-number">1</span> Find det største tal, der går op</div>
           <div class="step-content">
-            <strong>${currentDividend} : ${currentDivisor}</strong><br>
-            Find det højeste tal, der er mindre end eller lig med ${currentDividend}, og som kan deles med ${currentDivisor}.<br><br>
-            ${currentDivisor} × ${heltal} = ${currentDivisor * heltal}
+            <strong>Brug din ${currentDivisor}-tabel:</strong><br><br>
+            Kig i ${currentDivisor}-tabellen og find det højeste tal, der er mindre end ${currentDividend}:<br><br>
+            
+            ${currentDivisor} × 1 = ${currentDivisor * 1}<br>
+            ${currentDivisor} × 2 = ${currentDivisor * 2}<br>
+            ${currentDivisor} × 3 = ${currentDivisor * 3}<br>
+            ...<br>
+            <span style="color: #48bb78; font-weight: bold;">${currentDivisor} × ${heltal} = ${currentDivisor * heltal}</span> ← DETTE TAL!<br>
+            ${currentDivisor} × ${heltal + 1} = ${currentDivisor * (heltal + 1)} (for stort)<br><br>
+            
+            <strong>✅ ${currentDivisor} × ${heltal} = ${currentDivisor * heltal}</strong> er det højeste, der går op i ${currentDividend}.
           </div>
         </div>
         
         <div class="step-explanation" style="background: #c6f6d5; border-left-color: #48bb78;">
-          <div class="step-title"><span class="step-number">2</span> Hvor meget er tilbage?</div>
+          <div class="step-title"><span class="step-number">2</span> Find resten</div>
           <div class="step-content">
+            Dividenden (tallet du deler) er <strong>${currentDividend}</strong>.<br><br>
             Træk resultatet fra dividenden:<br>
             <strong>${currentDividend} - ${currentDivisor * heltal} = ${rest}</strong><br><br>
             Det er det, der er til rest.
@@ -943,7 +1034,7 @@
         <div class="step-explanation" style="background: #fed7d7; border-left-color: #f56565;">
           <div class="step-title"><span class="step-number">3</span> Skriv svaret</div>
           <div class="step-content">
-            <strong>${heltal}, rest ${rest}</strong><br><br>
+            <strong style="font-size: 1.2rem;">${heltal}, rest ${rest}</strong><br><br>
             Det betyder: ${currentDivisor} går op ${heltal} gange, og der er ${rest} tilbage.
           </div>
         </div>
@@ -960,45 +1051,111 @@
       hjælpContainer.scrollIntoView({ behavior: 'smooth' });
     }
 
+    // ==================== HJÆLP TIL DECIMALER - KORREKT ====================
     function visDecimalHjaelp() {
       const hjælpContainer = document.getElementById('hjaelpContainer');
       
       const heltal = Math.floor(currentDividend / currentDivisor);
       const rest = currentDividend % currentDivisor;
-      const decimal = (rest / currentDivisor).toFixed(1).replace('.', ',');
-      const resultat = (currentDividend / currentDivisor).toFixed(1).replace('.', ',');
+      
+      // Decimalberegning - KORREKT: 3/4 = 0,75, IKKE 0,8!
+      const decimalDel = rest / currentDivisor;
+      
+      // Afrund til 2 decimaler for pæn visning
+      const resultat = (currentDividend / currentDivisor).toFixed(2);
+      const resultatKomma = resultat.replace('.', ',');
       
       let hjælpHTML = `
         <div class="kolonne-title">
-          <i class="fas fa-divide"></i> Sådan får du et decimaltal
+          <i class="fas fa-divide"></i> Fra rest til decimal - ${currentDividend} : ${currentDivisor}
         </div>
         
         <div class="step-explanation">
-          <div class="step-title"><span class="step-number">1</span> Find det hele tal og resten</div>
+          <div class="step-title"><span class="step-number">1</span> Start med almindelig division</div>
           <div class="step-content">
-            <strong>${currentDividend} : ${currentDivisor}</strong><br>
-            Heltal: ${heltal}<br>
-            Rest: ${rest}
+            <strong>Først dividerer vi som normalt:</strong><br><br>
+            ${currentDivisor} går op i ${currentDividend} <strong>${heltal}</strong> gange.<br>
+            ${currentDivisor} × ${heltal} = ${currentDivisor * heltal}<br>
+            Der er <strong>${rest}</strong> til rest.
           </div>
         </div>
         
         <div class="step-explanation" style="background: #c6f6d5; border-left-color: #48bb78;">
-          <div class="step-title"><span class="step-number">2</span> Gør resten til decimal</div>
+          <div class="step-title"><span class="step-number">2</span> Gør resten til decimaler</div>
           <div class="step-content">
-            Resten på ${rest} er en brøkdel af ${currentDivisor}:<br>
-            ${rest} / ${currentDivisor} = ${(rest / currentDivisor).toFixed(1)}<br>
-            Det skriver vi som <strong>${decimal}</strong>.
+            I stedet for at skrive "rest", sætter vi et <strong>komma</strong> og <strong>tilføjer et 0</strong>:<br><br>
+            
+            <span style="font-size: 1.2rem;">${rest}0 : ${currentDivisor} = ${Math.floor(rest * 10 / currentDivisor)}</span><br><br>
+            
+            Det betyder, at resten på ${rest} svarer til <strong>${(rest / currentDivisor * 10).toFixed(0)}/10</strong> = <strong>${decimalDel.toFixed(2).replace('.', ',')}</strong><br><br>
+            
+            <div style="background: #f3e8ff; padding: 15px; border-radius: 8px;">
+              <strong>Regnestykket:</strong> ${rest}/${currentDivisor} = ${decimalDel.toFixed(2).replace('.', ',')}
+            </div>
           </div>
         </div>
         
         <div class="step-explanation" style="background: #fed7d7; border-left-color: #f56565;">
-          <div class="step-title"><span class="step-number">3</span> Sæt det hele sammen</div>
+          <div class="step-title"><span class="step-number">3</span> Læg det hele sammen</div>
           <div class="step-content">
-            <strong>${heltal} + ${decimal} = ${resultat}</strong><br><br>
-            Hele regnestykket: ${currentDividend} : ${currentDivisor} = ${resultat}
+            <strong style="font-size: 1.3rem;">
+              ${heltal} + ${decimalDel.toFixed(2).replace('.', ',')} = ${resultatKomma}
+            </strong><br><br>
+            
+            Hele regnestykket:<br>
+            <span style="font-size: 1.2rem; color: #9f7aea; font-weight: bold;">
+              ${currentDividend} : ${currentDivisor} = ${resultatKomma}
+            </span>
           </div>
         </div>
         
+        <div style="text-align: center; margin-top: 20px;">
+          <button onclick="skjulHjaelp()" class="close-hjaelp-btn">
+            <i class="fas fa-times"></i> Luk hjælp
+          </button>
+        </div>
+      `;
+      
+      hjælpContainer.innerHTML = hjælpHTML;
+      hjælpContainer.style.display = 'block';
+      hjælpContainer.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function visSimpelHjaelp() {
+      // Kompakt hjælp til Let og Mellem
+      const hjælpContainer = document.getElementById('hjaelpContainer');
+      
+      let hjælpHTML = `
+        <div class="kolonne-title">
+          <i class="fas fa-lightbulb"></i> Sådan regner du ${currentDividend} : ${currentDivisor}
+        </div>
+        
+        <div style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; margin: 20px 0;">
+          <div style="flex: 1; min-width: 250px; background: #ebf8ff; padding: 20px; border-radius: 12px;">
+            <strong>🎯 Metode 1: Baglæns gangetabel</strong><br><br>
+            ${currentDivisor} × ? = ${currentDividend}<br><br>
+            <span style="color: #48bb78; font-size: 1.2rem;">
+              ${currentDivisor} × ${currentDividend / currentDivisor} = ${currentDividend}
+            </span>
+          </div>
+          
+          <div style="flex: 1; min-width: 250px; background: #fff3cd; padding: 20px; border-radius: 12px;">
+            <strong>🔵 Metode 2: Grupper</strong><br><br>
+            Del ${currentDividend} i ${currentDivisor} lige store grupper.<br>
+            Klik på "Vis grupper" for at se det!
+          </div>
+        </div>
+      `;
+      
+      if (currentDifficulty === "let") {
+        hjælpHTML += `
+          <div style="text-align: center; margin-top: 20px; padding: 20px; background: #c6f6d5; border-radius: 12px;">
+            <span style="font-size: 1.3rem;">✅ Svaret er: ${currentDividend / currentDivisor}</span>
+          </div>
+        `;
+      }
+      
+      hjælpHTML += `
         <div style="text-align: center; margin-top: 20px;">
           <button onclick="skjulHjaelp()" class="close-hjaelp-btn">
             <i class="fas fa-times"></i> Luk hjælp
@@ -1015,196 +1172,73 @@
       document.getElementById('hjaelpContainer').style.display = 'none';
     }
 
-    function visCirkelTabel() {
-      if (currentDifficulty !== "let" && currentDifficulty !== "mellem") {
-        showFeedback('Grupper er kun tilgængelig i Let og Mellem', false);
-        return;
-      }
-      
-      document.getElementById('cirkelContainer').style.display = 'block';
-      tegnCirkelTabel();
-      opdaterCirkelKnapper();
-      skjulHjaelp();
-    }
-
-    function tegnCirkelTabel() {
-      const container = document.getElementById('cirkelGrid');
-      const explanation = document.getElementById('cirkelExplanation');
-      
-      const antalGrupper = currentDivisor;
-      const antalPerGruppe = Math.floor(currentDividend / currentDivisor);
-      const rest = currentDividend % currentDivisor;
-      
-      // Vis kun hvis det er overskueligt (max 50 cirkler)
-      if (currentDividend > 50) {
-        container.innerHTML = `
-          <div style="text-align: center; padding: 40px; color: #718096; width: 100%;">
-            <i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 20px;"></i>
-            <h3>For mange cirkler at vise!</h3>
-            <p>${currentDividend} cirkler ville være for mange at vise klart.</p>
-            <p>Prøv i stedet at bruge "Hjælp mig!" knappen.</p>
-          </div>
-        `;
-        explanation.innerHTML = `
-          ${currentDividend} cirkler delt i ${currentDivisor} grupper
-        `;
-        return;
-      }
-      
-      container.style.gridTemplateColumns = `repeat(${Math.min(antalPerGruppe, 10)}, 1fr)`;
-      container.style.gap = '2px';
-      
-      let html = '';
-      
-      for (let g = 0; g < antalGrupper; g++) {
-        for (let i = 0; i < antalPerGruppe; i++) {
-          html += `<div class="cirkel" style="background: #9f7aea;"></div>`;
-        }
-        html += `<div style="width: 10px;"></div>`; // mellemrum mellem grupper
-      }
-      
-      // Tilføj rest-cirkler
-      if (rest > 0) {
-        for (let i = 0; i < rest; i++) {
-          html += `<div class="cirkel" style="background: #fbbf24;"></div>`;
-        }
-      }
-      
-      container.innerHTML = html;
-      
-      let forklaring = `${currentDividend} cirkler delt i ${currentDivisor} lige store grupper.<br>`;
-      
-      if (currentDifficulty === "let") {
-        if (rest === 0) {
-          forklaring += `<span style="font-size: 1.2rem; color: #48bb78;">Hver gruppe har ${antalPerGruppe} cirkler → svaret er ${antalPerGruppe}</span>`;
-        } else {
-          forklaring += `<span style="font-size: 1.2rem; color: #fbbf24;">Hver gruppe har ${antalPerGruppe} cirkler, og der er ${rest} til rest.</span>`;
-        }
-      } else {
-        forklaring += `Hver gruppe har ${antalPerGruppe} cirkler. Kan du tælle dem?`;
-      }
-      
-      explanation.innerHTML = forklaring;
-    }
-
-    function opdaterCirkelKnapper() {
-      const knapContainer = document.querySelector('.cirkel-knapper');
-      
-      knapContainer.innerHTML = `
-        <button onclick="skjulCirkelTabel()" class="close-hjaelp-btn" style="min-width: 180px; padding: 12px 20px;">
-          <i class="fas fa-times"></i> Luk grupper
-        </button>
-      `;
-    }
-
-    function skjulCirkelTabel() {
-      document.getElementById('cirkelContainer').style.display = 'none';
-    }
-
-    function visDivisionTabel() {
-      if (currentDifficulty !== "let") {
-        showFeedback('Divisionstabel er kun tilgængelig i Let', false);
-        return;
-      }
-      
-      const container = document.getElementById('divisionTabelContainer');
-      const tabel = document.getElementById('divisionTabel');
-      
-      // Opret en lille divisionstabel for den aktuelle divisor
-      let html = '';
-      
-      // Headers
-      html += `<div class="division-celle header top" style="background: linear-gradient(135deg, #9f7aea 0%, #805ad5 100%);">:</div>`;
-      html += `<div class="division-celle header top" style="background: #9f7aea;">×</div>`;
-      for (let i = 1; i <= 5; i++) {
-        html += `<div class="division-celle header top" style="background: #9f7aea;">${i}</div>`;
-      }
-      
-      // Række med divisor
-      html += `<div class="division-celle header" style="background: #9f7aea;">${currentDivisor}</div>`;
-      html += `<div class="division-celle" style="background: #e9d8fd;">:</div>`;
-      for (let i = 1; i <= 5; i++) {
-        const produkt = currentDivisor * i;
-        const erSvaret = (produkt === currentDividend);
-        html += `<div class="division-celle ${erSvaret ? 'active' : ''}">${produkt}</div>`;
-      }
-      
-      tabel.innerHTML = html;
-      container.style.display = 'block';
-      container.scrollIntoView({ behavior: 'smooth' });
-      
-      const existingExplanation = container.querySelector('.tabel-forklaring');
-      if (existingExplanation) existingExplanation.remove();
-      
-      const explanation = document.createElement('div');
-      explanation.className = 'tabel-forklaring';
-      explanation.innerHTML = `
-        <strong><i class="fas fa-info-circle"></i> Sådan bruger du divisionstabellen</strong><br><br>
-        <strong>Find ${currentDividend} i ${currentDivisor}-tabellen.</strong><br>
-        Tallet over viser, hvor mange gange ${currentDivisor} skal ganges.<br><br>
-        <strong>${currentDivisor} × ${currentDividend / currentDivisor} = ${currentDividend}</strong><br>
-        Derfor er svaret: <span style="color: #48bb78; font-weight: bold;">${currentDividend / currentDivisor}</span>
-      `;
-      container.appendChild(explanation);
-    }
-
+    // ==================== TJEK SVAR - MED TO BOKSE TIL REST ====================
     function tjekSvar() {
       const svarInput = document.getElementById('svarInput');
-      let brugerSvar = svarInput.value.trim();
-      
-      if (brugerSvar === '') {
-        showFeedback('Skriv venligst et svar', false);
-        return;
-      }
+      const restInput = document.getElementById('restInput');
       
       let isCorrect = false;
+      let brugerSvarTekst = '';
       
-      // Tjek svar baseret på niveau
       if (currentDifficulty === "svaer") {
-        // Format: "heltal, rest X" eller "heltal rest X"
-        const restMatch = brugerSvar.toLowerCase().match(/(\d+)\s*[, ]?\s*rest\s*(\d+)/i);
-        if (restMatch) {
-          const svarHeltal = parseInt(restMatch[1]);
-          const svarRest = parseInt(restMatch[2]);
-          isCorrect = (svarHeltal === correctAnswer && svarRest === correctRest);
-        } else {
-          // Prøv med komma
-          const commaMatch = brugerSvar.match(/^(\d+)\s*,\s*(\d+)$/);
-          if (commaMatch) {
-            const svarHeltal = parseInt(commaMatch[1]);
-            const svarRest = parseInt(commaMatch[2]);
-            isCorrect = (svarHeltal === correctAnswer && svarRest === correctRest);
-          }
+        // TO bokse: heltal og rest
+        const svarHeltal = svarInput ? parseInt(svarInput.value) : null;
+        const svarRest = restInput ? parseInt(restInput.value) : null;
+        
+        if (svarHeltal === null || isNaN(svarHeltal) || svarRest === null || isNaN(svarRest)) {
+          showFeedback('Skriv både heltal og rest', false);
+          return;
         }
+        
+        isCorrect = (svarHeltal === correctAnswer && svarRest === correctRest);
+        brugerSvarTekst = `${svarHeltal}, rest ${svarRest}`;
+        
       } else if (currentDifficulty === "ekspert" || currentDifficulty === "mester") {
-        // Decimaltal med komma
+        // Decimaltal med komma eller punktum
+        let brugerSvar = svarInput.value.trim();
         brugerSvar = brugerSvar.replace(',', '.');
         const svarDecimal = parseFloat(brugerSvar);
-        if (!isNaN(svarDecimal)) {
-          isCorrect = Math.abs(svarDecimal - correctAnswer) < 0.01;
+        
+        if (isNaN(svarDecimal)) {
+          showFeedback('Skriv et tal med komma (f.eks. 3,5)', false);
+          return;
         }
+        
+        // Tjek med tolerance på 0.01
+        isCorrect = Math.abs(svarDecimal - correctAnswer) < 0.01;
+        brugerSvarTekst = svarInput.value;
+        
       } else {
         // Heltal
-        const svarHeltal = parseInt(brugerSvar);
-        if (!isNaN(svarHeltal)) {
-          isCorrect = (svarHeltal === correctAnswer);
+        const svarHeltal = svarInput ? parseInt(svarInput.value) : null;
+        
+        if (svarHeltal === null || isNaN(svarHeltal)) {
+          showFeedback('Skriv et tal', false);
+          return;
         }
+        
+        isCorrect = (svarHeltal === correctAnswer);
+        brugerSvarTekst = svarHeltal.toString();
       }
       
+      // Opdater statistik
       difficultyData[currentDifficulty].totalAttempts = (difficultyData[currentDifficulty].totalAttempts || 0) + 1;
       
-      let svarTekst = brugerSvar;
-      if (currentDifficulty === "ekspert" || currentDifficulty === "mester") {
-        svarTekst = formatDecimal(correctAnswer);
-      } else if (currentDifficulty === "svaer") {
-        svarTekst = `${correctAnswer}, rest ${correctRest}`;
+      // Gem forsøg
+      let opgaveStreng = `${formatNumber(currentDividend)} : ${formatNumber(currentDivisor)}`;
+      let korrektSvarStreng = '';
+      
+      if (currentDifficulty === "svaer") {
+        korrektSvarStreng = `${correctAnswer}, rest ${correctRest}`;
+      } else if (currentDifficulty === "ekspert" || currentDifficulty === "mester") {
+        korrektSvarStreng = formatDecimal(correctAnswer);
       } else {
-        svarTekst = formatNumber(correctAnswer);
+        korrektSvarStreng = formatNumber(correctAnswer);
       }
       
       attempts.unshift({
-        opgave: `${formatNumber(currentDividend)} : ${formatNumber(currentDivisor)}`,
-        svar: brugerSvar,
+        opgave: opgaveStreng,
+        svar: brugerSvarTekst,
         korrekt: isCorrect,
         tid: new Date().toLocaleTimeString(),
         difficulty: currentDifficulty
@@ -1212,11 +1246,15 @@
       
       if (attempts.length > 5) attempts.pop();
       visForsog();
+      
+      // Skjul hjælp
       skjulHjaelp();
+      skjulTabelHjaelp();
+      skjulBaelge();
       
       if (isCorrect) {
         difficultyData[currentDifficulty].correctCount++;
-        showFeedback(`✅ Fantastisk! ${formatNumber(currentDividend)} : ${formatNumber(currentDivisor)} = ${svarTekst}`, true);
+        showFeedback(`✅ Fantastisk! ${opgaveStreng} = ${korrektSvarStreng}`, true);
         saveUserData();
         updateStatsDisplay();
         
@@ -1224,7 +1262,13 @@
           genererOpgave();
         }, 1500);
       } else {
-        showFeedback(`❌ ${brugerSvar} er ikke rigtigt. Prøv igen!`, false);
+        let fejlBesked = `❌ ${brugerSvarTekst} er ikke rigtigt.`;
+        
+        if (currentDifficulty === "svaer") {
+          fejlBesked += ` Prøv med ${correctAnswer}, rest ${correctRest}`;
+        }
+        
+        showFeedback(fejlBesked, false);
         saveUserData();
         updateStatsDisplay();
       }
@@ -1234,7 +1278,12 @@
       genererOpgave();
       document.getElementById('feedback').textContent = '';
       document.getElementById('feedback').className = 'feedback';
+      
+      // Skjul alle hjælpe-containere
       skjulHjaelp();
+      skjulTabelHjaelp();
+      skjulBaelge();
+      skjulGrupper();
     }
 
     function visForsog() {
@@ -1266,11 +1315,6 @@
       container.innerHTML = html || '<p>Ingen forsøg endnu...</p>';
     }
 
-    function visMatematiktutor() {
-      const videoURL = "https://www.youtube.com/watch?v=y7Be7AqWWm0";
-      window.open(videoURL, '_blank');
-    }
-
     function showFeedback(message, isSuccess) {
       const feedback = document.getElementById('feedback');
       feedback.innerHTML = message;
@@ -1280,10 +1324,11 @@
       if (!isSuccess) {
         setTimeout(() => {
           feedback.style.display = 'none';
-        }, 3000);
+        }, 4000);
       }
     }
 
+    // Initial kald
     visForsog();
   </script>
 </body>
